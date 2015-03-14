@@ -3,6 +3,8 @@
     padding-bottom: 40px
 }
 
+.angular-google-map-container { height: 400px; }
+
 #loading-bar .bar {
     background: #ffffff;
 }

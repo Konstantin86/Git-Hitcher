@@ -66,6 +66,8 @@
     <Content Include="content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="scripts\angular-google-maps.js" />
+    <Content Include="scripts\angular-google-maps.min.js" />
     <Content Include="scripts\angular-resource.min.js.map" />
     <Content Include="scripts\angular-route.min.js.map" />
     <Content Include="scripts\angular-sanitize.min.js.map" />
@@ -125,6 +127,8 @@
     <Content Include="scripts\jquery.min.js" />
     <Content Include="scripts\loading-bar.js" />
     <Content Include="scripts\loading-bar.min.js" />
+    <Content Include="scripts\lodash.js" />
+    <Content Include="scripts\lodash.min.js" />
     <Content Include="scripts\ng-flow-standalone.js" />
     <Content Include="scripts\ng-flow-standalone.min.js" />
     <Content Include="scripts\ng-infinite-scroll.js" />
