@@ -1,0 +1,30 @@
+﻿<div class="row">
+    <div class="col-sm-6">
+        <ui-gmap-google-map id="map-canvas"
+                            center="map.center"
+                            zoom="map.zoom"
+                            draggable="true"
+                            options="map.options"
+                            control="map.control">
+        </ui-gmap-google-map>
+    </div>
+    <div class="col-sm-6">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Start</label>
+                <div class="col-sm-8">
+                    <select class="form-control" ng-model="routePoints.start"
+                            ng-options="route.name for route in map.routes.start"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">End</label>
+                <div class="col-sm-8">
+                    <select class="form-control" ng-model="routePoints.end"
+                            ng-options="route.name for route in map.routes.end"></select>
+                </div>
+            </div>
+            <button ng-click="calcRoute(routePoints)" type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+</div>
