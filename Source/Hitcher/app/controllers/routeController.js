@@ -29,6 +29,7 @@
                 end: {}
             }
         });
+
         $scope.routePoints.start = $scope.map.routes.start[0];
         $scope.routePoints.end = $scope.map.routes.end[0];
 
