@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\controllers\routeController.js" />
+    <Content Include="app\services\routeService.js" />
     <Content Include="app\views\route.html" />
     <Content Include="content\css\bootstrap.css.map" />
     <Content Include="content\fonts\fontawesome-webfont.eot" />

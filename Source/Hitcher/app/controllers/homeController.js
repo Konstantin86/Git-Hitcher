@@ -4,10 +4,13 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, uiGmapGoogleMapApi) {
+app.controller("homeController", function ($scope, uiGmapGoogleMapApi, uiGmapIsReady, routeService) {
     //    // Do stuff with your $scope.
     //    // Note: Some of the directives require at least something to be defined originally!
     //    // e.g. $scope.markers = []
+
+    $scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
+
     $scope.randomMarkers = [];
 
     var markers = [];
@@ -49,10 +52,8 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi) {
 
         var geocoder = new maps.Geocoder();
 
-        var directionsDisplay = new maps.DirectionsRenderer();
+        //var directionsDisplay = new maps.DirectionsRenderer();
         var directionsService = new maps.DirectionsService();
-
-        //$scope.map.control = {};
 
         function codeAddress(address, callback) {
             geocoder.geocode({ 'address': address }, function (results, status) {
@@ -78,6 +79,7 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi) {
         }
 
         var createRoute = function (routePoints) {
+            var directionsDisplay = new maps.DirectionsRenderer();
             directionsDisplay.setMap($scope.map.control.getGMap());
             var directionsService = new maps.DirectionsService();
             var start = routePoints.start.latlng;
@@ -85,7 +87,7 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi) {
             var request = {
                 origin: start,
                 destination: end,
-                travelMode: maps.TravelMode.WALKING
+                travelMode: maps.TravelMode.DRIVING
             };
             directionsService.route(request, function (response, status) {
                 if (status == maps.DirectionsStatus.OK) {
@@ -95,18 +97,17 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi) {
             return;
         };
 
-        codeAddress("Харьков, новгородская 3б", function (results) {
-            route.start.latlng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
-            codeAddress("Харьков, героев сталинграда 136б", function (results) {
-                route.end.latlng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
-                createRoute(route);
-            });
-        });
+        //codeAddress("Харьков, новгородская 3б", function (results) {
+        //    route.start.latlng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
+        //    codeAddress("Харьков, героев сталинграда 136б", function (results) {
+        //        route.end.latlng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
+        //        createRoute(route);
+        //    });
+        //});
+
         //codeAddress("Харьков, героев сталинграда 136б");
 
-        $scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, bounds: {} };
-
-        $scope.map.control = {};
+        //$scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
 
         var pos = new maps.LatLng(40.1451, -99.6680);
 
@@ -164,5 +165,14 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi) {
         //        icons: [{ icon: { path: maps.SymbolPath.BACKWARD_OPEN_ARROW }, offset: "25px", repeat: "50px" }]
         //    }
         //];
+
+        // Waiting for maps.control.getGMap is one of the things that the uiGmapIsReady service in Angular Google Maps was designed for
+        uiGmapIsReady.promise().then(function (maps) {
+            var routes = routeService.get();
+
+            for (var i = 0; i < routes.length; i++) {
+                createRoute(routes[i]);
+            }
+        });
     });
 });
