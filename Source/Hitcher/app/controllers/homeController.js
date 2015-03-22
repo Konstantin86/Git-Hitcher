@@ -1,6 +1,7 @@
 ﻿/// <reference path="~/scripts/angular.min.js"/>
 
 /// <reference path="~/app/app.js"/>
+/// <reference path="~/app/services/routeService.js"/>
 
 "use strict";
 
@@ -82,8 +83,8 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi, uiGmapIsR
             var directionsDisplay = new maps.DirectionsRenderer();
             directionsDisplay.setMap($scope.map.control.getGMap());
             var directionsService = new maps.DirectionsService();
-            var start = routePoints.start.latlng;
-            var end = routePoints.end.latlng;
+            var start = routePoints.startLatLng;
+            var end = routePoints.endLatLng;
             var request = {
                 origin: start,
                 destination: end,
@@ -148,31 +149,24 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi, uiGmapIsR
 
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
-        //$scope.polylines = [
-        //    {
-        //        id: 1,
-        //        path: [
-        //            { latitude: 45, longitude: -74 },
-        //            { latitude: 30, longitude: -89 },
-        //            { latitude: 37, longitude: -122 },
-        //            { latitude: 60, longitude: -95 }
-        //        ],
-        //        stroke: { color: "#6060FB", weight: 3 },
-        //        editable: true,
-        //        draggable: true,
-        //        geodesic: true,
-        //        visible: true,
-        //        icons: [{ icon: { path: maps.SymbolPath.BACKWARD_OPEN_ARROW }, offset: "25px", repeat: "50px" }]
-        //    }
-        //];
-
         // Waiting for maps.control.getGMap is one of the things that the uiGmapIsReady service in Angular Google Maps was designed for
         uiGmapIsReady.promise().then(function (maps) {
-            var routes = routeService.get();
+            drawRoutes();
+            //var routes = routeService.get();
 
-            for (var i = 0; i < routes.length; i++) {
-                createRoute(routes[i]);
-            }
+            //for (var i = 0; i < routes.length; i++) {
+            //    createRoute(routes[i]);
+            //}
         });
+
+        function drawRoutes() {
+            routeService.resource.query({}, function (result) {
+                if (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        createRoute(result[i]);
+                    }
+                }
+            });
+        };
     });
 });

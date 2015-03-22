@@ -1,10 +1,17 @@
 ﻿/// <reference path="~/scripts/angular.min.js"/>
+/// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
+/// <reference path="~/app/const/appConst.js"/>
 
 "use strict";
 
-app.service("routeService", function ($resource) {
-    var get = function() {
+app.service("routeService", function ($resource, appConst) {
+
+    var resource = $resource(appConst.serviceBase + "/:action", { action: "api/route" },
+    {
+    });
+
+    var get = function () {
 
         return [
             {
@@ -41,4 +48,5 @@ app.service("routeService", function ($resource) {
     };
 
     this.get = get;
+    this.resource = resource;
 });

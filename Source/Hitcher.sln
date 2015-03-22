@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hitcher", "Hitcher\Hitcher.csproj", "{1BC645FB-8F15-457E-A67C-057836F37E23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hitcher.DataAccess", "Hitcher.DataAccess\Hitcher.DataAccess.csproj", "{B31A45F7-F965-4088-8138-64244A6F455C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1BC645FB-8F15-457E-A67C-057836F37E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BC645FB-8F15-457E-A67C-057836F37E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BC645FB-8F15-457E-A67C-057836F37E23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B31A45F7-F965-4088-8138-64244A6F455C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B31A45F7-F965-4088-8138-64244A6F455C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B31A45F7-F965-4088-8138-64244A6F455C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B31A45F7-F965-4088-8138-64244A6F455C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
