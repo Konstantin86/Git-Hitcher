@@ -6,15 +6,49 @@
 "use strict";
 
 app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, uiGmapIsReady, routeService) {
-    //    // Do stuff with your $scope.
-    //    // Note: Some of the directives require at least something to be defined originally!
-    //    // e.g. $scope.markers = []
+
+    var googleMaps = null;
+    var geocoder = null;
 
     $scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
 
     $scope.randomMarkers = [];
 
-    $scope.selectedAddress = "";
+    $scope.driveFrom = "";
+    $scope.driveTo = "";
+
+    var route = {
+        startName: 'Tokyo Station',
+        startLatLng: '35.6813177190391,139.76609230041504',
+        endName: 'Ootemon',
+        endLatLng: '35.68567497604782,139.7612428665161'
+    }
+
+    $scope.declareRoute = function () {
+        var asideScope = this;
+
+        if (asideScope.driveFrom && asideScope.driveTo) {
+            route.startName = asideScope.driveFrom;
+            route.endName = asideScope.driveTo;
+
+            codeAddress(asideScope.driveFrom, function(results) {
+                route.startLatLng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
+                codeAddress(asideScope.driveTo, function(results) {
+                    route.endLatLng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
+                    createRoute2(route);
+
+                    routeService.resource.save(route, function (result) {
+                        if (result) {
+                            // show alert!
+                        }
+                    });
+                });
+            });
+        }
+
+        this.$hide();
+    };
+
     $scope.getAddress = function (viewValue) {
         var params = { address: viewValue, sensor: false };
         return $http.get('http://maps.googleapis.com/maps/api/geocode/json', { params: params })
@@ -24,7 +58,7 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
     };
 
     $scope.aside = {
-        "title": "Title",
+        "title": "Подвезу",
         "content": "Hello Aside<br />This is a multiline message!"
     };
 
@@ -39,11 +73,6 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
         $scope.map.zoom = 12;
         $scope.$apply();
     };
-
-    var route = {
-            start: { name: 'Tokyo Station', latlng: '35.6813177190391,139.76609230041504' },
-            end: { name: 'Ootemon', latlng: '35.68567497604782,139.7612428665161' }
-        }
 
     var createRandomMarker = function (lat, lng, idKey) {
 
@@ -62,10 +91,52 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
         return ret;
     };
 
+    function codeAddress(address, callback) {
+        geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status === googleMaps.GeocoderStatus.OK) {
+                //In this case it creates a marker, but you can get the lat and lng from the location.LatLng
+
+
+                markers.push(createRandomMarker(results[0].geometry.location.lat(), results[0].geometry.location.lng()));
+                $scope.randomMarkers = markers;
+
+                if (typeof (callback) == "function") {
+                    callback(results);
+                } else {
+                    //  $scope.$apply();
+                }
+
+
+                //centerMap(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+            } else {
+                alert("Geocode was not successful for the following reason: " + status);
+            }
+        });
+    }
+
+    function createRoute2(routePoints) {
+        var directionsDisplay = new googleMaps.DirectionsRenderer();
+        directionsDisplay.setMap($scope.map.control.getGMap());
+        var directionsService = new googleMaps.DirectionsService();
+        var start = routePoints.startLatLng;
+        var end = routePoints.endLatLng;
+        var request = {
+            origin: start,
+            destination: end,
+            travelMode: googleMaps.TravelMode.DRIVING
+        };
+        directionsService.route(request, function (response, status) {
+            if (status === googleMaps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+            }
+        });
+        return;
+    };
 
     uiGmapGoogleMapApi.then(function (maps) {
 
-        var geocoder = new maps.Geocoder();
+        googleMaps = maps;
+        geocoder = new maps.Geocoder();
 
         //var directionsDisplay = new maps.DirectionsRenderer();
         var directionsService = new maps.DirectionsService();
@@ -127,6 +198,7 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
         var pos = new maps.LatLng(40.1451, -99.6680);
 
         function calcRoute() {
+            var directionsDisplay = new maps.DirectionsRenderer();
             var start = "37.891586,-4.7844853";
             var end = pos.k + "," + pos.B;
 
@@ -164,13 +236,8 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
         // Waiting for maps.control.getGMap is one of the things that the uiGmapIsReady service in Angular Google Maps was designed for
-        uiGmapIsReady.promise().then(function (maps) {
+        uiGmapIsReady.promise().then(function (gmaps) {
             drawRoutes();
-            //var routes = routeService.get();
-
-            //for (var i = 0; i < routes.length; i++) {
-            //    createRoute(routes[i]);
-            //}
         });
 
         function drawRoutes() {

@@ -124,10 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\const\appConst.js" />
-    <Content Include="app\controllers\routeController.js" />
     <Content Include="app\services\routeService.js" />
     <Content Include="app\views\modal\aside.html" />
-    <Content Include="app\views\route.html" />
+    <Content Include="content\css\bootstrap-theme.css" />
     <Content Include="content\css\bootstrap.css.map" />
     <Content Include="content\fonts\fontawesome-webfont.eot" />
     <Content Include="content\fonts\fontawesome-webfont.ttf" />
@@ -143,6 +142,7 @@
     <Content Include="scripts\angular-route.min.js.map" />
     <Content Include="scripts\angular-sanitize.min.js.map" />
     <Content Include="packages.config" />
+    <Content Include="content\css\bootstrap-theme.min" />
     <None Include="Properties\PublishProfiles\hitcher.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -163,8 +163,8 @@
     <Content Include="content\css\bootstrap-additions.min.css" />
     <Content Include="content\css\bootstrap-custom-alerts.css" />
     <Content Include="content\css\bootstrap-form.css" />
-    <Content Include="content\css\bootstrap-theme.css" />
-    <Content Include="content\css\bootstrap-theme.min.css" />
+    <Content Include="content\css\themes\bootstrap-theme.css" />
+    <Content Include="content\css\themes\bootstrap-theme.min.css" />
     <Content Include="content\css\bootstrap.css" />
     <Content Include="content\css\bootstrap.min.css" />
     <Content Include="content\css\font-awesome.min.css" />

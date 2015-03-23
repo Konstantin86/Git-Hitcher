@@ -10,11 +10,6 @@ app.config(function ($routeProvider) {
         templateUrl: "app/views/home.html"
     });
 
-    $routeProvider.when("/route", {
-        controller: "routeController",
-        templateUrl: "app/views/route.html"
-    });
-
     $routeProvider.otherwise({ redirectTo: "/home" });
 });
 
