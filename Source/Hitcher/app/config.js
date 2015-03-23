@@ -17,3 +17,10 @@ app.config(function ($routeProvider) {
 
     $routeProvider.otherwise({ redirectTo: "/home" });
 });
+
+app.config(function($asideProvider) {
+    angular.extend($asideProvider.defaults, {
+        container: "body",
+        html: true
+    });
+})

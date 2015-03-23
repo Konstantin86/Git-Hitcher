@@ -5,7 +5,7 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, uiGmapGoogleMapApi, uiGmapIsReady, routeService) {
+app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, uiGmapIsReady, routeService) {
     //    // Do stuff with your $scope.
     //    // Note: Some of the directives require at least something to be defined originally!
     //    // e.g. $scope.markers = []
@@ -13,6 +13,20 @@ app.controller("homeController", function ($scope, uiGmapGoogleMapApi, uiGmapIsR
     $scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
 
     $scope.randomMarkers = [];
+
+    $scope.selectedAddress = "";
+    $scope.getAddress = function (viewValue) {
+        var params = { address: viewValue, sensor: false };
+        return $http.get('http://maps.googleapis.com/maps/api/geocode/json', { params: params })
+        .then(function (res) {
+            return res.data.results;
+        });
+    };
+
+    $scope.aside = {
+        "title": "Title",
+        "content": "Hello Aside<br />This is a multiline message!"
+    };
 
     var markers = [];
 
