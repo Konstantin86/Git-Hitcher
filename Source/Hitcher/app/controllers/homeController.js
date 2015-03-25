@@ -50,6 +50,10 @@ app.controller("homeController", function ($scope, $alert, $http, $q, $timeout, 
         "content": "Hello Aside<br />This is a multiline message!"
     };
 
+    mapService.onMapConfigChanged(function () {
+        $scope.$apply();
+    });
+
     mapService.ready.then(function (gmaps) {
         mapService.centerOnMe();
         drawRoutes();

@@ -10,6 +10,8 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
 
+    var onMapConfigChangedCallback;
+
     var ready = $q.defer();
 
     var map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
@@ -18,6 +20,10 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
     var centerMap = function (lat, lng, zoom) {
         map.center = { latitude: lat, longitude: lng };
         map.zoom = zoom;
+
+        if (typeof (onMapConfigChangedCallback) == "function") {
+            onMapConfigChangedCallback();
+        }
     };
 
     var centerOnMe = function () {
@@ -79,6 +85,10 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
         return deferred.promise;
     };
 
+    var onMapConfigChanged = function(callback) {
+        onMapConfigChangedCallback = callback;
+    };
+
     uiGmapGoogleMapApi.then(function (maps) {
         gmaps = maps;
         geocoder = new maps.Geocoder();
@@ -95,4 +105,5 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
     this.setMarker = setMarker;
     this.setRoute = setRoute;
     this.ready = ready.promise;
+    this.onMapConfigChanged = onMapConfigChanged;
 });
