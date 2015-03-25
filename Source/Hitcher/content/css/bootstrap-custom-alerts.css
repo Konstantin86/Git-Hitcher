@@ -35,6 +35,12 @@
   color: #f0ad4e;
 }
 
+.alert-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #3a87ad;
+}
+
 .info {
   border-left-color: #5bc0de;
   background-color: rgba(91, 192, 222, 0.1);

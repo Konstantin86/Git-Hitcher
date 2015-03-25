@@ -8,6 +8,7 @@
     </ui-gmap-markers>
     <ui-gmap-polyline ng-repeat="p in polylines" path="p.path" stroke="p.stroke" visible='p.visible'
                       geodesic='p.geodesic' fit="false" editable="p.editable" draggable="p.draggable" icons='p.icons'></ui-gmap-polyline>
+    <ui-gmap-map-control template="app/views/modal/custom.map.control.html" controller="controlCtrl" position="top-right" index="-1"></ui-gmap-map-control>
 </ui-gmap-google-map>
 
 <button type="button" class="btn btn-lg btn-danger" data-template="app/views/modal/aside.html" data-placement="left" data-animation="am-slide-left" bs-aside="aside" data-container="body" style="margin-top: 5px">

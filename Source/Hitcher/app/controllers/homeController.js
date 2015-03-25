@@ -5,10 +5,11 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, uiGmapIsReady, routeService) {
+app.controller("homeController", function ($scope, $alert, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, uiGmapIsReady, statusService, routeService) {
 
     var googleMaps = null;
     var geocoder = null;
+    var loadCount = 0;
 
     $scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
 
@@ -31,11 +32,11 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
             route.startName = asideScope.driveFrom;
             route.endName = asideScope.driveTo;
 
-            codeAddress(asideScope.driveFrom, function(results) {
+            codeAddress(asideScope.driveFrom, function (results) {
                 route.startLatLng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
-                codeAddress(asideScope.driveTo, function(results) {
+                codeAddress(asideScope.driveTo, function (results) {
                     route.endLatLng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
-                    createRoute2(route);
+                    createRoute(route);
 
                     routeService.resource.save(route, function (result) {
                         if (result) {
@@ -51,7 +52,7 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
 
     $scope.getAddress = function (viewValue) {
         var params = { address: viewValue, sensor: false };
-        return $http.get('http://maps.googleapis.com/maps/api/geocode/json', { params: params })
+        return $http.get('https://maps.googleapis.com/maps/api/geocode/json', { params: params })
         .then(function (res) {
             return res.data.results;
         });
@@ -60,6 +61,24 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
     $scope.aside = {
         "title": "Подвезу",
         "content": "Hello Aside<br />This is a multiline message!"
+    };
+
+    var handleCenterMe = function() {
+        var onSuccess = function (position) {
+            $scope.map.center = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            };
+
+            $scope.map.zoom = 12;
+            $scope.$apply();
+        };
+
+        function onError(error) {
+            console.log('code: ' + error.code + "\n" + 'message: ' + error.message + "\n");
+        };
+
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
     };
 
     var markers = [];
@@ -114,10 +133,18 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
         });
     }
 
-    function createRoute2(routePoints) {
-        var directionsDisplay = new googleMaps.DirectionsRenderer();
+    function createRoute(routePoints, i) {
+
+        var deferred = $q.defer();
+
+        var rendererOptions = {
+            preserveViewport: true,
+            //suppressMarkers: true,
+            routeIndex: i
+        };
+
+        var directionsDisplay = new googleMaps.DirectionsRenderer(rendererOptions);
         directionsDisplay.setMap($scope.map.control.getGMap());
-        var directionsService = new googleMaps.DirectionsService();
         var start = routePoints.startLatLng;
         var end = routePoints.endLatLng;
         var request = {
@@ -125,12 +152,31 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
             destination: end,
             travelMode: googleMaps.TravelMode.DRIVING
         };
+
+        var directionsService = new googleMaps.DirectionsService();
         directionsService.route(request, function (response, status) {
             if (status === googleMaps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
+
+                if (loadCount > 0) {
+                    loadCount--;
+                }
+
+                if (loadCount === 0) {
+                    statusService.clear();
+                }
             }
+            else if (status === googleMaps.GeocoderStatus.ZERO_RESULTS) {
+            }
+            else if (status === googleMaps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                console.log("Hello from " + status);
+                deferred.reject(i);
+            }
+
+            deferred.resolve(i);
         });
-        return;
+
+        return deferred.promise;
     };
 
     uiGmapGoogleMapApi.then(function (maps) {
@@ -144,56 +190,17 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
         function codeAddress(address, callback) {
             geocoder.geocode({ 'address': address }, function (results, status) {
                 if (status === maps.GeocoderStatus.OK) {
-                    //In this case it creates a marker, but you can get the lat and lng from the location.LatLng
-
-
                     markers.push(createRandomMarker(results[0].geometry.location.lat(), results[0].geometry.location.lng()));
                     $scope.randomMarkers = markers;
 
                     if (typeof (callback) == "function") {
                         callback(results);
-                    } else {
-                        //  $scope.$apply();
                     }
-
-
-                    //centerMap(results[0].geometry.location.lat(), results[0].geometry.location.lng());
                 } else {
                     alert("Geocode was not successful for the following reason: " + status);
                 }
             });
         }
-
-        var createRoute = function (routePoints) {
-            var directionsDisplay = new maps.DirectionsRenderer();
-            directionsDisplay.setMap($scope.map.control.getGMap());
-            var directionsService = new maps.DirectionsService();
-            var start = routePoints.startLatLng;
-            var end = routePoints.endLatLng;
-            var request = {
-                origin: start,
-                destination: end,
-                travelMode: maps.TravelMode.DRIVING
-            };
-            directionsService.route(request, function (response, status) {
-                if (status == maps.DirectionsStatus.OK) {
-                    directionsDisplay.setDirections(response);
-                }
-            });
-            return;
-        };
-
-        //codeAddress("Харьков, новгородская 3б", function (results) {
-        //    route.start.latlng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
-        //    codeAddress("Харьков, героев сталинграда 136б", function (results) {
-        //        route.end.latlng = results[0].geometry.location.lat() + ',' + results[0].geometry.location.lng();
-        //        createRoute(route);
-        //    });
-        //});
-
-        //codeAddress("Харьков, героев сталинграда 136б");
-
-        //$scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
 
         var pos = new maps.LatLng(40.1451, -99.6680);
 
@@ -226,7 +233,7 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
             };
 
             $scope.map.zoom = 12;
-            $scope.$apply();
+            //$scope.$apply();
         };
 
         function onError(error) {
@@ -243,8 +250,23 @@ app.controller("homeController", function ($scope, $http, uiGmapGoogleMapApi, ui
         function drawRoutes() {
             routeService.resource.query({}, function (result) {
                 if (result) {
+                    loadCount = result.length - 1;
+                    statusService.loading("Загрузка маршрутов...");
+                    //TODO to overcome over query limit issues refer:
+                    //http://stackoverflow.com/questions/14014074/google-maps-api-over-query-limit-per-second-limit
+                    //http://stackoverflow.com/questions/11792916/over-query-limit-in-google-maps-api-v3-how-do-i-pause-delay-in-javascript-to-sl
+
+                    var drawRoute = function (i) {
+                        createRoute(result[i], i).then(function() {}, function (index) {
+                            var timer = $timeout(function () {
+                                $timeout.cancel(timer);
+                                drawRoute(index);
+                            }, 500);
+                        });
+                    };
+
                     for (var i = 0; i < result.length; i++) {
-                        createRoute(result[i]);
+                        drawRoute(i);
                     }
                 }
             });

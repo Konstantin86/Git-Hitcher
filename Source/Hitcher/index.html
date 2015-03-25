@@ -23,7 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 </head>
 <body>
-    <div>
+    <div ng-controller="indexController">
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -42,6 +42,8 @@
             </div>
         </div>
 
+        <!--Look to the http://angular-ui.github.io/bootstrap/ example in order to implement array of alerts-->
+        <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" close="closeAlert()">{{state.message}}</alert>
         <!--<alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" close="closeAlert()">{{state.message}}</alert>-->
     </div>
 
@@ -136,8 +138,10 @@
 
 <!--Directives-->
 <!--Services-->
+<script type="text/javascript" src="app/services/statusService.js"></script>
 <script type="text/javascript" src="app/services/routeService.js"></script>
 <!--Filters-->
 <!--Controllers-->
+<script type="text/javascript" src="app/controllers/indexController.js"></script>
 <script type="text/javascript" src="app/controllers/homeController.js"></script>
-<script type="text/javascript" src="app/controllers/routeController.js"></script>
+<script type="text/javascript" src="app/controllers/controlCtrl.js"></script>

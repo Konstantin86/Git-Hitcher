@@ -6,9 +6,9 @@
 
 app.constant("appConst", {
 
-    //serviceBase: "https://keepfit-api.azurewebsites.net/",
+    serviceBase: "https://hitcher.azurewebsites.net/",
 
-    serviceBase: "http://localhost:49976/",
+    //serviceBase: "http://localhost:49976/",
     //cdnBase: "http://az736194.vo.msecnd.net/",
     //cdnMediaBase: "http://az736194.vo.msecnd.net/media/",
     //userPhotoWidth: "360"
