@@ -5,10 +5,11 @@
 
 "use strict";
 
-app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
-
+app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
+
+    var currentLocation;
 
     var onMapConfigChangedCallback;
 
@@ -17,23 +18,16 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
     var map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
     var markers = [];
 
-    var centerMap = function (lat, lng, zoom) {
-        map.center = { latitude: lat, longitude: lng };
-        map.zoom = zoom;
-
-        if (typeof (onMapConfigChangedCallback) == "function") {
-            onMapConfigChangedCallback();
-        }
-    };
-
-    var centerOnMe = function () {
-        navigator.geolocation.getCurrentPosition(function (pos) { centerMap(pos.coords.latitude, pos.coords.longitude, 12) });
-    };
-
-    var getLatLng = function (address) {
+    var geocode = function (request, local) {
         var deferred = $q.defer();
 
-        geocoder.geocode({ 'address': address }, function (response, status) {
+        if (local) {
+            if (request.address) {
+                request.address = currentLocation.city + ', ' + request.address;
+            }
+        }
+
+        geocoder.geocode(request, function (response, status) {
             if (status === gmaps.GeocoderStatus.OK) {
                 deferred.resolve(response);
             } else {
@@ -43,6 +37,46 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
 
         return deferred.promise;
     }
+
+    var plainGeocode = function (request, local) {
+        if (local) {
+            if (request.address) {
+                request.address = currentLocation.city + ', ' + request.address;
+            }
+        }
+
+        return $http.get('https://maps.googleapis.com/maps/api/geocode/json', { params: request });
+    }
+
+    var centerMap = function (lat, lng, zoom) {
+        map.control.getGMap().panTo(new gmaps.LatLng(lat, lng));
+        //map.center = { latitude: lat, longitude: lng };
+        //map.zoom = zoom;
+        map.control.getGMap().setZoom(zoom);
+
+        if (typeof (onMapConfigChangedCallback) == "function") {
+            onMapConfigChangedCallback();
+        }
+    };
+
+    var centerOnMe = function () {
+        navigator.geolocation.getCurrentPosition(function (pos) {
+            centerMap(pos.coords.latitude, pos.coords.longitude, 12);
+            var latlng = new gmaps.LatLng(pos.coords.latitude, pos.coords.longitude);
+            geocode({ 'latLng': latlng }).then(function (result) {
+                currentLocation = {};
+                for (var j = 0; j < result[0].address_components.length; j++) {
+                    if ($.inArray("country", result[0].address_components[j].types) >= 0) {
+                        currentLocation.country = result[0].address_components[j].short_name;
+                    }
+
+                    if ($.inArray("locality", result[0].address_components[j].types) >= 0) {
+                        currentLocation.city = result[0].address_components[j].short_name;
+                    }
+                }
+            });
+        }, function () { }, { enableHighAccuracy: true, timeout: 2000 });
+    };
 
     var setMarker = function (lat, lng, key) {
         if (key == null) {
@@ -56,7 +90,6 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
     };
 
     var setRoute = function (routePoints, index) {
-
         var deferred = $q.defer();
 
         var rendererOptions = {
@@ -85,7 +118,7 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
         return deferred.promise;
     };
 
-    var onMapConfigChanged = function(callback) {
+    var onMapConfigChanged = function (callback) {
         onMapConfigChangedCallback = callback;
     };
 
@@ -101,7 +134,8 @@ app.service("mapService", function ($q, uiGmapGoogleMapApi, uiGmapIsReady) {
     this.map = map;
     this.markers = markers;
     this.centerOnMe = centerOnMe;
-    this.getLatLng = getLatLng;
+    this.geocode = geocode;
+    this.plainGeocode = plainGeocode;
     this.setMarker = setMarker;
     this.setRoute = setRoute;
     this.ready = ready.promise;
