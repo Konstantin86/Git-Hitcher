@@ -20,10 +20,8 @@ app.controller("homeController", function ($scope, $alert, $http, $q, $timeout, 
 
             mapService.geocode({ 'address': asideScope.driveFrom }).then(function (result) {
                 route.startLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
-                mapService.setMarker(result[0].geometry.location.lat(), result[0].geometry.location.lng());
                 mapService.geocode({ 'address': asideScope.driveTo }).then(function (result) {
                     route.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
-                    mapService.setMarker(result[0].geometry.location.lat(), result[0].geometry.location.lng());
                     mapService.setRoute(route);
                     routeService.resource.save(route, function (result) {
                         if (result) {
@@ -39,25 +37,6 @@ app.controller("homeController", function ($scope, $alert, $http, $q, $timeout, 
 
     $scope.getAddress = function (viewValue) {
         var params = { 'address': viewValue, 'region': 'UA', 'language': 'ru' };
-
-        //return mapService.geocode(params, true).then(function(res) {
-        //    var results = [];
-        //    if (res) {
-        //        for (var i = 0; i < res.length; i++) {
-        //            for (var j = 0; j < res[i].address_components.length; j++) {
-        //                if ($.inArray("country", res[i].address_components[j].types) >= 0) {
-        //                    if (res[i].address_components[j].short_name == "UA") {
-        //                        results.push(res[i]);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return results;
-        //});
-
-
         return mapService.plainGeocode(params, true)
         .then(function (res) {
             return res.data.results;
@@ -66,7 +45,7 @@ app.controller("homeController", function ($scope, $alert, $http, $q, $timeout, 
 
     $scope.aside = {
         "title": "Подвезу",
-        "content": "Hello Aside<br />This is a multiline message!"
+        "content": "Hello Aside<br />This is a multiline message!",
     };
 
     mapService.onMapConfigChanged(function () {

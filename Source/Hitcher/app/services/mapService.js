@@ -8,6 +8,10 @@
 app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
+    var mapControl;
+
+
+    var polylineColors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
     var currentLocation;
 
@@ -23,7 +27,7 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
 
         if (local) {
             if (request.address) {
-                request.address = currentLocation.city + ', ' + request.address;
+                request.address = currentLocation.city + ", " + request.address;
             }
         }
 
@@ -41,7 +45,7 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     var plainGeocode = function (request, local) {
         if (local) {
             if (request.address) {
-                request.address = currentLocation.city + ', ' + request.address;
+                request.address = currentLocation.city + ", " + request.address;
             }
         }
 
@@ -49,10 +53,10 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     }
 
     var centerMap = function (lat, lng, zoom) {
-        map.control.getGMap().panTo(new gmaps.LatLng(lat, lng));
+        mapControl.panTo(new gmaps.LatLng(lat, lng));
         //map.center = { latitude: lat, longitude: lng };
         //map.zoom = zoom;
-        map.control.getGMap().setZoom(zoom);
+        mapControl.setZoom(zoom);
 
         if (typeof (onMapConfigChangedCallback) == "function") {
             onMapConfigChangedCallback();
@@ -87,6 +91,10 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
         marker[key] = markers.length + 1;
 
         markers.push(marker);
+
+        if (typeof (onMapConfigChangedCallback) == "function") {
+            onMapConfigChangedCallback();
+        }
     };
 
     var setRoute = function (routePoints, index) {
@@ -94,11 +102,14 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
 
         var rendererOptions = {
             preserveViewport: true,
+            polylineOptions: {
+                strokeColor: polylineColors[Math.floor((Math.random() * polylineColors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5
+            },
             routeIndex: index
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
-        directionsDisplay.setMap(map.control.getGMap());
+        directionsDisplay.setMap(mapControl);
         var start = routePoints.startLatLng;
         var end = routePoints.endLatLng;
         var request = { origin: start, destination: end, travelMode: gmaps.TravelMode.DRIVING };
@@ -127,8 +138,46 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
         geocoder = new maps.Geocoder();
     });
 
-    uiGmapIsReady.promise().then(function (gmaps) {
-        ready.resolve(gmaps);
+    uiGmapIsReady.promise().then(function (googlemap) {
+
+        mapControl = map.control.getGMap();
+
+        initGmapsContextMenu(gmaps);
+
+        var menuStyle = {
+            menu: 'context_menu',
+            menuSeparator: 'context_menu_separator',
+            menuItem: 'context_menu_item'
+        };
+
+        var contextMenuOptions = {
+            id: "map_rightclick",
+            eventName: "menu_item_selected",
+            classNames: menuStyle,
+            menuItems:
+            [
+               { label: 'Еду отсюда', id: 'menu_go_from', eventName: 'onGoFromClick' },
+               { label: 'Еду сюда', id: 'menu_go_to', eventName: 'onGoToClick' }
+            ]
+        };
+
+        var contextMenu = new googlemaps.ContextMenu(mapControl, contextMenuOptions, function () {
+            console.log('optional callback');
+        });
+
+        gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) {
+            contextMenu.show(mouseEvent.latLng);
+        });
+
+        gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) {
+            setMarker(coords.k, coords.B);
+        });
+
+        gmaps.event.addListener(contextMenu, 'onGoToClick', function (coords) {
+            setMarker(coords.k, coords.B);
+        });
+
+        ready.resolve(googlemap);
     });
 
     this.map = map;
