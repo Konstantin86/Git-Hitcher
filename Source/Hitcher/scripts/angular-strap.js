@@ -2582,8 +2582,8 @@ angular.module('mgcrea.ngStrap.modal', ['mgcrea.ngStrap.helpers.dimensions'])
         // Private methods
 
         function hideOnBackdropClick(evt) {
-          if(evt.target !== evt.currentTarget) return;
-          options.backdrop === 'static' ? $modal.focus() : $modal.hide();
+          //if(evt.target !== evt.currentTarget) return;
+          //options.backdrop === 'static' ? $modal.focus() : $modal.hide();
         }
 
         function preventEventDefault(evt) {

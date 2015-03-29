@@ -10,12 +10,14 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     var geocoder;
     var mapControl;
 
-
     var polylineColors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
     var currentLocation;
 
     var onMapConfigChangedCallback;
+    var onMapMarkersChangedCallback;
+    var onFromMarkerSelectedCallback;
+    var onToMarkerSelectedCallback;
 
     var ready = $q.defer();
 
@@ -25,10 +27,8 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     var geocode = function (request, local) {
         var deferred = $q.defer();
 
-        if (local) {
-            if (request.address) {
-                request.address = currentLocation.city + ", " + request.address;
-            }
+        if (local && request.address) {
+            request.address = currentLocation.city + ", " + request.address;
         }
 
         geocoder.geocode(request, function (response, status) {
@@ -43,10 +43,8 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     }
 
     var plainGeocode = function (request, local) {
-        if (local) {
-            if (request.address) {
-                request.address = currentLocation.city + ", " + request.address;
-            }
+        if (local && request.address) {
+            request.address = currentLocation.city + ", " + request.address;
         }
 
         return $http.get('https://maps.googleapis.com/maps/api/geocode/json', { params: request });
@@ -54,8 +52,6 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
 
     var centerMap = function (lat, lng, zoom) {
         mapControl.panTo(new gmaps.LatLng(lat, lng));
-        //map.center = { latitude: lat, longitude: lng };
-        //map.zoom = zoom;
         mapControl.setZoom(zoom);
 
         if (typeof (onMapConfigChangedCallback) == "function") {
@@ -83,14 +79,24 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     };
 
     var setMarker = function (lat, lng, key) {
-        if (key == null) {
-            key = "id";
+        var marker = { latitude: lat, longitude: lng, title: "Test" };
+        marker["id"] = key;
+
+        var markerIndex = null;
+
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]["id"] === key) {
+                markerIndex = i;
+                break;
+            }
         }
 
-        var marker = { latitude: lat, longitude: lng, title: "Test" };
-        marker[key] = markers.length + 1;
-
-        markers.push(marker);
+        if (markerIndex != null) {
+            markers[markerIndex].latitude = lat;
+            markers[markerIndex].longitude = lng;
+        } else {
+            markers.push(marker);
+        }
 
         if (typeof (onMapConfigChangedCallback) == "function") {
             onMapConfigChangedCallback();
@@ -102,9 +108,7 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
 
         var rendererOptions = {
             preserveViewport: true,
-            polylineOptions: {
-                strokeColor: polylineColors[Math.floor((Math.random() * polylineColors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5
-            },
+            polylineOptions: { strokeColor: polylineColors[Math.floor((Math.random() * polylineColors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
             routeIndex: index
         };
 
@@ -131,6 +135,30 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
 
     var onMapConfigChanged = function (callback) {
         onMapConfigChangedCallback = callback;
+    };
+
+    var onMapMarkersChanged = function(callback) {
+        onMapMarkersChangedCallback = callback;
+    };
+
+    var onFromMarkerSelected = function (callback) {
+        onFromMarkerSelectedCallback = callback;
+    };
+
+    var onToMarkerSelected = function (callback) {
+        onToMarkerSelectedCallback = callback;
+    };
+
+    var removeMarkers = function() {
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker") {
+                markers = markers.splice(1, i);
+            }
+        }
+
+        if (typeof (onMapMarkersChangedCallback) == "function") {
+            onMapMarkersChangedCallback(markers);
+        }
     };
 
     uiGmapGoogleMapApi.then(function (maps) {
@@ -170,11 +198,23 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
         });
 
         gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) {
-            setMarker(coords.k, coords.B);
+            setMarker(coords.k, coords.B, "fromMarker");
+
+            geocode({ 'latLng': coords }).then(function (result) {
+                if (result && typeof (onFromMarkerSelectedCallback) == "function") {
+                    onFromMarkerSelectedCallback(result[0].formatted_address, coords);
+                }
+            });
         });
 
         gmaps.event.addListener(contextMenu, 'onGoToClick', function (coords) {
-            setMarker(coords.k, coords.B);
+            setMarker(coords.k, coords.B, "toMarker");
+
+            geocode({ 'latLng': coords }).then(function (result) {
+                if (result && typeof (onToMarkerSelectedCallback) == "function") {
+                    onToMarkerSelectedCallback(result[0].formatted_address, coords);
+                }
+            });
         });
 
         ready.resolve(googlemap);
@@ -189,4 +229,8 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     this.setRoute = setRoute;
     this.ready = ready.promise;
     this.onMapConfigChanged = onMapConfigChanged;
+    this.onMapMarkersChanged = onMapMarkersChanged;
+    this.onFromMarkerSelected = onFromMarkerSelected;
+    this.onToMarkerSelected = onToMarkerSelected;
+    this.removeMarkers = removeMarkers;
 });

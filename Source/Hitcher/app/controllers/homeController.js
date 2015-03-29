@@ -5,34 +5,93 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $alert, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, mapService, uiGmapIsReady, statusService, routeService) {
+app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, mapService, uiGmapIsReady, statusService, routeService) {
     var loadCount = 0;
+    var driveAside;
 
     $scope.map = mapService.map;
     $scope.markers = mapService.markers;
 
+    //$scope.$on('aside.hide', function () {
+    //    console.log('aside-hide');
+    //});
+
+    //$scope.$on('aside.hide.before', function () {
+    //    console.log('aside-hide-before');
+    //});
+    var renderAside = function () {
+        driveAside = $aside({ scope: $scope, dismissable: false, placement: 'left', template: 'app/views/modal/aside.html' });
+        driveAside.$promise.then(function () {
+            driveAside.show();
+        });
+    };
+
+    $scope.renderAside = function () {
+        $scope.aside.markerDriveFrom = null;
+        $scope.aside.markerDriveFromCoords = null;
+        $scope.aside.markerDriveTo = null;
+        $scope.aside.markerDriveToCoords = null;
+        mapService.removeMarkers();
+        renderAside();
+    }
+
+    $scope.hideDriveAside = function () {
+        $scope.aside.markerDriveFrom = null;
+        $scope.aside.markerDriveFromCoords = null;
+        $scope.aside.markerDriveTo = null;
+        $scope.aside.markerDriveToCoords = null;
+        $scope.aside.driveFrom = null;
+        $scope.aside.driveTo = null;
+        mapService.removeMarkers();
+        driveAside.hide();
+    };
+
     $scope.declareRoute = function () {
-        var asideScope = this;
+        var route = null;
 
-        if (asideScope.driveFrom && asideScope.driveTo) {
+        if ($scope.aside.markerDriveFromCoords && $scope.aside.markerDriveToCoords) {
+            route = {
+                startName: $scope.aside.markerDriveFrom,
+                endName: $scope.aside.markerDriveTo,
+                startLatLng: $scope.aside.markerDriveFromCoords.k + ',' + $scope.aside.markerDriveFromCoords.B,
+                endLatLng: $scope.aside.markerDriveToCoords.k + ',' + $scope.aside.markerDriveToCoords.B
+            };
 
-            var route = { startName: asideScope.driveFrom, endName: asideScope.driveTo }
+            mapService.setRoute(route);
+            routeService.resource.save(route, function (result) {
+                if (result) {
+                    // show alert!
+                }
+            });
+        } else {
+            if ($scope.aside.driveFrom && $scope.aside.driveTo) {
 
-            mapService.geocode({ 'address': asideScope.driveFrom }).then(function (result) {
-                route.startLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
-                mapService.geocode({ 'address': asideScope.driveTo }).then(function (result) {
-                    route.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
-                    mapService.setRoute(route);
-                    routeService.resource.save(route, function (result) {
-                        if (result) {
-                            // show alert!
-                        }
+                route = { startName: $scope.aside.driveFrom, endName: $scope.aside.driveTo }
+
+                mapService.geocode({ 'address': $scope.aside.driveFrom }).then(function (result) {
+                    route.startLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
+                    mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
+                        route.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
+                        mapService.setRoute(route);
+                        routeService.resource.save(route, function (result) {
+                            if (result) {
+                                // show alert!
+                            }
+                        });
                     });
                 });
-            });
+            }
         }
 
-        this.$hide();
+        $scope.aside.markerDriveFrom = null;
+        $scope.aside.markerDriveFromCoords = null;
+        $scope.aside.markerDriveTo = null;
+        $scope.aside.markerDriveToCoords = null;
+        $scope.aside.driveFrom = null;
+        $scope.aside.driveTo = null;
+
+        mapService.removeMarkers();
+        driveAside.hide();
     };
 
     $scope.getAddress = function (viewValue) {
@@ -44,12 +103,42 @@ app.controller("homeController", function ($scope, $alert, $http, $q, $timeout, 
     };
 
     $scope.aside = {
-        "title": "Подвезу",
-        "content": "Hello Aside<br />This is a multiline message!",
+        title: "Подвезу",
+        markerDriveFrom: null,
+        markerDriveFromCoords: null,
+        markerDriveTo: null,
+        markerDriveToCoords: null,
+        driveFrom: "",
+        driveTo: ""
     };
 
+    mapService.onMapMarkersChanged(function (markers) {
+        $scope.markers = markers;
+        //$scope.$apply();
+    });
+
     mapService.onMapConfigChanged(function () {
-        $scope.$apply();
+        //$scope.$apply();
+    });
+
+    mapService.onFromMarkerSelected(function (address, coords) {
+        $scope.aside.markerDriveFrom = address;
+        $scope.aside.markerDriveFromCoords = coords;
+
+        if ($scope.aside.markerDriveFrom && $scope.aside.markerDriveTo) {
+            renderAside();
+        }
+        //$scope.$apply();
+    });
+
+    mapService.onToMarkerSelected(function (address, coords) {
+        $scope.aside.markerDriveTo = address;
+        $scope.aside.markerDriveToCoords = coords;
+
+        if ($scope.aside.markerDriveFrom && $scope.aside.markerDriveTo) {
+            renderAside();
+        }
+        //$scope.$apply();
     });
 
     mapService.ready.then(function (gmaps) {
