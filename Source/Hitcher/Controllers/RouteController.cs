@@ -27,14 +27,16 @@ namespace Hitcher.Controllers
 
     [Route("")]
     [HttpGet]
-    public IHttpActionResult Get([FromUri]QueryRequestBase request)
+    public IHttpActionResult Get([FromUri]QueryRouteRequest request)
     {
-      if (request == null)
+      var allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type);
+
+      if (!request.Take.HasValue && !request.Skip.HasValue)
       {
-        return Ok(_unitOfWork.RouteRepository.GetAll());
+        return Ok(allRoutes);
       }
 
-      var routes = _unitOfWork.RouteRepository.GetAll().Skip(request.Skip.GetValueOrDefault()).ToList();
+      var routes = allRoutes.Skip(request.Skip.GetValueOrDefault()).ToList();
       return Ok(routes.Any() ? (request.Take.HasValue ? routes.Take(request.Take.Value) : routes) : null);
     }
 

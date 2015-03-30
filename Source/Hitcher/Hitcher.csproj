@@ -129,6 +129,7 @@
     <Content Include="app\services\mapService.js" />
     <Content Include="app\services\routeService.js" />
     <Content Include="app\services\statusService.js" />
+    <Content Include="app\services\userService.js" />
     <Content Include="app\views\modal\aside.html" />
     <Content Include="content\css\bootstrap-theme.css" />
     <Content Include="content\css\bootstrap.css.map" />
@@ -220,6 +221,7 @@
     <Compile Include="Controllers\Base\ControllerBase.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Models\Request\QueryRequestBase.cs" />
+    <Compile Include="Models\Request\QueryRouteRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

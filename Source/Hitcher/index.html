@@ -34,6 +34,13 @@
                     <a class="navbar-brand" href="#/home">The Hitcher</a>
                 </div>
                 <div class="collapse navbar-collapse" data-collapse="!navbarExpanded">
+                    <ul class="nav navbar-nav" style="margin: 9px 0px 0px 15px">
+                        <div class="btn-group" ng-model="user.type" bs-radio-group>
+                            <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0">Попутчик</label>
+                            <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1">Водитель</label>
+                        </div>
+                    </ul>
+
                     <ul class="nav navbar-nav navbar-right">
                         <li data-ng-hide="authData.isAuth"> <a href="#/login">Login</a></li>
                         <li data-ng-hide="authData.isAuth"> <a href="#/signup">Sign Up</a></li>
@@ -96,6 +103,9 @@
 <script type="text/javascript" src="scripts/bootstrap.min.js"></script>-->
 <!--<script type="text/javascript" src="scripts/loading-bar.min.js"></script>-->
 <!--Development-->
+<script type="text/javascript" src="scripts/jquery.js"></script>
+<!--<script type="text/javascript" src="scripts/bootstrap.js"></script>-->
+
 <script type="text/javascript" src="scripts/angular.js"></script>
 <script type="text/javascript" src="scripts/angular-route.js"></script>
 <script type="text/javascript" src="scripts/angular-resource.js"></script>
@@ -112,9 +122,6 @@
 <script type="text/javascript" src="scripts/angular-google-maps.js"></script>
 
 <script type="text/javascript" src="scripts/ng-flow-standalone.js"></script>
-
-<script type="text/javascript" src="scripts/jquery.js"></script>
-<script type="text/javascript" src="scripts/bootstrap.js"></script>
 
 <script type="text/javascript" src="scripts/gMapsContextMenu.js"></script>
 
@@ -140,6 +147,7 @@
 
 <!--Directives-->
 <!--Services-->
+<script type="text/javascript" src="app/services/userService.js"></script>
 <script type="text/javascript" src="app/services/mapService.js"></script>
 <script type="text/javascript" src="app/services/statusService.js"></script>
 <script type="text/javascript" src="app/services/routeService.js"></script>

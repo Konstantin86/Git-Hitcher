@@ -3,15 +3,18 @@
 /// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
+/// <reference path="~/app/service/routeService.js"/>
 
 "use strict";
 
-app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady) {
+app.service("mapService", function ($q, $http, $timeout, routeService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
     var mapControl;
 
     var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
+
+    var directions = [];
 
     var currentLocation;
 
@@ -98,17 +101,19 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
         }
     };
 
-    var setRoute = function (routePoints, index) {
+    var setRoute = function (routePoints, preserveViewport, index) {
         var deferred = $q.defer();
 
         var rendererOptions = {
-            preserveViewport: true,
+            preserveViewport: preserveViewport,
             polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
             routeIndex: index
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
         directionsDisplay.setMap(mapControl);
+
+        directions.push(directionsDisplay);
         
         var directionsService = new gmaps.DirectionsService();
         var request = { origin: routePoints.startLatLng, destination: routePoints.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
@@ -141,6 +146,36 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
         }
 
         if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
+    // mode: 0 - hitcher, 1 driver
+    var showRoutes = function (type) {
+
+        directions.forEach(function (dir) {
+            //dir.setOptions({ suppressMarkers: true });
+            dir.set('directions', null)
+            //dir.setMap(null);
+        });
+
+        directions = [];
+
+        routeService.resource.query({ type: type }, function (result) {
+            if (result) {
+                var drawRoute = function (i) {
+                    setRoute(result[i], true, i).then(function () {
+                    }, function (index) {
+                        var timer = $timeout(function () {
+                            $timeout.cancel(timer);
+                            drawRoute(index);
+                        }, 500);
+                    });
+                };
+
+                for (var i = 0; i < result.length; i++) {
+                    drawRoute(i);
+                }
+            }
+        });
     };
 
     uiGmapGoogleMapApi.then(function (maps) {
@@ -199,4 +234,5 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     this.onFromMarkerSelected = onFromMarkerSelected;
     this.onToMarkerSelected = onToMarkerSelected;
     this.removeMarkers = removeMarkers;
+    this.showRoutes = showRoutes;
 });

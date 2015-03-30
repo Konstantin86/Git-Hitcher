@@ -6,7 +6,7 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, mapService, uiGmapIsReady, statusService, routeService) {
+app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, userService, mapService, uiGmapIsReady, statusService, routeService) {
     var loadCount = 0;
     var driveAside;
 
@@ -38,36 +38,39 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 startName: $scope.aside.markerDriveFrom,
                 endName: $scope.aside.markerDriveTo,
                 startLatLng: $scope.aside.markerDriveFromCoords.k + ',' + $scope.aside.markerDriveFromCoords.B,
-                endLatLng: $scope.aside.markerDriveToCoords.k + ',' + $scope.aside.markerDriveToCoords.B
+                endLatLng: $scope.aside.markerDriveToCoords.k + ',' + $scope.aside.markerDriveToCoords.B,
+                type: userService.user.type
             };
 
-            mapService.setRoute(route);
+            mapService.setRoute(route, false);
             routeService.resource.save(route, function (result) {
                 if (result) {
                     // show alert!
                 }
+
+                initAside();
             });
         } else {
             if ($scope.aside.driveFrom && $scope.aside.driveTo) {
 
-                route = { startName: $scope.aside.driveFrom, endName: $scope.aside.driveTo }
+                route = { startName: $scope.aside.driveFrom, endName: $scope.aside.driveTo, type: userService.user.type }
 
                 mapService.geocode({ 'address': $scope.aside.driveFrom }).then(function (result) {
                     route.startLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
                     mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
                         route.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
-                        mapService.setRoute(route);
+                        mapService.setRoute(route, false);
                         routeService.resource.save(route, function (result) {
                             if (result) {
                                 // show alert!
                             }
+
+                            initAside();
                         });
                     });
                 });
             }
         }
-
-        initAside();
 
         mapService.removeMarkers();
         driveAside.hide();
@@ -105,14 +108,14 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
     mapService.ready.then(function (gmaps) {
         mapService.centerOnMe();
-        drawRoutes();
+        //drawRoutes();
     });
 
     initAside();
 
     function initAside() {
         $scope.aside = {
-            title: "Подвезу",
+            title: "Еду",
             markerDriveFrom: null,
             markerDriveFromCoords: null,
             markerDriveTo: null,
@@ -122,33 +125,33 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         };
     };
 
-    function drawRoutes() {
-        routeService.resource.query({}, function (result) {
-            if (result) {
-                loadCount = result.length - 1;
-                statusService.loading("Загрузка маршрутов...");
+    //function drawRoutes() {
+    //    routeService.resource.query({}, function (result) {
+    //        if (result) {
+    //            loadCount = result.length - 1;
+    //            statusService.loading("Загрузка маршрутов...");
 
-                var drawRoute = function (i) {
-                    mapService.setRoute(result[i], i).then(function () {
-                        if (loadCount > 0) {
-                            loadCount--;
-                        }
+    //            var drawRoute = function (i) {
+    //                mapService.setRoute(result[i], i).then(function () {
+    //                    if (loadCount > 0) {
+    //                        loadCount--;
+    //                    }
 
-                        if (loadCount === 0) {
-                            statusService.clear();
-                        }
-                    }, function (index) {
-                        var timer = $timeout(function () {
-                            $timeout.cancel(timer);
-                            drawRoute(index);
-                        }, 500);
-                    });
-                };
+    //                    if (loadCount === 0) {
+    //                        statusService.clear();
+    //                    }
+    //                }, function (index) {
+    //                    var timer = $timeout(function () {
+    //                        $timeout.cancel(timer);
+    //                        drawRoute(index);
+    //                    }, 500);
+    //                });
+    //            };
 
-                for (var i = 0; i < result.length; i++) {
-                    drawRoute(i);
-                }
-            }
-        });
-    };
+    //            for (var i = 0; i < result.length; i++) {
+    //                drawRoute(i);
+    //            }
+    //        }
+    //    });
+    //};
 });

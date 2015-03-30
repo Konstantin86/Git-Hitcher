@@ -11,5 +11,7 @@ namespace Hitcher.DataAccess.Entities
     public string EndName { get; set; }
 
     public string EndLatLng { get; set; }
+
+    public int Type { get; set; }   // 0 - Hitcher, 1 - Driver
   }
 }
