@@ -34,7 +34,7 @@
                     <a class="navbar-brand" href="#/home">The Hitcher</a>
                 </div>
                 <div class="collapse navbar-collapse" data-collapse="!navbarExpanded">
-                    <ul class="nav navbar-nav" style="margin: 9px 0px 0px 15px">
+                    <ul class="nav navbar-nav" style="margin: 9px 0px 0px 15px" ng-cloak>
                         <div class="btn-group" ng-model="user.type" bs-radio-group>
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0">Попутчик</label>
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1">Водитель</label>
@@ -50,8 +50,7 @@
         </div>
 
         <!--Look to the http://angular-ui.github.io/bootstrap/ example in order to implement array of alerts-->
-        <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" close="closeAlert()">{{state.message}}</alert>
-        <!--<alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" close="closeAlert()">{{state.message}}</alert>-->
+        <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
     <div class="container">
