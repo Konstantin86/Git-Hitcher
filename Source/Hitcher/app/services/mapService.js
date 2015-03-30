@@ -1,4 +1,5 @@
-﻿/// <reference path="~/scripts/angular.min.js"/>
+﻿/// <reference path="~/scripts/gMapsContextMenu.js"/>
+/// <reference path="~/scripts/angular.min.js"/>
 /// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
@@ -10,7 +11,7 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     var geocoder;
     var mapControl;
 
-    var polylineColors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
+    var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
     var currentLocation;
 
@@ -21,33 +22,27 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
 
     var ready = $q.defer();
 
-    var map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4, control: {}, bounds: {} };
+    var map = { center: { latitude: 49.1451, longitude: 35.6680 }, zoom: 4, control: {}, bounds: {} };
     var markers = [];
 
-    var geocode = function (request, local) {
-        var deferred = $q.defer();
-
+    var geocode = function (request, local, plain) {
         if (local && request.address) {
             request.address = currentLocation.city + ", " + request.address;
         }
+
+        if (plain) {
+            return $http.get('https://maps.googleapis.com/maps/api/geocode/json', { params: request });
+        }
+
+        var deferred = $q.defer();
 
         geocoder.geocode(request, function (response, status) {
             if (status === gmaps.GeocoderStatus.OK) {
                 deferred.resolve(response);
-            } else {
-                deferred.reject(status);
-            }
+            } else { deferred.reject(status); }
         });
 
         return deferred.promise;
-    }
-
-    var plainGeocode = function (request, local) {
-        if (local && request.address) {
-            request.address = currentLocation.city + ", " + request.address;
-        }
-
-        return $http.get('https://maps.googleapis.com/maps/api/geocode/json', { params: request });
     }
 
     var centerMap = function (lat, lng, zoom) {
@@ -108,22 +103,19 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
 
         var rendererOptions = {
             preserveViewport: true,
-            polylineOptions: { strokeColor: polylineColors[Math.floor((Math.random() * polylineColors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
+            polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
             routeIndex: index
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
         directionsDisplay.setMap(mapControl);
-        var start = routePoints.startLatLng;
-        var end = routePoints.endLatLng;
-        var request = { origin: start, destination: end, travelMode: gmaps.TravelMode.DRIVING };
-
+        
         var directionsService = new gmaps.DirectionsService();
+        var request = { origin: routePoints.startLatLng, destination: routePoints.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
         directionsService.route(request, function (response, status) {
             if (status === gmaps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
-            } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) {
-            } else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
+            } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) {} else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
                 deferred.reject(index);
             }
 
@@ -133,21 +125,13 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
         return deferred.promise;
     };
 
-    var onMapConfigChanged = function (callback) {
-        onMapConfigChangedCallback = callback;
-    };
+    var onMapConfigChanged = function (callback) { onMapConfigChangedCallback = callback; };
 
-    var onMapMarkersChanged = function(callback) {
-        onMapMarkersChangedCallback = callback;
-    };
+    var onMapMarkersChanged = function(callback) { onMapMarkersChangedCallback = callback; };
 
-    var onFromMarkerSelected = function (callback) {
-        onFromMarkerSelectedCallback = callback;
-    };
+    var onFromMarkerSelected = function (callback) { onFromMarkerSelectedCallback = callback; };
 
-    var onToMarkerSelected = function (callback) {
-        onToMarkerSelectedCallback = callback;
-    };
+    var onToMarkerSelected = function (callback) { onToMarkerSelectedCallback = callback; };
 
     var removeMarkers = function() {
         for (var i = 0; i < markers.length; i++) {
@@ -156,9 +140,7 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
             }
         }
 
-        if (typeof (onMapMarkersChangedCallback) == "function") {
-            onMapMarkersChangedCallback(markers);
-        }
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
     };
 
     uiGmapGoogleMapApi.then(function (maps) {
@@ -167,18 +149,13 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     });
 
     uiGmapIsReady.promise().then(function (googlemap) {
-
         mapControl = map.control.getGMap();
 
         initGmapsContextMenu(gmaps);
 
-        var menuStyle = {
-            menu: 'context_menu',
-            menuSeparator: 'context_menu_separator',
-            menuItem: 'context_menu_item'
-        };
+        var menuStyle = { menu: 'context_menu', menuSeparator: 'context_menu_separator', menuItem: 'context_menu_item' };
 
-        var contextMenuOptions = {
+        var menuOptions = {
             id: "map_rightclick",
             eventName: "menu_item_selected",
             classNames: menuStyle,
@@ -189,33 +166,23 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
             ]
         };
 
-        var contextMenu = new googlemaps.ContextMenu(mapControl, contextMenuOptions, function () {
-            console.log('optional callback');
-        });
+        var contextMenu = new googlemaps.ContextMenu(mapControl, menuOptions);
 
-        gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) {
-            contextMenu.show(mouseEvent.latLng);
-        });
-
-        gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) {
-            setMarker(coords.k, coords.B, "fromMarker");
+        var handleContextMenyRouteClick = function (coords, markerType, callback) {
+            setMarker(coords.k, coords.B, markerType);
 
             geocode({ 'latLng': coords }).then(function (result) {
-                if (result && typeof (onFromMarkerSelectedCallback) == "function") {
-                    onFromMarkerSelectedCallback(result[0].formatted_address, coords);
+                if (result && result.length && typeof (callback) == "function") {
+                    callback(result[0].formatted_address, coords);
                 }
             });
-        });
+        };
 
-        gmaps.event.addListener(contextMenu, 'onGoToClick', function (coords) {
-            setMarker(coords.k, coords.B, "toMarker");
+        gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) { contextMenu.show(mouseEvent.latLng); });
 
-            geocode({ 'latLng': coords }).then(function (result) {
-                if (result && typeof (onToMarkerSelectedCallback) == "function") {
-                    onToMarkerSelectedCallback(result[0].formatted_address, coords);
-                }
-            });
-        });
+        gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) { handleContextMenyRouteClick(coords, "fromMarker", onFromMarkerSelectedCallback); });
+
+        gmaps.event.addListener(contextMenu, 'onGoToClick', function (coords) { handleContextMenyRouteClick(coords, "toMarker", onToMarkerSelectedCallback); });
 
         ready.resolve(googlemap);
     });
@@ -224,7 +191,6 @@ app.service("mapService", function ($q, $http, uiGmapGoogleMapApi, uiGmapIsReady
     this.markers = markers;
     this.centerOnMe = centerOnMe;
     this.geocode = geocode;
-    this.plainGeocode = plainGeocode;
     this.setMarker = setMarker;
     this.setRoute = setRoute;
     this.ready = ready.promise;

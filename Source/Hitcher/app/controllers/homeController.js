@@ -1,6 +1,7 @@
 ﻿/// <reference path="~/scripts/angular.min.js"/>
-
 /// <reference path="~/app/app.js"/>
+/// <reference path="~/app/services/mapService.js"/>
+/// <reference path="~/app/services/statusService.js"/>
 /// <reference path="~/app/services/routeService.js"/>
 
 "use strict";
@@ -12,36 +13,19 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     $scope.map = mapService.map;
     $scope.markers = mapService.markers;
 
-    //$scope.$on('aside.hide', function () {
-    //    console.log('aside-hide');
-    //});
-
-    //$scope.$on('aside.hide.before', function () {
-    //    console.log('aside-hide-before');
-    //});
-    var renderAside = function () {
+    var showAside = function () {
         driveAside = $aside({ scope: $scope, dismissable: false, placement: 'left', template: 'app/views/modal/aside.html' });
-        driveAside.$promise.then(function () {
-            driveAside.show();
-        });
+        driveAside.$promise.then(function () { driveAside.show(); });
     };
 
     $scope.renderAside = function () {
-        $scope.aside.markerDriveFrom = null;
-        $scope.aside.markerDriveFromCoords = null;
-        $scope.aside.markerDriveTo = null;
-        $scope.aside.markerDriveToCoords = null;
+        initAside();
         mapService.removeMarkers();
-        renderAside();
+        showAside();
     }
 
     $scope.hideDriveAside = function () {
-        $scope.aside.markerDriveFrom = null;
-        $scope.aside.markerDriveFromCoords = null;
-        $scope.aside.markerDriveTo = null;
-        $scope.aside.markerDriveToCoords = null;
-        $scope.aside.driveFrom = null;
-        $scope.aside.driveTo = null;
+        initAside();
         mapService.removeMarkers();
         driveAside.hide();
     };
@@ -83,12 +67,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
             }
         }
 
-        $scope.aside.markerDriveFrom = null;
-        $scope.aside.markerDriveFromCoords = null;
-        $scope.aside.markerDriveTo = null;
-        $scope.aside.markerDriveToCoords = null;
-        $scope.aside.driveFrom = null;
-        $scope.aside.driveTo = null;
+        initAside();
 
         mapService.removeMarkers();
         driveAside.hide();
@@ -96,29 +75,14 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
     $scope.getAddress = function (viewValue) {
         var params = { 'address': viewValue, 'region': 'UA', 'language': 'ru' };
-        return mapService.plainGeocode(params, true)
+        return mapService.geocode(params, true, true)
         .then(function (res) {
             return res.data.results;
         });
     };
 
-    $scope.aside = {
-        title: "Подвезу",
-        markerDriveFrom: null,
-        markerDriveFromCoords: null,
-        markerDriveTo: null,
-        markerDriveToCoords: null,
-        driveFrom: "",
-        driveTo: ""
-    };
-
     mapService.onMapMarkersChanged(function (markers) {
         $scope.markers = markers;
-        //$scope.$apply();
-    });
-
-    mapService.onMapConfigChanged(function () {
-        //$scope.$apply();
     });
 
     mapService.onFromMarkerSelected(function (address, coords) {
@@ -126,9 +90,8 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         $scope.aside.markerDriveFromCoords = coords;
 
         if ($scope.aside.markerDriveFrom && $scope.aside.markerDriveTo) {
-            renderAside();
+            showAside();
         }
-        //$scope.$apply();
     });
 
     mapService.onToMarkerSelected(function (address, coords) {
@@ -136,15 +99,28 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         $scope.aside.markerDriveToCoords = coords;
 
         if ($scope.aside.markerDriveFrom && $scope.aside.markerDriveTo) {
-            renderAside();
+            showAside();
         }
-        //$scope.$apply();
     });
 
     mapService.ready.then(function (gmaps) {
         mapService.centerOnMe();
         drawRoutes();
     });
+
+    initAside();
+
+    function initAside() {
+        $scope.aside = {
+            title: "Подвезу",
+            markerDriveFrom: null,
+            markerDriveFromCoords: null,
+            markerDriveTo: null,
+            markerDriveToCoords: null,
+            driveFrom: null,
+            driveTo: null
+        };
+    };
 
     function drawRoutes() {
         routeService.resource.query({}, function (result) {
