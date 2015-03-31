@@ -60,6 +60,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                     mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
                         route.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
                         mapService.setRoute(route, false);
+                        // TODO save route points here (get from service set route method)
                         routeService.resource.save(route, function (result) {
                             if (result) {
                                 // show alert!

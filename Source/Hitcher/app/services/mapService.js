@@ -3,14 +3,17 @@
 /// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
+/// <reference path="~/app/service/statusService.js"/>
 /// <reference path="~/app/service/routeService.js"/>
 
 "use strict";
 
-app.service("mapService", function ($q, $http, $timeout, routeService, uiGmapGoogleMapApi, uiGmapIsReady) {
+app.service("mapService", function ($q, $http, $timeout, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
     var mapControl;
+
+    var loadCount;
 
     var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
@@ -114,13 +117,13 @@ app.service("mapService", function ($q, $http, $timeout, routeService, uiGmapGoo
         directionsDisplay.setMap(mapControl);
 
         directions.push(directionsDisplay);
-        
+
         var directionsService = new gmaps.DirectionsService();
         var request = { origin: routePoints.startLatLng, destination: routePoints.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
         directionsService.route(request, function (response, status) {
             if (status === gmaps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
-            } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) {} else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
+            } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) { } else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
                 deferred.reject(index);
             }
 
@@ -132,13 +135,13 @@ app.service("mapService", function ($q, $http, $timeout, routeService, uiGmapGoo
 
     var onMapConfigChanged = function (callback) { onMapConfigChangedCallback = callback; };
 
-    var onMapMarkersChanged = function(callback) { onMapMarkersChangedCallback = callback; };
+    var onMapMarkersChanged = function (callback) { onMapMarkersChangedCallback = callback; };
 
     var onFromMarkerSelected = function (callback) { onFromMarkerSelectedCallback = callback; };
 
     var onToMarkerSelected = function (callback) { onToMarkerSelectedCallback = callback; };
 
-    var removeMarkers = function() {
+    var removeMarkers = function () {
         for (var i = 0; i < markers.length; i++) {
             if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker") {
                 markers = markers.splice(1, i);
@@ -152,17 +155,25 @@ app.service("mapService", function ($q, $http, $timeout, routeService, uiGmapGoo
     var showRoutes = function (type) {
 
         directions.forEach(function (dir) {
-            //dir.setOptions({ suppressMarkers: true });
-            dir.set('directions', null)
-            //dir.setMap(null);
+            dir.set('directions', null);
         });
 
         directions = [];
 
         routeService.resource.query({ type: type }, function (result) {
             if (result) {
+                loadCount = result.length - 1;
+                statusService.loading("Загрузка маршрутов...");
+
                 var drawRoute = function (i) {
                     setRoute(result[i], true, i).then(function () {
+                        if (loadCount > 0) {
+                            loadCount--;
+                        }
+
+                        if (loadCount === 0) {
+                            statusService.clear();
+                        }
                     }, function (index) {
                         var timer = $timeout(function () {
                             $timeout.cancel(timer);
