@@ -104,7 +104,23 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         }
     };
 
-    var setRoute = function (routePoints, preserveViewport, index) {
+    var getRouteInfo = function (route) {
+        var totalDistance = 0;
+        var totalDuration = 0;
+        var legs = route.legs;
+        for (var i = 0; i < legs.length; ++i) {
+            totalDistance += legs[i].distance.value;
+            totalDuration += legs[i].duration.value;
+        }
+
+        return {
+            totalDistance: totalDistance,
+            totalDuration: totalDistance,
+            path: route.overview_path.map(function(m) { return { lat: m.lat(), lng: m.lng() }; })
+        };
+    };
+
+    var setRoute = function (routePoints, preserveViewport, returnRouteInfo, index) {
         var deferred = $q.defer();
 
         var rendererOptions = {
@@ -123,6 +139,11 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         directionsService.route(request, function (response, status) {
             if (status === gmaps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
+
+                if (returnRouteInfo) {
+                    var routeInfo = getRouteInfo(response.routes[0]);
+                    deferred.resolve(routeInfo);
+                }
             } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) { } else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
                 deferred.reject(index);
             }
@@ -166,7 +187,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
                 statusService.loading("Загрузка маршрутов...");
 
                 var drawRoute = function (i) {
-                    setRoute(result[i], true, i).then(function () {
+                    setRoute(result[i], true, false, i).then(function () {
                         if (loadCount > 0) {
                             loadCount--;
                         }

@@ -8,9 +8,12 @@ namespace Hitcher.DataAccess
   {
     public DbSet<Route> Routes { get; set; }
 
+    public DbSet<Coord> Coords { get; set; }
+
     public AppDbContext()
       : base("DefaultConnection", throwIfV1Schema: false)
     {
+      Configuration.ProxyCreationEnabled = false;   // Because ASP.NET Web Api cannot serialize dynamic proxy objects. They appear when some entities have lazy loaded related entities.
     }
 
     public static AppDbContext Create()

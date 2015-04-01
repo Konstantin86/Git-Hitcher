@@ -42,14 +42,27 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 type: userService.user.type
             };
 
-            mapService.setRoute(route, false);
-            routeService.resource.save(route, function (result) {
-                if (result) {
-                    // show alert!
-                }
+            mapService.setRoute(route, false, true).then(function (routeData) {
 
-                initAside();
+                route.totalDistance = routeData.totalDistance;
+                route.totalDuration = routeData.totalDistance;
+                route.path = routeData.path;
+
+                routeService.resource.save(route, function (result) {
+                    if (result) {
+                        // show alert!
+                    }
+
+                    initAside();
+                });
             });
+            //routeService.resource.save(route, function (result) {
+            //    if (result) {
+            //        // show alert!
+            //    }
+
+            //    initAside();
+            //});
         } else {
             if ($scope.aside.driveFrom && $scope.aside.driveTo) {
 
@@ -59,15 +72,28 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                     route.startLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
                     mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
                         route.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
-                        mapService.setRoute(route, false);
-                        // TODO save route points here (get from service set route method)
-                        routeService.resource.save(route, function (result) {
-                            if (result) {
-                                // show alert!
-                            }
+                        mapService.setRoute(route, false, true).then(function (routeData) {
 
-                            initAside();
+                            route.totalDistance = routeData.totalDistance;
+                            route.totalDuration = routeData.totalDistance;
+                            route.path = routeData.path;
+
+                            routeService.resource.save(route, function (result) {
+                                if (result) {
+                                    // show alert!
+                                }
+
+                                initAside();
+                            });
                         });
+                        // TODO save route points here (get from service set route method)
+                        //routeService.resource.save(route, function (result) {
+                        //    if (result) {
+                        //        // show alert!
+                        //    }
+
+                        //    initAside();
+                        //});
                     });
                 });
             }

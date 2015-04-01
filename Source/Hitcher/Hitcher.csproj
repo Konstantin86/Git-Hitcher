@@ -219,10 +219,13 @@
   <ItemGroup>
     <Compile Include="CompositionRoot\Bootstrapper.cs" />
     <Compile Include="Controllers\Base\ControllerBase.cs" />
+    <Compile Include="Service\IRouteService.cs" />
     <Compile Include="Controllers\RouteController.cs" />
+    <Compile Include="Models\Request\PostRouteRequest.cs" />
     <Compile Include="Models\Request\QueryRequestBase.cs" />
     <Compile Include="Models\Request\QueryRouteRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\RouteService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

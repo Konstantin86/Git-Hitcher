@@ -1,4 +1,5 @@
-﻿using Hitcher.DataAccess.Entities.Base;
+﻿using System.Collections.Generic;
+using Hitcher.DataAccess.Entities.Base;
 
 namespace Hitcher.DataAccess.Entities
 {
@@ -12,6 +13,12 @@ namespace Hitcher.DataAccess.Entities
 
     public string EndLatLng { get; set; }
 
+    public int TotalDistance { get; set; }
+
+    public int TotalDuration { get; set; }
+
     public int Type { get; set; }   // 0 - Hitcher, 1 - Driver
+
+    public virtual ICollection<Coord> Coords { get; set; }
   }
 }

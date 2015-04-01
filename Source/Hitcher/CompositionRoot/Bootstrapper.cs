@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Hitcher.DataAccess;
+using Hitcher.Service;
 
 namespace Hitcher.CompositionRoot
 {
@@ -34,6 +35,7 @@ namespace Hitcher.CompositionRoot
       RegisterManagers(webApi);
       RegisterJiraClientComponents(webApi);
       RegisterDataAccessComponents(webApi);
+      RegisterServices(webApi);
 
       return BuidContainer();
     }
@@ -67,6 +69,11 @@ namespace Hitcher.CompositionRoot
     {
       RegisterDependency<AppDbContext>(webapi);
       RegisterDependency<UnitOfWork, IUnitOfWork>(webapi);
+    }
+
+    private void RegisterServices(bool webapi)
+    {
+      RegisterDependency<RouteService, IRouteService>(webapi);
     }
 
     private void RegisterJiraClientComponents(bool webapi)

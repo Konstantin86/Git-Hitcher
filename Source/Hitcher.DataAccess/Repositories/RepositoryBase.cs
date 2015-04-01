@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Hitcher.DataAccess.Entities.Base;
@@ -26,7 +27,7 @@ namespace Hitcher.DataAccess.Repositories
       return _context.Set<T>().FirstOrDefault(func);
     }
 
-    public IEnumerable<T> GetAll(Expression<Func<T, bool>> func)
+    public IQueryable<T> GetAll(Expression<Func<T, bool>> func)
     {
       return _context.Set<T>().Where(func);
     }
