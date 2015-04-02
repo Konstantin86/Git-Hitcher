@@ -5,10 +5,22 @@
 
 "use strict";
 
-app.controller("indexController", function ($scope, $location, userService, mapService, statusService) {
+app.controller("indexController", function ($scope, $location, $aside, userService, routeService, mapService, statusService) {
+
+    var searchAside;
+
+    var showAside = function () {
+        searchAside = $aside({ scope: $scope, dismissable: false, placement: 'right', template: 'app/views/modal/search.html' });
+        searchAside.$promise.then(function () { searchAside.show(); });
+    };
+
     $scope.state = statusService.state;
 
     $scope.user = userService.user;
+
+    $scope.app = {
+        seachToggle: false
+    }
 
     var type;
 
@@ -26,6 +38,77 @@ app.controller("indexController", function ($scope, $location, userService, mapS
                 type = value;
             }
         });
+    });
+
+    function initAside() {
+        $scope.aside = {
+            title: "Ищу",
+            markerDriveFrom: null,
+            markerDriveFromCoords: null,
+            markerDriveTo: null,
+            markerDriveToCoords: null,
+            driveFrom: null,
+            driveTo: null
+        };
+    };
+
+    initAside();
+
+    $scope.getAddress = function (viewValue) {
+        var params = { 'address': viewValue, 'region': 'UA', 'language': 'ru' };
+        return mapService.geocode(params, true, true)
+        .then(function (res) {
+            return res.data.results;
+        });
+    };
+
+    $scope.search = function() {
+        alert('Search is clicked');
+
+        var search = { type: userService.user.type };
+
+        if ($scope.aside.markerDriveFromCoords && $scope.aside.markerDriveToCoords) {
+            search.startLat = $scope.aside.markerDriveFromCoords.k;
+            search.startLng = $scope.aside.markerDriveFromCoords.B;
+            search.endLat = $scope.aside.markerDriveToCoords.k;
+            search.endLng = $scope.aside.markerDriveToCoords.B;
+            routeService.resource.query(search, function (result) {
+            });
+        } else {
+            if ($scope.aside.driveFrom && $scope.aside.driveTo) {
+                mapService.geocode({ 'address': $scope.aside.driveFrom }).then(function (result) {
+                    search.startLat = result[0].geometry.location.lat();
+                    search.startLng = result[0].geometry.location.lng();
+                    //search.startLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
+                    mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
+                        search.endLat = result[0].geometry.location.lat();
+                        search.endLng = result[0].geometry.location.lng();
+                        //search.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
+                        routeService.resource.query(search, function (result) {
+                            var sss = result;
+                        });
+                    });
+                });
+            }
+        }
+
+        searchAside.hide();
+    };
+
+    $scope.hideSearch = function () {
+        initAside();
+        //mapService.removeMarkers();
+        searchAside.hide();
+    };
+
+    $scope.onSearchClick = function() {
+        showAside();
+    };
+
+    $scope.$watch('app.searchToggle', function (value) {
+        if (value) {
+            showAside();
+        }
     });
 
     //$scope.userData = authService.userData;

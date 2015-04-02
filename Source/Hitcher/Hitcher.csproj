@@ -131,6 +131,7 @@
     <Content Include="app\services\statusService.js" />
     <Content Include="app\services\userService.js" />
     <Content Include="app\views\modal\aside.html" />
+    <Content Include="app\views\modal\search.html" />
     <Content Include="content\css\bootstrap-theme.css" />
     <Content Include="content\css\bootstrap.css.map" />
     <Content Include="content\fonts\fontawesome-webfont.eot" />
@@ -227,6 +228,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\RouteService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\DistanceAlgorithm.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hitcher.DataAccess\Hitcher.DataAccess.csproj">

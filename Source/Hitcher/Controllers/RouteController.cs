@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using Hitcher.Controllers.Base;
@@ -33,7 +34,17 @@ namespace Hitcher.Controllers
     [HttpGet]
     public IHttpActionResult Get([FromUri]QueryRouteRequest request)
     {
-      var allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type);
+      List<Route> allRoutes;
+
+      if (request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
+      {
+        var enumerable = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value);
+        return Ok(enumerable);
+      }
+      else
+      {
+        allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).ToList();
+      }
       //var allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords);
 
       if (!request.Take.HasValue && !request.Skip.HasValue)

@@ -56,13 +56,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                     initAside();
                 });
             });
-            //routeService.resource.save(route, function (result) {
-            //    if (result) {
-            //        // show alert!
-            //    }
-
-            //    initAside();
-            //});
         } else {
             if ($scope.aside.driveFrom && $scope.aside.driveTo) {
 
@@ -86,14 +79,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                                 initAside();
                             });
                         });
-                        // TODO save route points here (get from service set route method)
-                        //routeService.resource.save(route, function (result) {
-                        //    if (result) {
-                        //        // show alert!
-                        //    }
-
-                        //    initAside();
-                        //});
                     });
                 });
             }
