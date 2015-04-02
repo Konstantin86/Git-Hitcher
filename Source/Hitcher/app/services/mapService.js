@@ -182,7 +182,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         directions = [];
 
         routeService.resource.query({ type: type }, function (result) {
-            if (result) {
+            if (result && result.length) {
                 loadCount = result.length - 1;
                 statusService.loading("Загрузка маршрутов...");
 
