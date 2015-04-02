@@ -30,8 +30,8 @@ namespace Hitcher.Service
         TotalDuration = route.TotalDuration,
         Type = route.Type,
         Coords = new List<Coord>()
-      }; 
-      
+      };
+
       int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);
 
       for (int i = 0; i < route.Path.Length; i += incr)
@@ -51,33 +51,11 @@ namespace Hitcher.Service
     {
       var routes = _unitOfWork.RouteRepository.GetAll(m => m.Type == 0).Include(m => m.Coords).ToList();
 
-      var distances = new Dictionary<int, double>();
+      var distances = routes.ToDictionary(route => route.Id, route => route.Coords.Select(m => DistanceAlgorithm.DistanceBetweenPlaces(startLng, startLat, m.Lng, m.Lat)).Min() + route.Coords.Select(m => DistanceAlgorithm.DistanceBetweenPlaces(endLng, endLat, m.Lng, m.Lat)).Min());
 
-      foreach (var route in routes)
-      {
-        double minFromStart = 100;
-        double minFromEnd = 100;
+      var top2Dist = distances.OrderBy(m => m.Value).Select(m => m.Key).Take(2);
 
-        foreach (var coord in route.Coords)
-        {
-          double fromStart = DistanceAlgorithm.DistanceBetweenPlaces(startLng, startLat, coord.Lng, coord.Lat);
-          double fromEnd = DistanceAlgorithm.DistanceBetweenPlaces(endLng, endLat, coord.Lng, coord.Lat);
-
-          if (fromStart < minFromStart)
-          {
-            minFromStart = fromStart;
-          }
-
-          if (fromEnd < minFromEnd)
-          {
-            minFromEnd = fromEnd;
-          }
-        }
-
-        distances.Add(route.Id, minFromStart + minFromEnd);
-      }
-      
-      return routes.Where(r => r.Id == distances.OrderBy(m => m.Value).First().Key);
+      return routes.Where(r => top2Dist.Contains(r.Id));
     }
   }
 }
