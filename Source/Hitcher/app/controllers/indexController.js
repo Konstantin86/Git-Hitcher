@@ -95,9 +95,6 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
             mapService.showRoutes(search).then(function () {
                 initAside();
             });
-
-            //routeService.resource.query(search, function (result) {
-            //});
         } else {
             if ($scope.aside.driveFrom && $scope.aside.driveTo) {
                 mapService.geocode({ 'address': $scope.aside.driveFrom }).then(function (result) {
@@ -111,10 +108,6 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
                         mapService.showRoutes(search).then(function () {
                             initAside();
                         });
-                        
-                        //routeService.resource.query(search, function (result) {
-                        //    var sss = result;
-                        //});
                     });
                 });
             }
