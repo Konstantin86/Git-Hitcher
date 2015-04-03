@@ -47,7 +47,7 @@ namespace Hitcher
       //  //Provider = new AppAuthorizationServerProvider()
       //};
 
-      var oAuthBearerOptions = new OAuthBearerAuthenticationOptions();
+      //var oAuthBearerOptions = new OAuthBearerAuthenticationOptions();
 
       //app.UseOAuthAuthorizationServer(oAuthServerOptions);
       //app.UseOAuthBearerAuthentication(oAuthBearerOptions);

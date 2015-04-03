@@ -26,6 +26,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var onFromMarkerSelectedCallback;
     var onToMarkerSelectedCallback;
 
+    var onSearchFromMarkerSelectedCallback;
+    var onSearchToMarkerSelectedCallback;
+
     var ready = $q.defer();
 
     var map = { center: { latitude: 49.1451, longitude: 35.6680 }, zoom: 4, control: {}, bounds: {} };
@@ -162,9 +165,13 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
     var onToMarkerSelected = function (callback) { onToMarkerSelectedCallback = callback; };
 
+    var onSearchFromMarkerSelected = function (callback) { onSearchFromMarkerSelectedCallback = callback; };
+
+    var onSearchToMarkerSelected = function (callback) { onSearchToMarkerSelectedCallback = callback; };
+
     var removeMarkers = function () {
         for (var i = 0; i < markers.length; i++) {
-            if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker") {
+            if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker" || markers[i]["id"] === "searchFromMarker" || markers[i]["id"] === "searchToMarker") {
                 markers = markers.splice(1, i);
             }
         }
@@ -173,7 +180,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     };
 
     // mode: 0 - hitcher, 1 driver
-    var showRoutes = function (type) {
+    var showRoutes = function (request) {
+        var deferred = $q.defer();
 
         directions.forEach(function (dir) {
             dir.set('directions', null);
@@ -181,7 +189,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
         directions = [];
 
-        routeService.resource.query({ type: type }, function (result) {
+        routeService.resource.query(request, function (result) {
             if (result && result.length) {
                 loadCount = result.length - 1;
                 statusService.loading("Загрузка маршрутов...");
@@ -194,6 +202,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
                         if (loadCount === 0) {
                             statusService.clear();
+                            deferred.resolve();
                         }
                     }, function (index) {
                         var timer = $timeout(function () {
@@ -207,7 +216,11 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
                     drawRoute(i);
                 }
             }
+
+            deferred.resolve();
         });
+
+        return deferred.promise;
     };
 
     uiGmapGoogleMapApi.then(function (maps) {
@@ -229,7 +242,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
             menuItems:
             [
                { label: 'Еду отсюда', id: 'menu_go_from', eventName: 'onGoFromClick' },
-               { label: 'Еду сюда', id: 'menu_go_to', eventName: 'onGoToClick' }
+               { label: 'Еду сюда', id: 'menu_go_to', eventName: 'onGoToClick' },
+               { label: 'Ищу отсюда', id: 'menu_search_from', eventName: 'onSearchFromClick' },
+               { label: 'Ищу сюда', id: 'menu_search_to', eventName: 'onSearchToClick' }
             ]
         };
 
@@ -248,8 +263,10 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) { contextMenu.show(mouseEvent.latLng); });
 
         gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) { handleContextMenyRouteClick(coords, "fromMarker", onFromMarkerSelectedCallback); });
-
         gmaps.event.addListener(contextMenu, 'onGoToClick', function (coords) { handleContextMenyRouteClick(coords, "toMarker", onToMarkerSelectedCallback); });
+
+        gmaps.event.addListener(contextMenu, 'onSearchFromClick', function (coords) { handleContextMenyRouteClick(coords, "searchFromMarker", onSearchFromMarkerSelectedCallback); });
+        gmaps.event.addListener(contextMenu, 'onSearchToClick', function (coords) { handleContextMenyRouteClick(coords, "searchToMarker", onSearchToMarkerSelectedCallback); });
 
         ready.resolve(googlemap);
     });
@@ -265,6 +282,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     this.onMapMarkersChanged = onMapMarkersChanged;
     this.onFromMarkerSelected = onFromMarkerSelected;
     this.onToMarkerSelected = onToMarkerSelected;
+    this.onSearchFromMarkerSelected = onSearchFromMarkerSelected;
+    this.onSearchToMarkerSelected = onSearchToMarkerSelected;
     this.removeMarkers = removeMarkers;
     this.showRoutes = showRoutes;
 });

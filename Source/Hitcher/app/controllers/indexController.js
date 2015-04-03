@@ -34,7 +34,7 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
     mapService.ready.then(function (gmaps) {
         $scope.$watch('user.type', function (value) {
             if (value != type) {
-                mapService.showRoutes(value);
+                mapService.showRoutes({ type: value });
                 type = value;
             }
         });
@@ -62,6 +62,25 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
         });
     };
 
+
+    mapService.onSearchFromMarkerSelected(function (address, coords) {
+        $scope.aside.markerDriveFrom = address;
+        $scope.aside.markerDriveFromCoords = coords;
+
+        if ($scope.aside.markerDriveFrom && $scope.aside.markerDriveTo) {
+            showAside();
+        }
+    });
+
+    mapService.onSearchToMarkerSelected(function (address, coords) {
+        $scope.aside.markerDriveTo = address;
+        $scope.aside.markerDriveToCoords = coords;
+
+        if ($scope.aside.markerDriveFrom && $scope.aside.markerDriveTo) {
+            showAside();
+        }
+    });
+
     $scope.search = function() {
         alert('Search is clicked');
 
@@ -72,32 +91,42 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
             search.startLng = $scope.aside.markerDriveFromCoords.B;
             search.endLat = $scope.aside.markerDriveToCoords.k;
             search.endLng = $scope.aside.markerDriveToCoords.B;
-            routeService.resource.query(search, function (result) {
+
+            mapService.showRoutes(search).then(function () {
+                initAside();
             });
+
+            //routeService.resource.query(search, function (result) {
+            //});
         } else {
             if ($scope.aside.driveFrom && $scope.aside.driveTo) {
                 mapService.geocode({ 'address': $scope.aside.driveFrom }).then(function (result) {
                     search.startLat = result[0].geometry.location.lat();
                     search.startLng = result[0].geometry.location.lng();
-                    //search.startLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
+                    
                     mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
                         search.endLat = result[0].geometry.location.lat();
                         search.endLng = result[0].geometry.location.lng();
-                        //search.endLatLng = result[0].geometry.location.lat() + ',' + result[0].geometry.location.lng();
-                        routeService.resource.query(search, function (result) {
-                            var sss = result;
+
+                        mapService.showRoutes(search).then(function () {
+                            initAside();
                         });
+                        
+                        //routeService.resource.query(search, function (result) {
+                        //    var sss = result;
+                        //});
                     });
                 });
             }
         }
 
+        mapService.removeMarkers();
         searchAside.hide();
     };
 
     $scope.hideSearch = function () {
         initAside();
-        //mapService.removeMarkers();
+        mapService.removeMarkers();
         searchAside.hide();
     };
 
