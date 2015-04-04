@@ -47,13 +47,13 @@ namespace Hitcher.Service
       return 1;
     }
 
-    public IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng)
+    public IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng, int resultsCount)
     {
       var routes = _unitOfWork.RouteRepository.GetAll(m => m.Type == 0).Include(m => m.Coords).ToList();
 
       var distances = routes.ToDictionary(route => route.Id, route => route.Coords.Select(m => DistanceAlgorithm.DistanceBetweenPlaces(startLng, startLat, m.Lng, m.Lat)).Min() + route.Coords.Select(m => DistanceAlgorithm.DistanceBetweenPlaces(endLng, endLat, m.Lng, m.Lat)).Min());
 
-      var top2Dist = distances.OrderBy(m => m.Value).Select(m => m.Key).Take(2);
+      var top2Dist = distances.OrderBy(m => m.Value).Select(m => m.Key).Take(resultsCount);
 
       return routes.Where(r => top2Dist.Contains(r.Id));
     }

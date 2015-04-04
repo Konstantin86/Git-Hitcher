@@ -48,7 +48,8 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
             markerDriveTo: null,
             markerDriveToCoords: null,
             driveFrom: null,
-            driveTo: null
+            driveTo: null,
+            resultsCount: 2
         };
     };
 
@@ -82,9 +83,7 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
     });
 
     $scope.search = function() {
-        alert('Search is clicked');
-
-        var search = { type: userService.user.type };
+        var search = { type: userService.user.type, take: $scope.aside.resultsCount };
 
         if ($scope.aside.markerDriveFromCoords && $scope.aside.markerDriveToCoords) {
             search.startLat = $scope.aside.markerDriveFromCoords.k;

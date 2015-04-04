@@ -14,6 +14,8 @@ namespace Hitcher.Controllers
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRouteService _routeService;
 
+    private const int DefaultResultsCount = 2;
+
     public RouteController(IUnitOfWork unitOfWork, IRouteService routeService)
     {
       _unitOfWork = unitOfWork;
@@ -34,7 +36,8 @@ namespace Hitcher.Controllers
     {
       if (request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
       {
-        var enumerable = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value);
+        int resultsCount = request.Take ?? DefaultResultsCount;
+        var enumerable = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount);
         return Ok(enumerable);
       }
 
