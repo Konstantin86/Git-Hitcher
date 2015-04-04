@@ -59,6 +59,7 @@
     <Compile Include="Entities\Base\EntityBase.cs" />
     <Compile Include="Entities\Coord.cs" />
     <Compile Include="Entities\Route.cs" />
+    <Compile Include="Extensions\RouteExtensions.cs" />
     <Compile Include="Migrations\201503222032246_InitialCreate.cs" />
     <Compile Include="Migrations\201503222032246_InitialCreate.Designer.cs">
       <DependentUpon>201503222032246_InitialCreate.cs</DependentUpon>
