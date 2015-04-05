@@ -7,7 +7,6 @@
 "use strict";
 
 app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, userService, mapService, uiGmapIsReady, statusService, routeService) {
-    var loadCount = 0;
     var driveAside;
 
     $scope.map = mapService.map;
@@ -15,12 +14,20 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
     $scope.markerEvents = {
         dragend: function (marker, eventName, args) {
-            //$log.log('marker dragend');
-            var lat = marker.getPosition().lat();
-            var lon = marker.getPosition().lng();
-            alert(lat, lon);
-            //$log.log(lat);
-            //$log.log(lon);
+            var coords = marker.position;
+            var markerKey = marker.key;
+
+            var params = { 'latlng': coords.lat() + ',' + coords.lng(), 'language': 'ru' };
+            mapService.geocode(params, false, true)
+            .then(function (res) {
+                if (markerKey === "fromMarker") {
+                    $scope.aside.driveFrom = res.data.results[0].formatted_address;
+                    $scope.aside.driveFromCoords = coords;
+                } else if (markerKey === "toMarker") {
+                    $scope.aside.driveTo = res.data.results[0].formatted_address;
+                    $scope.aside.driveToCoords = coords;
+                }
+            });
 
             //$scope.marker.options = {
             //    draggable: true,
@@ -50,7 +57,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         driveAside.hide();
     };
 
-    var setRoute = function(route) {
+    var setRoute = function (route) {
         mapService.setRoute(route, false, true).then(function (routeData) {
 
             route.totalDistance = routeData.totalDistance;

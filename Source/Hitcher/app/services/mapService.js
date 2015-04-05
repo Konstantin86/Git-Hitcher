@@ -276,9 +276,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         var handleContextMenyRouteClick = function (coords, markerType, callback) {
             setMarker(coords.k, coords.B, markerType);
 
-            geocode({ 'latLng': coords }).then(function (result) {
-                if (result && result.length && typeof (callback) == "function") {
-                    callback(result[0].formatted_address, coords);
+            geocode({ 'latlng': coords.lat() + ',' + coords.lng(), 'language': 'ru' }, false, true).then(function (result) {
+                if (result.data.results && result.data.results.length && typeof (callback) == "function") {
+                    callback(result.data.results[0].formatted_address, coords);
                 }
             });
         };
