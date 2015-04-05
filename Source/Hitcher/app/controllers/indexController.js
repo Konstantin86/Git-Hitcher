@@ -82,7 +82,7 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
         }
     });
 
-    $scope.search = function() {
+    $scope.search = function () {
         var search = { type: userService.user.type, take: $scope.aside.resultsCount };
 
         if ($scope.aside.markerDriveFromCoords && $scope.aside.markerDriveToCoords) {
@@ -91,7 +91,11 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
             search.endLat = $scope.aside.markerDriveToCoords.k;
             search.endLng = $scope.aside.markerDriveToCoords.B;
 
-            mapService.showRoutes(search).then(function () {
+            mapService.showRoutes(search).then(function (routesCount) {
+                if (routesCount === 0) {
+                    statusService.warning("Подходящих результатов не найдено");
+                }
+
                 initAside();
             });
         } else {
@@ -99,12 +103,16 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
                 mapService.geocode({ 'address': $scope.aside.driveFrom }).then(function (result) {
                     search.startLat = result[0].geometry.location.lat();
                     search.startLng = result[0].geometry.location.lng();
-                    
+
                     mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
                         search.endLat = result[0].geometry.location.lat();
                         search.endLng = result[0].geometry.location.lng();
 
-                        mapService.showRoutes(search).then(function () {
+                        mapService.showRoutes(search).then(function (routesCount) {
+                            if (routesCount === 0) {
+                                statusService.warning("Подходящих результатов не найдено");
+                            }
+
                             initAside();
                         });
                     });
@@ -122,7 +130,7 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
         searchAside.hide();
     };
 
-    $scope.onSearchClick = function() {
+    $scope.onSearchClick = function () {
         showAside();
     };
 

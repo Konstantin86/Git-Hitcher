@@ -225,7 +225,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
                         if (loadCount === 0) {
                             statusService.clear();
-                            deferred.resolve();
+                            deferred.resolve(result.length);
                         }
                     }, function (index) {
                         var timer = $timeout(function () {
@@ -240,7 +240,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
                 }
             }
 
-            deferred.resolve();
+            deferred.resolve(0);
         });
 
         return deferred.promise;
