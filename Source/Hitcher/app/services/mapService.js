@@ -83,7 +83,29 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     };
 
     var setMarker = function (lat, lng, key) {
-        var marker = { latitude: lat, longitude: lng, title: "Test" };
+        var marker = {
+            latitude: lat, 
+            longitude: lng, 
+            title: "Test", 
+            options: { draggable: true },
+            markerEvents: {
+                dragend: function(marker, eventName, args) {
+                    //$log.log('marker dragend');
+                    var lat = marker.getPosition().lat();
+                    var lon = marker.getPosition().lng();
+
+                    //$log.log(lat);
+                    //$log.log(lon);
+
+                    //$scope.marker.options = {
+                    //    draggable: true,
+                    //    labelContent: "lat: " + $scope.marker.coords.latitude + ' ' + 'lon: ' + $scope.marker.coords.longitude,
+                    //    labelAnchor: "100 0",
+                    //    labelClass: "marker-labels"
+                    //};
+                }
+            }
+        };
         marker["id"] = key;
 
         var markerIndex = null;
@@ -127,6 +149,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         var deferred = $q.defer();
 
         var rendererOptions = {
+            //draggable: true,   // TODO plan how to handle saving route coords to db
             preserveViewport: preserveViewport,
             polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
             routeIndex: index

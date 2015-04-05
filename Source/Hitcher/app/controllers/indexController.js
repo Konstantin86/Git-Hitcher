@@ -10,7 +10,7 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
     var searchAside;
 
     var showAside = function () {
-        searchAside = $aside({ scope: $scope, dismissable: false, placement: 'right', template: 'app/views/modal/search.html' });
+        searchAside = $aside({ scope: $scope, backdrop: 'static', dismissable: false, placement: 'right', template: 'app/views/modal/search.html' });
         searchAside.$promise.then(function () { searchAside.show(); });
     };
 

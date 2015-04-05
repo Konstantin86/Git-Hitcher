@@ -13,8 +13,26 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     $scope.map = mapService.map;
     $scope.markers = mapService.markers;
 
+    $scope.markerEvents = {
+        dragend: function(marker, eventName, args) {
+            //$log.log('marker dragend');
+            var lat = marker.getPosition().lat();
+            var lon = marker.getPosition().lng();
+            alert(lat, lon);
+            //$log.log(lat);
+            //$log.log(lon);
+
+            //$scope.marker.options = {
+            //    draggable: true,
+            //    labelContent: "lat: " + $scope.marker.coords.latitude + ' ' + 'lon: ' + $scope.marker.coords.longitude,
+            //    labelAnchor: "100 0",
+            //    labelClass: "marker-labels"
+            //};
+        }
+    }
+
     var showAside = function () {
-        driveAside = $aside({ scope: $scope, dismissable: false, placement: 'left', template: 'app/views/modal/aside.html' });
+        driveAside = $aside({ scope: $scope, backdrop: false, dismissable: false, placement: 'left', template: 'app/views/modal/aside.html' });
         driveAside.$promise.then(function () { driveAside.show(); });
     };
 
