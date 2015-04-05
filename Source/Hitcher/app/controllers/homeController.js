@@ -123,6 +123,19 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         }
     });
 
+    $scope.$on('$typeahead.select', function (value, index) {
+        console.log(value);
+        console.log(index);
+
+        if ($scope.aside.driveFrom === index) {
+            alert('drive From');
+            // TODO handle drive from selected field...
+        } else if ($scope.aside.driveTo === index) {
+            alert('drive To');
+            // TODO handle drive to selected field...
+        }
+    });
+
     mapService.ready.then(function (gmaps) { mapService.centerOnMe(); });
 
     initAside();
