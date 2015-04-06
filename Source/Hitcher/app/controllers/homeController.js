@@ -92,26 +92,19 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     mapService.onFromMarkerSelected(function (address, coords) {
         $scope.route.startName = address;
         $scope.route.startLatLng = coords;
-
-        if ($scope.route.startName && $scope.route.endName) {
-            showAside();
-        }
+        showAside();
     });
 
     mapService.onToMarkerSelected(function (address, coords) {
         $scope.route.endName = address;
         $scope.route.endLatLng = coords;
-
-        if ($scope.route.startName && $scope.route.endName) {
-            showAside();
-        }
+        showAside();
     });
 
     $scope.$on('$typeahead.select', function (value, index) {
         if ($scope.route.startName === index) {
             mapService.geocode({ 'address': $scope.route.startName }).then(function (result) {
                 var location = result[0].geometry.location;
-                //$scope.route.startLatLng = location.lat() + "," + location.lng();
                 $scope.route.startLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "fromMarker");
                 mapService.centerMap(location.lat(), location.lng(), 12);
@@ -119,7 +112,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         } else if ($scope.route.endName === index) {
             mapService.geocode({ 'address': $scope.route.endName }).then(function (result) {
                 var location = result[0].geometry.location;
-                //$scope.route.endLatLng = location.lat() + "," + location.lng();
                 $scope.route.endLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "toMarker");
                 mapService.centerMap(location.lat(), location.lng(), 12);
