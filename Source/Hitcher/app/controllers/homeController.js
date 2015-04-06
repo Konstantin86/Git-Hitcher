@@ -38,15 +38,19 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         }
     };
 
-    $scope.renderAside = function () {
-        initAside();
-        mapService.removeMarkers();
-        showAside();
+    $scope.toggleAside = function () {
+        if (!driveAside || !driveAside.$isShown) {
+            //initAside();
+            //mapService.removeMarkers();
+            showAside();
+        } else {
+            $scope.hideDriveAside();
+        }
     }
 
     $scope.hideDriveAside = function () {
-        initAside();
-        mapService.removeMarkers();
+        //initAside();
+        //mapService.removeMarkers();
         driveAside.hide();
     };
 
