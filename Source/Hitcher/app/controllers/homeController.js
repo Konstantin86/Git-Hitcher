@@ -8,6 +8,7 @@
 
 app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, userService, mapService, uiGmapIsReady, statusService, routeService) {
     var driveAside;
+    var route = {};
 
     $scope.map = mapService.map;
     $scope.markers = mapService.markers;
@@ -75,7 +76,9 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     };
 
     $scope.declareRoute = function () {
-        var route = { startName: $scope.aside.driveFrom, endName: $scope.aside.driveTo, type: userService.user.type };
+        route.startName = $scope.aside.driveFrom;
+        route.endName = $scope.aside.driveTo;
+        route.type = userService.user.type;
 
         if ($scope.aside.driveFromCoords && $scope.aside.driveToCoords) {
             route.startLatLng = $scope.aside.driveFromCoords.k + ',' + $scope.aside.driveFromCoords.B;
@@ -128,10 +131,22 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         console.log(index);
 
         if ($scope.aside.driveFrom === index) {
-            alert('drive From');
+            mapService.geocode({ 'address': $scope.aside.driveFrom }).then(function(result) {
+                var location = result[0].geometry.location;
+                route.startLatLng = location.lat() + "," + location.lng();
+                mapService.setMarker(location.lat(), location.lng(), "fromMarker");
+            });
+
+            //alert('drive From');
             // TODO handle drive from selected field...
         } else if ($scope.aside.driveTo === index) {
-            alert('drive To');
+            mapService.geocode({ 'address': $scope.aside.driveTo }).then(function (result) {
+                var location = result[0].geometry.location;
+                route.endLatLng = location.lat() + "," + location.lng();
+                mapService.setMarker(location.lat(), location.lng(), "toMarker");
+            });
+
+            //alert('drive To');
             // TODO handle drive to selected field...
         }
     });
