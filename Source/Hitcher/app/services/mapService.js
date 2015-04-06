@@ -107,24 +107,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
             latitude: lat, 
             longitude: lng, 
             title: "Test", 
-            options: { draggable: true },
-            markerEvents: {
-                dragend: function(marker, eventName, args) {
-                    //$log.log('marker dragend');
-                    var lat = marker.getPosition().lat();
-                    var lon = marker.getPosition().lng();
-
-                    //$log.log(lat);
-                    //$log.log(lon);
-
-                    //$scope.marker.options = {
-                    //    draggable: true,
-                    //    labelContent: "lat: " + $scope.marker.coords.latitude + ' ' + 'lon: ' + $scope.marker.coords.longitude,
-                    //    labelAnchor: "100 0",
-                    //    labelClass: "marker-labels"
-                    //};
-                }
-            }
+            options: { draggable: true, animation: gmaps.Animation.DROP }
         };
         marker["id"] = key;
 
