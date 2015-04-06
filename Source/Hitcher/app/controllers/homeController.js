@@ -108,27 +108,20 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     });
 
     $scope.$on('$typeahead.select', function (value, index) {
-        console.log(value);
-        console.log(index);
-
         if ($scope.route.startName === index) {
             mapService.geocode({ 'address': $scope.route.startName }).then(function (result) {
                 var location = result[0].geometry.location;
-                $scope.route.startLatLng = location.lat() + "," + location.lng();
+                //$scope.route.startLatLng = location.lat() + "," + location.lng();
+                $scope.route.startLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "fromMarker");
             });
-
-            //alert('drive From');
-            // TODO handle drive from selected field...
         } else if ($scope.route.endName === index) {
             mapService.geocode({ 'address': $scope.route.endName }).then(function (result) {
                 var location = result[0].geometry.location;
-                $scope.route.endLatLng = location.lat() + "," + location.lng();
+                //$scope.route.endLatLng = location.lat() + "," + location.lng();
+                $scope.route.endLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "toMarker");
             });
-
-            //alert('drive To');
-            // TODO handle drive to selected field...
         }
     });
 
