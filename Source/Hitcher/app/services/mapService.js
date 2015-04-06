@@ -83,7 +83,27 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     };
 
     var setMarker = function (lat, lng, key) {
+        //var point = new gmaps.Point(lat, lng);
+
+        // Use this doc to find info regarding icon image generation: https://developers.google.com/chart/image/docs/gallery/dynamic_icons?csw=1#pins
+
+        var letter = "A";
+
+        if (key && key.indexOf("to") > -1) {
+            letter = "B";
+        }
+
+        var pinIcon = new gmaps.MarkerImage(
+                "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + letter + "|2DE02D",
+                null, /* size is determined at runtime */
+                null, /* origin is 0,0 */
+                null, /* anchor is bottom center of the scaled image */
+                new gmaps.Size(24, 37)
+            );
+
         var marker = {
+            //icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|FF0000|0030F2",
+            icon: pinIcon,
             latitude: lat, 
             longitude: lng, 
             title: "Test", 
@@ -297,6 +317,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     this.map = map;
     this.markers = markers;
     this.centerOnMe = centerOnMe;
+    this.centerMap = centerMap;
     this.geocode = geocode;
     this.setMarker = setMarker;
     this.setRoute = setRoute;

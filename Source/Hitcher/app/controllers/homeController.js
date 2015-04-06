@@ -114,6 +114,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 //$scope.route.startLatLng = location.lat() + "," + location.lng();
                 $scope.route.startLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "fromMarker");
+                mapService.centerMap(location.lat(), location.lng(), 12);
             });
         } else if ($scope.route.endName === index) {
             mapService.geocode({ 'address': $scope.route.endName }).then(function (result) {
@@ -121,6 +122,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 //$scope.route.endLatLng = location.lat() + "," + location.lng();
                 $scope.route.endLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "toMarker");
+                mapService.centerMap(location.lat(), location.lng(), 12);
             });
         }
     });
