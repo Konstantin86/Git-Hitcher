@@ -29,6 +29,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var onSearchFromMarkerSelectedCallback;
     var onSearchToMarkerSelectedCallback;
 
+    var onMarkerDragCallbacks = [];
+
     var ready = $q.defer();
 
     var map = { center: { latitude: 49.1451, longitude: 35.6680 }, zoom: 4, control: {}, bounds: {} };
@@ -83,18 +85,12 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     };
 
     var setMarker = function (lat, lng, key) {
-        //var point = new gmaps.Point(lat, lng);
-
         // Use this doc to find info regarding icon image generation: https://developers.google.com/chart/image/docs/gallery/dynamic_icons?csw=1#pins
-
-        var letter = "A";
-
-        if (key && key.indexOf("to") > -1) {
-            letter = "B";
-        }
+        var letter = key && key.indexOf("to") > -1 ? "B" : "A";
+        var color = key && key.indexOf("Search") > -1 ? "EDED0C" : "2DE02D";
 
         var pinIcon = new gmaps.MarkerImage(
-                "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + letter + "|2DE02D",
+                "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + letter + "|" + color,
                 null, /* size is determined at runtime */
                 null, /* origin is 0,0 */
                 null, /* anchor is bottom center of the scaled image */
@@ -197,7 +193,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
     var removeMarkers = function () {
         for (var i = 0; i < markers.length; i++) {
-            if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker" || markers[i]["id"] === "searchFromMarker" || markers[i]["id"] === "searchToMarker") {
+            if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker" || markers[i]["id"] === "fromSearchMarker" || markers[i]["id"] === "toSearchMarker") {
                 markers = markers.splice(1, i);
             }
         }
@@ -291,11 +287,27 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) { handleContextMenyRouteClick(coords, "fromMarker", onFromMarkerSelectedCallback); });
         gmaps.event.addListener(contextMenu, 'onGoToClick', function (coords) { handleContextMenyRouteClick(coords, "toMarker", onToMarkerSelectedCallback); });
 
-        gmaps.event.addListener(contextMenu, 'onSearchFromClick', function (coords) { handleContextMenyRouteClick(coords, "searchFromMarker", onSearchFromMarkerSelectedCallback); });
-        gmaps.event.addListener(contextMenu, 'onSearchToClick', function (coords) { handleContextMenyRouteClick(coords, "searchToMarker", onSearchToMarkerSelectedCallback); });
+        gmaps.event.addListener(contextMenu, 'onSearchFromClick', function (coords) { handleContextMenyRouteClick(coords, "fromSearchMarker", onSearchFromMarkerSelectedCallback); });
+        gmaps.event.addListener(contextMenu, 'onSearchToClick', function (coords) { handleContextMenyRouteClick(coords, "toSearchMarker", onSearchToMarkerSelectedCallback); });
 
         ready.resolve(googlemap);
     });
+
+    var markerEvents = {
+        dragend: function (marker, eventName, args) {
+
+            if (onMarkerDragCallbacks.length) {
+                onMarkerDragCallbacks.forEach(function (callback) {
+                    if (typeof (callback) == "function") { callback(marker, eventName, args); }
+                });
+            }
+            //if (typeof (onMarkerDragCallback) == "function") { onMarkerDragCallback(marker, eventName, args); }
+        }
+    };
+
+    var onMarkerDrag = function (callback) {
+        onMarkerDragCallbacks.push(callback);
+    }
 
     this.map = map;
     this.markers = markers;
@@ -311,6 +323,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     this.onToMarkerSelected = onToMarkerSelected;
     this.onSearchFromMarkerSelected = onSearchFromMarkerSelected;
     this.onSearchToMarkerSelected = onSearchToMarkerSelected;
+    this.onMarkerDrag = onMarkerDrag;
     this.removeMarkers = removeMarkers;
     this.showRoutes = showRoutes;
+    this.markerEvents = markerEvents;
 });

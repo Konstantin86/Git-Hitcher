@@ -11,25 +11,26 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
     $scope.map = mapService.map;
     $scope.markers = mapService.markers;
+    $scope.markerEvents = mapService.markerEvents;
 
-    $scope.markerEvents = {
-        dragend: function (marker, eventName, args) {
-            var coords = marker.position;
-            var markerKey = marker.key;
+    mapService.onMarkerDrag(function (marker, eventName, args) {
+        var coords = marker.position;
+        var markerKey = marker.key;
 
-            var params = { 'latlng': coords.lat() + ',' + coords.lng(), 'language': 'ru' };
-            mapService.geocode(params, false, true)
-            .then(function (res) {
-                if (markerKey === "fromMarker") {
-                    $scope.route.startName = res.data.results[0].formatted_address;
-                    $scope.route.startLatLng = coords;
-                } else if (markerKey === "toMarker") {
-                    $scope.route.endName = res.data.results[0].formatted_address;
-                    $scope.route.endLatLng = coords;
-                }
-            });
-        }
-    }
+        if (markerKey !== "fromMarker" && markerKey !== "toMarker") return;
+
+        var params = { 'latlng': coords.lat() + ',' + coords.lng(), 'language': 'ru' };
+        mapService.geocode(params, false, true)
+        .then(function (res) {
+            if (markerKey === "fromMarker") {
+                $scope.route.startName = res.data.results[0].formatted_address;
+                $scope.route.startLatLng = coords;
+            } else if (markerKey === "toMarker") {
+                $scope.route.endName = res.data.results[0].formatted_address;
+                $scope.route.endLatLng = coords;
+            }
+        });
+    });
 
     var showAside = function () {
         if (!driveAside || !driveAside.$isShown) {
@@ -40,8 +41,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
     $scope.toggleAside = function () {
         if (!driveAside || !driveAside.$isShown) {
-            //initAside();
-            //mapService.removeMarkers();
             showAside();
         } else {
             $scope.hideDriveAside();
@@ -49,8 +48,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     }
 
     $scope.hideDriveAside = function () {
-        //initAside();
-        //mapService.removeMarkers();
         driveAside.hide();
     };
 
@@ -128,10 +125,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     initAside();
 
     function initAside() {
-        $scope.route = {
-            type: userService.user.type,
-            startName: null,
-            endName: null
-        };
+        $scope.route = { startName: null, endName: null };
     };
 });

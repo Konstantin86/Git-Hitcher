@@ -1,26 +1,22 @@
-﻿<div class="aside right" tabindex="-1" role="dialog" style="display: block;">
+﻿<div class="aside right" tabindex="-1" role="dialog" style="display: block; background-color: #ecf0f1;">
     <div class="aside-dialog">
         <div class="aside-content">
-            <div class="aside-header" ng-show="aside.title">
-                <button type="button" class="close" ng-click="$parent.hideSearch()">×</button><h4 class="aside-title" ng-bind-html="aside.title"></h4>
+            <div class="aside-header" style="height: 62px; background-color: #149c82">
+                <button type="button" class="close" ng-click="$parent.hideSearch()" style="margin-top: 6px">×</button><h4 class="aside-title" style="margin-top: 12px">Поиск</h4>
             </div>
             <div class="aside-body">
                 <label><i class="fa fa-home"></i> Откуда </label>
-                <input type="text" class="form-control" ng-model="aside.markerDriveFrom" readonly="readonly" ng-show="aside.markerDriveFrom">
-                <!--<input type="text" class="form-control" ng-model="aside.driveFrom" ng-show="!aside.markerDriveFrom" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Enter address" bs-typeahead>-->
-                <input type="text" class="form-control" ng-model="aside.driveFrom" ng-show="!aside.markerDriveTo" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Enter address" bs-typeahead>
+                <input type="text" class="form-control" ng-model="searchModel.from" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Enter address" bs-typeahead>
                 <br />
                 <label><i class="fa fa-home"></i> Куда </label>
-                <input type="text" class="form-control" ng-model="aside.markerDriveTo" readonly="readonly" ng-show="aside.markerDriveTo">
-                <!--<input type="text" class="form-control" ng-model="aside.driveTo" ng-show="!aside.markerDriveTo" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Enter address" bs-typeahead>-->
-                <input type="text" class="form-control" ng-model="aside.driveTo" ng-show="!aside.markerDriveTo" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Enter address" bs-typeahead>
+                <input type="text" class="form-control" ng-model="searchModel.to" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Enter address" bs-typeahead>
                 <br/>
                 <label><i class="fa fa-home"></i> Количество результатов </label>
-                <input type="number" min="1" max="10" class="form-control" ng-model="aside.resultsCount">
+                <input type="number" min="1" max="10" class="form-control" ng-model="searchModel.take">
             </div>
             <div class="aside-footer">
                 <button type="button" class="btn btn-default" ng-click="$parent.hideSearch()">Отмена</button>
-                <button type="button" class="btn btn-primary" ng-disabled="(!aside.driveFrom || !aside.driveTo) && (!aside.markerDriveFrom || !aside.markerDriveTo)" ng-click="$parent.search()">Ок</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!searchModel.from || !searchModel.to || !searchModel.startLat || !searchModel.startLng || !searchModel.endLat || !searchModel.endLng" ng-click="$parent.search()">Ок</button>
             </div>
         </div>
     </div>
