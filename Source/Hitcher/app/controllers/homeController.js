@@ -49,7 +49,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
     $scope.hideDriveAside = function () {
         initAside();
-        mapService.removeMarkers();
+        mapService.removeRouteMarkers();
         driveAside.hide();
     };
 
@@ -78,7 +78,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
         setRoute();
 
-        mapService.removeMarkers();
+        mapService.removeRouteMarkers();
         driveAside.hide();
     };
 
@@ -132,12 +132,24 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
     mapService.ready.then(function (gmaps) {
         mapService.centerOnMe();
+    });
 
+    mapService.contextMenuReady.then(function (gmaps) {
         $scope.$watch('route.startLatLng', function (value) {
             var contextMenu = $('.context_menu');
 
             if (contextMenu.length) {
                 contextMenu.children()[0].style.display = value ? 'none' : 'block';
+                contextMenu.children()[1].style.display = value ? 'block' : 'none';
+                contextMenu.children()[5].style.display = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+            }
+        });
+
+        $scope.$watch('route.endLatLng', function (value) {
+            var contextMenu = $('.context_menu');
+
+            if (contextMenu.length) {
+                contextMenu.children()[1].style.display = ($scope.route.startLatLng && $scope.route.endLatLng) || (!$scope.route.startLatLng) ? 'none' : 'block';
             }
         });
     });

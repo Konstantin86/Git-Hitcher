@@ -56,12 +56,24 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
                 type = value;
             }
         });
+    });
 
+    mapService.contextMenuReady.then(function (gmaps) {
         $scope.$watch('searchModel.startLat', function (value) {
             var contextMenu = $('.context_menu');
 
             if (contextMenu.length) {
                 contextMenu.children()[2].style.display = value ? 'none' : 'block';
+                contextMenu.children()[3].style.display = value ? 'block' : 'none';
+                contextMenu.children()[5].style.display = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+            }
+        });
+
+        $scope.$watch('searchModel.endLat', function (value) {
+            var contextMenu = $('.context_menu');
+
+            if (contextMenu.length) {
+                contextMenu.children()[3].style.display = ($scope.searchModel.startLat && $scope.searchModel.endLat) || (!$scope.searchModel.startLat) ? 'none' : 'block';
             }
         });
     });
@@ -116,7 +128,7 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
             initAside();
         });
 
-        mapService.removeMarkers();
+        mapService.removeSearchMarkers();
         searchAside.hide();
     };
 
@@ -142,7 +154,7 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
 
     $scope.hideSearch = function () {
         initAside();
-        mapService.removeMarkers();
+        mapService.removeSearchMarkers();
         searchAside.hide();
     };
 

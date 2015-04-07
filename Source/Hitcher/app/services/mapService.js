@@ -34,6 +34,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var onMarkerDragCallbacks = [];
 
     var ready = $q.defer();
+    var contextMenuReady = $q.defer();
 
     var map = { center: { latitude: 49.1451, longitude: 35.6680 }, zoom: 4, control: {}, bounds: {} };
     var markers = [];
@@ -102,9 +103,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         var marker = {
             //icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|FF0000|0030F2",
             icon: pinIcon,
-            latitude: lat, 
-            longitude: lng, 
-            title: "Test", 
+            latitude: lat,
+            longitude: lng,
+            title: "Test",
             options: { draggable: true, animation: gmaps.Animation.DROP }
         };
         marker["id"] = key;
@@ -142,7 +143,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         return {
             totalDistance: totalDistance,
             totalDuration: totalDistance,
-            path: route.overview_path.map(function(m) { return { lat: m.lat(), lng: m.lng() }; })
+            path: route.overview_path.map(function (m) { return { lat: m.lat(), lng: m.lng() }; })
         };
     };
 
@@ -193,17 +194,46 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
     var onSearchToMarkerSelected = function (callback) { onSearchToMarkerSelectedCallback = callback; };
 
-    var onResetSelected = function (callback)
-    {
+    var onResetSelected = function (callback) {
         onResetSelectedCallbacks.push(callback);
     };
 
     var removeMarkers = function () {
+        //for (var i = 0; i < markers.length; i++) {
+        //    if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker" || markers[i]["id"] === "fromSearchMarker" || markers[i]["id"] === "toSearchMarker") {
+        //        markers = markers.splice(i, 1);
+        //    }
+        //}
+
+        markers = [];
+
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
+    var removeRouteMarkers = function () {
+
+        var routeMarkers = [];
         for (var i = 0; i < markers.length; i++) {
-            if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker" || markers[i]["id"] === "fromSearchMarker" || markers[i]["id"] === "toSearchMarker") {
-                markers = markers.splice(1, i);
+            if (markers[i]["id"] !== "fromMarker" && markers[i]["id"] !== "toMarker") {
+                routeMarkers.push(markers[i]);
             }
         }
+
+        markers = routeMarkers;
+
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
+    var removeSearchMarkers = function () {
+
+        var searchMarkers = [];
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]["id"] !== "fromSearchMarker" && markers[i]["id"] !== "toSearchMarker") {
+                searchMarkers.push(markers[i]);
+            }
+        }
+
+        markers = searchMarkers;
 
         if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
     };
@@ -304,7 +334,10 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
             //}
         };
 
-        gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) { contextMenu.show(mouseEvent.latLng); });
+        gmaps.event.addListener(mapControl, 'rightclick', function(mouseEvent) {
+            contextMenu.show(mouseEvent.latLng);
+            contextMenuReady.resolve();
+        });
 
         gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) { handleContextMenyRouteClick(coords, "fromMarker", onFromMarkerSelectedCallback); });
         gmaps.event.addListener(contextMenu, 'onGoToClick', function (coords) { handleContextMenyRouteClick(coords, "toMarker", onToMarkerSelectedCallback); });
@@ -325,7 +358,6 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
                     if (typeof (callback) == "function") { callback(marker, eventName, args); }
                 });
             }
-            //if (typeof (onMarkerDragCallback) == "function") { onMarkerDragCallback(marker, eventName, args); }
         }
     };
 
@@ -341,6 +373,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     this.setMarker = setMarker;
     this.setRoute = setRoute;
     this.ready = ready.promise;
+    this.contextMenuReady = contextMenuReady.promise;
     this.onMapConfigChanged = onMapConfigChanged;
     this.onMapMarkersChanged = onMapMarkersChanged;
     this.onFromMarkerSelected = onFromMarkerSelected;
@@ -350,6 +383,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     this.onResetSelected = onResetSelected;
     this.onMarkerDrag = onMarkerDrag;
     this.removeMarkers = removeMarkers;
+    this.removeRouteMarkers = removeRouteMarkers;
+    this.removeSearchMarkers = removeSearchMarkers;
     this.showRoutes = showRoutes;
     this.markerEvents = markerEvents;
 });
