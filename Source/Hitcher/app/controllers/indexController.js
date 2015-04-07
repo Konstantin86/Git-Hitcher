@@ -56,6 +56,14 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
                 type = value;
             }
         });
+
+        $scope.$watch('searchModel.startLat', function (value) {
+            var contextMenu = $('.context_menu');
+
+            if (contextMenu.length) {
+                contextMenu.children()[2].style.display = value ? 'none' : 'block';
+            }
+        });
     });
 
     function initAside() {
@@ -88,6 +96,12 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
         $scope.searchModel.endLat = coords.lat();
         $scope.searchModel.endLng = coords.lng();
         showAside();
+    });
+
+    mapService.onResetSelected(function () {
+        if (searchAside && searchAside.$isShown) {
+            $scope.hideSearch();
+        }
     });
 
     $scope.search = function () {
@@ -127,8 +141,8 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
     });
 
     $scope.hideSearch = function () {
-        //initAside();
-        //mapService.removeMarkers();
+        initAside();
+        mapService.removeMarkers();
         searchAside.hide();
     };
 

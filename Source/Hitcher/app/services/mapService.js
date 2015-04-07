@@ -26,6 +26,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var onFromMarkerSelectedCallback;
     var onToMarkerSelectedCallback;
 
+    var onResetSelectedCallbacks = [];
+
     var onSearchFromMarkerSelectedCallback;
     var onSearchToMarkerSelectedCallback;
 
@@ -191,6 +193,11 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
     var onSearchToMarkerSelected = function (callback) { onSearchToMarkerSelectedCallback = callback; };
 
+    var onResetSelected = function (callback)
+    {
+        onResetSelectedCallbacks.push(callback);
+    };
+
     var removeMarkers = function () {
         for (var i = 0; i < markers.length; i++) {
             if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker" || markers[i]["id"] === "fromSearchMarker" || markers[i]["id"] === "toSearchMarker") {
@@ -266,7 +273,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
                { label: 'Еду отсюда', id: 'menu_go_from', eventName: 'onGoFromClick' },
                { label: 'Еду сюда', id: 'menu_go_to', eventName: 'onGoToClick' },
                { label: 'Ищу отсюда', id: 'menu_search_from', eventName: 'onSearchFromClick' },
-               { label: 'Ищу сюда', id: 'menu_search_to', eventName: 'onSearchToClick' }
+               { label: 'Ищу сюда', id: 'menu_search_to', eventName: 'onSearchToClick' },
+               { id: 'Separator' },
+               { label: 'Сброс', id: 'menu_reset', eventName: 'onResetClick' }
             ]
         };
 
@@ -282,6 +291,19 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
             });
         };
 
+        var handleContextMenyResetClick = function (callbacks) {
+
+            if (callbacks.length) {
+                callbacks.forEach(function (callback) {
+                    if (typeof (callback) == "function") { callback(); }
+                });
+            }
+
+            //if (typeof (callback) == "function") {
+            //    callback();
+            //}
+        };
+
         gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) { contextMenu.show(mouseEvent.latLng); });
 
         gmaps.event.addListener(contextMenu, 'onGoFromClick', function (coords) { handleContextMenyRouteClick(coords, "fromMarker", onFromMarkerSelectedCallback); });
@@ -289,6 +311,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
         gmaps.event.addListener(contextMenu, 'onSearchFromClick', function (coords) { handleContextMenyRouteClick(coords, "fromSearchMarker", onSearchFromMarkerSelectedCallback); });
         gmaps.event.addListener(contextMenu, 'onSearchToClick', function (coords) { handleContextMenyRouteClick(coords, "toSearchMarker", onSearchToMarkerSelectedCallback); });
+
+        gmaps.event.addListener(contextMenu, 'onResetClick', function () { handleContextMenyResetClick(onResetSelectedCallbacks); });
 
         ready.resolve(googlemap);
     });
@@ -323,6 +347,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     this.onToMarkerSelected = onToMarkerSelected;
     this.onSearchFromMarkerSelected = onSearchFromMarkerSelected;
     this.onSearchToMarkerSelected = onSearchToMarkerSelected;
+    this.onResetSelected = onResetSelected;
     this.onMarkerDrag = onMarkerDrag;
     this.removeMarkers = removeMarkers;
     this.showRoutes = showRoutes;

@@ -48,6 +48,8 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     }
 
     $scope.hideDriveAside = function () {
+        initAside();
+        mapService.removeMarkers();
         driveAside.hide();
     };
 
@@ -102,6 +104,14 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         showAside();
     });
 
+    mapService.onResetSelected(function () {
+        //mapService.removeMarkers();
+        //initAside();
+        if (driveAside && driveAside.$isShown) {
+            $scope.hideDriveAside();
+        }
+    });
+
     $scope.$on('$typeahead.select', function (value, index) {
         if ($scope.route.startName === index) {
             mapService.geocode({ 'address': $scope.route.startName }).then(function (result) {
@@ -120,7 +130,17 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         }
     });
 
-    mapService.ready.then(function (gmaps) { mapService.centerOnMe(); });
+    mapService.ready.then(function (gmaps) {
+        mapService.centerOnMe();
+
+        $scope.$watch('route.startLatLng', function (value) {
+            var contextMenu = $('.context_menu');
+
+            if (contextMenu.length) {
+                contextMenu.children()[0].style.display = value ? 'none' : 'block';
+            }
+        });
+    });
 
     initAside();
 
