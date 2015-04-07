@@ -56,6 +56,12 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     var setRoute = function () {
         mapService.setRoute($scope.route, false, true).then(function (routeData) {
 
+            if (!routeData) {
+                initAside();
+                statusService.warning("Невозможно проложить маршрут.");
+                return;
+            };
+
             $scope.route.totalDistance = routeData.totalDistance;
             $scope.route.totalDuration = routeData.totalDistance;
             $scope.route.path = routeData.path;

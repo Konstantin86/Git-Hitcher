@@ -33,9 +33,9 @@ namespace Hitcher.Service
         Coords = new List<Coord>()
       };
 
-      int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);
+      //int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);
 
-      for (int i = 0; i < route.Path.Length; i += incr)
+      for (int i = 0; i < route.Path.Length; i++)
       {
         newRoute.Coords.Add(route.Path[i]);
       }

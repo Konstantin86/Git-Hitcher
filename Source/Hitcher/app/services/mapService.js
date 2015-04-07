@@ -166,6 +166,57 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         var request = { origin: routePoints.startLatLng, destination: routePoints.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
         directionsService.route(request, function (response, status) {
             if (status === gmaps.DirectionsStatus.OK) {
+
+                //var polyline = new gmaps.Polyline({
+                //    path: [],
+                //    strokeColor: '#FF0000',
+                //    strokeWeight: 3
+                //});
+                //var bounds = new gmaps.LatLngBounds();
+
+
+                //var legs = response.routes[0].legs;
+                //for (var i = 0; i < legs.length; i++) {
+                //    var steps = legs[i].steps;
+                //    for (var j = 0; j < steps.length; j++) {
+                //        var nextSegment = steps[j].path;
+                //        for (var k = 0; k < nextSegment.length; k++) {
+                //            polyline.getPath().push(nextSegment[k]);
+                //            bounds.extend(nextSegment[k]);
+                //        }
+                //    }
+                //}
+
+                //polyline.setMap(mapControl);
+                //mapControl.fitBounds(bounds);
+
+
+                //var test = {
+                //    "mc": {
+                //        destination: "49.99140828271532,36.28063201904297",
+                //        origin: "50.03906083112808,36.28337860107422",
+                //        travelMode: "DRIVING"
+                //    },
+                //    "routes": [
+                //        {
+                //            "legs": [
+                //            {
+                //                "end_address": "Bestuzheva Street, 8, Kharkiv, Kharkiv Oblast, Ukraine",
+                //                "end_location": {
+                //                    "lat": 49.9912883,
+                //                    "lng": 36.2807547
+                //                },
+                //                "start_address": "Lisoparkivska Street, 7, Kharkiv, Kharkiv Oblast, Ukraine",
+                //                "start_location": {
+                //                    "lat": 50.038954,
+                //                    "lng": 36.2836233
+                //                }
+                //            }]
+                //        }
+                //    ]
+                //};
+
+                //directionsDisplay.setDirections(test);
                 directionsDisplay.setDirections(response);
 
                 if (returnRouteInfo) {
@@ -199,14 +250,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     };
 
     var removeMarkers = function () {
-        //for (var i = 0; i < markers.length; i++) {
-        //    if (markers[i]["id"] === "fromMarker" || markers[i]["id"] === "toMarker" || markers[i]["id"] === "fromSearchMarker" || markers[i]["id"] === "toSearchMarker") {
-        //        markers = markers.splice(i, 1);
-        //    }
-        //}
-
         markers = [];
-
         if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
     };
 
@@ -334,7 +378,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
             //}
         };
 
-        gmaps.event.addListener(mapControl, 'rightclick', function(mouseEvent) {
+        gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) {
             contextMenu.show(mouseEvent.latLng);
             contextMenuReady.resolve();
         });
