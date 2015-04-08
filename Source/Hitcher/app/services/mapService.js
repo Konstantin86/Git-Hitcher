@@ -15,6 +15,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
     var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
+    var tempRouteDirection = null;
+
     var directions = [];
     var polylines = [];
 
@@ -31,6 +33,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var onSearchToMarkerSelectedCallback;
 
     var onMarkerDragCallbacks = [];
+    var onRouteChangedCallbacks = [];
 
     var ready = $q.defer();
     var contextMenuReady = $q.defer();
@@ -131,15 +134,11 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     };
 
     var getRouteInfo = function (route) {
-        var totalDistance = 0;
-        var totalDuration = 0;
         var path = [];
 
 
         var legs = route.legs;
         for (var i = 0; i < legs.length; i++) {
-            totalDistance += legs[i].distance.value;
-            totalDuration += legs[i].duration.value;
 
             var steps = legs[i].steps;
             for (var j = 0; j < steps.length; j++) {
@@ -150,26 +149,23 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             }
         }
 
-        return {
-            totalDistance: totalDistance,
-            totalDuration: totalDuration,
-            path: path
-        };
+        return { path: path };
     };
 
     var declareRoute = function (route) {
         var deferred = $q.defer();
 
         var rendererOptions = {
-            draggable: true,   // TODO plan how to handle saving route coords to db
+            draggable: true, 
             preserveViewport: false,
-            polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
+            polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 }
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
         directionsDisplay.setMap(mapControl);
 
-        directions.push(directionsDisplay);
+        tempRouteDirection = directionsDisplay;
+        //directions.push(directionsDisplay);
 
         var request = { origin: route.startLatLng, destination: route.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
 
@@ -179,53 +175,12 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             if (status === gmaps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
 
-                google.maps.event.addListener(directionsDisplay, 'directions_changed', function () {
-
-                    var directions = directionsDisplay.getDirections();
-
-                    if (!directions) return;
-
-                    var path = [];
-
-                    // TODO This code is duplicated. Introduce an appropriate function.
-                    var legs = directions.routes[0].legs;
-                    for (var i = 0; i < legs.length; i++) {
-                        var steps = legs[i].steps;
-                        for (var j = 0; j < steps.length; j++) {
-                            var nextSegment = steps[j].path;
-                            for (var k = 0; k < nextSegment.length; k++) {
-                                path.push({ Lat: nextSegment[k].lat(), Lng: nextSegment[k].lng() });
-                            }
-                        }
+                gmaps.event.addListener(directionsDisplay, 'directions_changed', function () {
+                    if (onRouteChangedCallbacks.length) {
+                        onRouteChangedCallbacks.forEach(function (callback) {
+                            if (typeof (callback) == "function") { callback(directionsDisplay); }
+                        });
                     }
-
-                    //Save route flow:
-                    //- User selects 'Go From'
-                    //- User selects 'Go To'
-                    //- Draggable route is actually created but is not saved to db yet
-                    //   * User can adjust route using all available options (including direction dragging)
-                    //   * User clicks 'Cancel' - created route is removed, route points are cleared (i.e. as it works now + removing temporary route from map)
-                    //* User clicks Save, route is saved to DB, then mapService.showRoutes call is executed that updates map with all routes (including created one)
-
-                    //Notes:
-                    //- we need to keep direction object (including points (path)) until user either click save or cancel.
-
-                    // TODO Updating path of the latest saved entity. Approach will fail in simulateneous routes creation. So we need to suspend route saving until we completed editing it!
-                    // Make up some workflow on how routes will be created (include editing)...
-                    // TODO: Bug for driver we get incorrect route with incorrect type (hitcher type)
-                    // TODO: Bug sometimes routes are not rendered correctly. Probably small delay is still needed.
-                    routeService.resource.query({ type: userService.user.type }, function (result) {
-                        if (result && result.length) {
-                            result[result.length - 1].path = path;
-
-                            routeService.resource.save(result[result.length - 1], function (result) {
-                                if (result) {
-                                    // show alert!
-                                }
-                            });
-                        }
-                    });
-
                 });
 
                 deferred.resolve(getRouteInfo(response.routes[0]));
@@ -330,6 +285,10 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var showRoutes = function (request) {
         var deferred = $q.defer();
 
+        if (tempRouteDirection) {
+            tempRouteDirection.set('directions', null);
+        }
+
         directions.forEach(function (dir) {
             dir.set('directions', null);
         });
@@ -344,15 +303,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
         routeService.resource.query(request, function (result) {
             if (result && result.length) {
-
-                //for (var i = 0; i < result.length; i++) {
-                //    (function (i) {  // i will now become available for the someMethod to call
-                //        $timeout(function () {
-                //            setRoute(result[i], i);
-                //        }, i * 100);
-                //    })(i); // Pass in i here
-                //}
-
                 for (var i = 0; i < result.length; i++) {
                     setRoute(result[i], i);
                 }
@@ -440,9 +390,19 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         }
     };
 
-    var onMarkerDrag = function (callback) {
+    var onMarkerDrag = function(callback) {
         onMarkerDragCallbacks.push(callback);
-    }
+    };
+
+    var onRouteChanged = function(callback) {
+        onRouteChangedCallbacks.push(callback);
+    };
+
+    var removeTempRoute = function() {
+        if (tempRouteDirection) {
+            tempRouteDirection.set('directions', null);
+        }
+    };
 
     this.map = map;
     this.markers = markers;
@@ -462,6 +422,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     this.onSearchToMarkerSelected = onSearchToMarkerSelected;
     this.onResetSelected = onResetSelected;
     this.onMarkerDrag = onMarkerDrag;
+    this.onRouteChanged = onRouteChanged;
+    this.removeTempRoute = removeTempRoute;
     this.removeMarkers = removeMarkers;
     this.removeRouteMarkers = removeRouteMarkers;
     this.removeSearchMarkers = removeSearchMarkers;

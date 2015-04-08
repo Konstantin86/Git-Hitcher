@@ -8,10 +8,14 @@
 
 app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, userService, mapService, uiGmapIsReady, statusService, routeService) {
     var driveAside;
+    var routeCreating = false;
+    var type;
 
     $scope.map = mapService.map;
     $scope.markers = mapService.markers;
     $scope.markerEvents = mapService.markerEvents;
+
+    $scope.user = userService.user;
 
     mapService.onMarkerDrag(function (marker, eventName, args) {
         var coords = marker.position;
@@ -50,38 +54,27 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     $scope.hideDriveAside = function () {
         initAside();
         mapService.removeRouteMarkers();
+        mapService.removeTempRoute();
+        routeCreating = false;
         driveAside.hide();
     };
 
     $scope.declareRoute = function () {
         $scope.route.type = userService.user.type;
+        $scope.route.startLatLng = $scope.route.startLatLng.lat() + "," + $scope.route.startLatLng.lng();
+        $scope.route.endLatLng = $scope.route.endLatLng.lat() + "," + $scope.route.endLatLng.lng();
 
-        mapService.declareRoute($scope.route, false, true).then(function (routeData) {
+        routeService.resource.save($scope.route, function (result) {
+            if (result) {
+                statusService.success("Route is successfully created.");
+            }
 
-            if (!routeData) {
-                initAside();
-                statusService.warning("Невозможно проложить маршрут.");
-                return;
-            };
+            initAside();
+            driveAside.hide();
+            routeCreating = false;
 
-            $scope.route.totalDistance = routeData.totalDistance;
-            $scope.route.totalDuration = routeData.totalDistance;
-            $scope.route.path = routeData.path;
-
-            $scope.route.startLatLng = $scope.route.startLatLng.lat() + "," + $scope.route.startLatLng.lng();
-            $scope.route.endLatLng = $scope.route.endLatLng.lat() + "," + $scope.route.endLatLng.lng();
-
-            routeService.resource.save($scope.route, function (result) {
-                if (result) {
-                    // show alert!
-                }
-
-                initAside();
-            });
+            mapService.showRoutes({ type: type });
         });
-
-        mapService.removeRouteMarkers();
-        driveAside.hide();
     };
 
     $scope.getAddress = function (viewValue) {
@@ -114,6 +107,23 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         }
     });
 
+    var createRoute = function () {
+        mapService.declareRoute($scope.route).then(function (routeData) {
+
+            if (!routeData) {
+                initAside();
+                statusService.warning("Невозможно проложить маршрут.");
+                return;
+            };
+
+            $scope.route.path = routeData.path;
+
+            mapService.removeRouteMarkers();
+
+            routeCreating = true;
+        });
+    };
+
     $scope.$on('$typeahead.select', function (value, index) {
         if ($scope.route.startName === index) {
             mapService.geocode({ 'address': $scope.route.startName }).then(function (result) {
@@ -121,6 +131,13 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 $scope.route.startLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "fromMarker");
                 mapService.centerMap(location.lat(), location.lng(), 12);
+
+                if (routeCreating) {
+                    //routeCreating = false;
+                    // TODO redraw route
+                    mapService.removeTempRoute();
+                    createRoute();
+                }
             });
         } else if ($scope.route.endName === index) {
             mapService.geocode({ 'address': $scope.route.endName }).then(function (result) {
@@ -128,12 +145,29 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 $scope.route.endLatLng = location;
                 mapService.setMarker(location.lat(), location.lng(), "toMarker");
                 mapService.centerMap(location.lat(), location.lng(), 12);
+
+                if (routeCreating) {
+                    //routeCreating = false;
+                    // TODO redraw route
+                    mapService.removeTempRoute();
+                    createRoute();
+                }
             });
         }
     });
 
     mapService.ready.then(function (gmaps) {
         mapService.centerOnMe();
+
+        $scope.$watch('user.type', function (value) {
+            if (value !== type) {
+                if (driveAside && driveAside.$isShown) {
+                    $scope.hideDriveAside();
+                }
+
+                type = value;
+            }
+        });
     });
 
     mapService.contextMenuReady.then(function (gmaps) {
@@ -153,6 +187,50 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
             if (contextMenu.length) {
                 contextMenu.children()[1].style.display = ($scope.route.startLatLng && $scope.route.endLatLng) || (!$scope.route.startLatLng) ? 'none' : 'block';
             }
+        });
+    });
+
+    $scope.$watch('route.startLatLng', function (value) {
+        if ($scope.route.endLatLng && $scope.route.startLatLng && !routeCreating) {
+            createRoute();
+        }
+    });
+
+    $scope.$watch('route.endLatLng', function (value) {
+        if ($scope.route.endLatLng && $scope.route.startLatLng && !routeCreating) {
+            createRoute();
+        }
+    });
+
+    mapService.onRouteChanged(function (directionsDisplay) {
+        var directions = directionsDisplay.getDirections();
+
+        if (!directions) return;
+
+        var path = [];
+
+        // TODO This code is duplicated. Introduce an appropriate function.
+        var legs = directions.routes[0].legs;
+        for (var i = 0; i < legs.length; i++) {
+            var steps = legs[i].steps;
+            for (var j = 0; j < steps.length; j++) {
+                var nextSegment = steps[j].path;
+                for (var k = 0; k < nextSegment.length; k++) {
+                    path.push({ Lat: nextSegment[k].lat(), Lng: nextSegment[k].lng() });
+                }
+            }
+        }
+
+        $scope.route.path = path;
+        $scope.route.startLatLng = directions.mc.origin;
+        $scope.route.endLatLng = directions.mc.destination;
+
+        mapService.geocode({ 'latlng': $scope.route.startLatLng.lat() + ',' + $scope.route.startLatLng.lng(), 'language': 'ru' }, false, true).then(function (res) {
+            $scope.route.startName = res.data.results[0].formatted_address;
+        });
+
+        mapService.geocode({ 'latlng': $scope.route.endLatLng.lat() + ',' + $scope.route.endLatLng.lng(), 'language': 'ru' }, false, true).then(function (res) {
+            $scope.route.endName = res.data.results[0].formatted_address;
         });
     });
 
