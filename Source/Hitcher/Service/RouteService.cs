@@ -20,9 +20,9 @@ namespace Hitcher.Service
 
     public int Save(PostRouteRequest route)
     {
-      //// TODO save 3 points for 1 km:
       Route newRoute = new Route
       {
+        Id = route.Id,
         EndLatLng = route.EndLatLng,
         StartLatLng = route.StartLatLng,
         StartName = route.StartName,
@@ -43,9 +43,7 @@ namespace Hitcher.Service
       newRoute.Coords.Remove(newRoute.Coords.Last());
       newRoute.Coords.Add(route.Path.Last());
 
-      int id = _unitOfWork.RouteRepository.Update(newRoute);
-      return id;
-      return 1;
+      return _unitOfWork.RouteRepository.Update(newRoute);
     }
 
     public IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng, int resultsCount)

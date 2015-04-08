@@ -13,8 +13,6 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var geocoder;
     var mapControl;
 
-    //var loadCount;
-
     var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
     var directions = [];
@@ -147,7 +145,6 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
             for (var j = 0; j < steps.length; j++) {
                 var nextSegment = steps[j].path;
                 for (var k = 0; k < nextSegment.length; k++) {
-                    //polyline.getPath().push(nextSegment[k]);
                     path.push({ Lat: nextSegment[k].lat(), Lng: nextSegment[k].lng() });
                 }
             }
@@ -156,7 +153,6 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         return {
             totalDistance: totalDistance,
             totalDuration: totalDuration,
-            //path: route.overview_path.map(function (m) { return { lat: m.lat(), lng: m.lng() }; })
             path: path
         };
     };
@@ -165,10 +161,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         var deferred = $q.defer();
 
         var rendererOptions = {
-            //draggable: true,   // TODO plan how to handle saving route coords to db
+            draggable: true,   // TODO plan how to handle saving route coords to db
             preserveViewport: false,
             polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
-            //routeIndex: index
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
@@ -183,6 +178,43 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         directionsService.route(request, function (response, status) {
             if (status === gmaps.DirectionsStatus.OK) {
                 directionsDisplay.setDirections(response);
+
+                google.maps.event.addListener(directionsDisplay, 'directions_changed', function () {
+
+                    var directions = directionsDisplay.getDirections();
+
+                    if (!directions) return;
+
+                    var path = [];
+
+                    // TODO This code is duplicated. Introduce an appropriate function.
+                    var legs = directions.routes[0].legs;
+                    for (var i = 0; i < legs.length; i++) {
+                        var steps = legs[i].steps;
+                        for (var j = 0; j < steps.length; j++) {
+                            var nextSegment = steps[j].path;
+                            for (var k = 0; k < nextSegment.length; k++) {
+                                path.push({ Lat: nextSegment[k].lat(), Lng: nextSegment[k].lng() });
+                            }
+                        }
+                    }
+
+                    // TODO Updating path of the latest saved entity. Approach will fail in simulateneous routes creation. So we need to suspend route saving until we completed editing it!
+                    // Make up some workflow on how routes will be created (include editing)...
+                    routeService.resource.query(request, function (result) {
+                        if (result && result.length) {
+                            result[result.length - 1].path = path;
+
+                            routeService.resource.save(result[result.length - 1], function (result) {
+                                if (result) {
+                                    // show alert!
+                                }
+                            });
+                        }
+                    });
+
+                });
+
                 deferred.resolve(getRouteInfo(response.routes[0]));
             } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) { } else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
                 deferred.reject();
@@ -194,11 +226,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         return deferred.promise;
     };
 
-    var setRoute = function (routePoints, preserveViewport, returnRouteInfo, index) {
-        //var deferred = $q.defer();
-
+    var setRoute = function (routePoints, index) {
         var rendererOptions = {
-            preserveViewport: preserveViewport,
+            preserveViewport: true,
             polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
             routeIndex: index
         };
@@ -233,15 +263,6 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         };
 
         directionsDisplay.setDirections(test);
-
-        //if (returnRouteInfo) {
-        //    var routeInfo = getRouteInfo(response.routes[0]);
-        //    deferred.resolve(routeInfo);
-        //}
-
-        //deferred.resolve(index);
-
-        //return deferred.promise;
     };
 
     var onMapConfigChanged = function (callback) { onMapConfigChangedCallback = callback; };
@@ -309,30 +330,8 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
         routeService.resource.query(request, function (result) {
             if (result && result.length) {
-                //loadCount = result.length - 1;
-                //statusService.loading("Загрузка маршрутов...");
-
-                //var drawRoute = function (i) {
-                //    setRoute(result[i], true, false, i).then(function () {
-                //        //if (loadCount > 0) {
-                //        //    loadCount--;
-                //        //}
-
-                //        //if (loadCount === 0) {
-                //            //statusService.clear();
-                //            deferred.resolve(result.length);
-                //        //}
-                //    }, function (index) {
-                //        var timer = $timeout(function () {
-                //            $timeout.cancel(timer);
-                //            drawRoute(index);
-                //        }, 500);
-                //    });
-                //};
-
                 for (var i = 0; i < result.length; i++) {
-                    setRoute(result[i], true, false, i);
-                    //drawRoute(i);
+                    setRoute(result[i], i);
                 }
 
                 deferred.resolve(result.length);
@@ -384,16 +383,11 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         };
 
         var handleContextMenyResetClick = function (callbacks) {
-
             if (callbacks.length) {
                 callbacks.forEach(function (callback) {
                     if (typeof (callback) == "function") { callback(); }
                 });
             }
-
-            //if (typeof (callback) == "function") {
-            //    callback();
-            //}
         };
 
         gmaps.event.addListener(mapControl, 'rightclick', function (mouseEvent) {

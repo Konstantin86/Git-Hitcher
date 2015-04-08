@@ -65,8 +65,7 @@ namespace Hitcher.DataAccess.Repositories
         return Add(t, saveChanges);
       }
 
-      _context.Set<T>().Attach(entity);
-      OnUpdate(entity, t, _context);
+      OnUpdate(t, _context);
 
       if (saveChanges)
       {
@@ -111,7 +110,7 @@ namespace Hitcher.DataAccess.Repositories
       }
     }
 
-    protected abstract void OnUpdate(T entity, T newEntity, AppDbContext context);
+    protected abstract void OnUpdate(T newEntity, AppDbContext context);
 
     protected virtual void OnAdd(T entity, AppDbContext context) { }
 
