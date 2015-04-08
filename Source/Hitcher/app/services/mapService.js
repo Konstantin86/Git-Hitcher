@@ -18,6 +18,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
     var directions = [];
+    var polylines = [];
 
     var currentLocation;
 
@@ -167,57 +168,59 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         directionsService.route(request, function (response, status) {
             if (status === gmaps.DirectionsStatus.OK) {
 
-                //var polyline = new gmaps.Polyline({
-                //    path: [],
-                //    strokeColor: '#FF0000',
-                //    strokeWeight: 3
-                //});
-                //var bounds = new gmaps.LatLngBounds();
+                var polyline = new gmaps.Polyline({
+                    path: [],
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.6,
+                    strokeWeight: 4
+                });
+                var bounds = new gmaps.LatLngBounds();
 
 
-                //var legs = response.routes[0].legs;
-                //for (var i = 0; i < legs.length; i++) {
-                //    var steps = legs[i].steps;
-                //    for (var j = 0; j < steps.length; j++) {
-                //        var nextSegment = steps[j].path;
-                //        for (var k = 0; k < nextSegment.length; k++) {
-                //            polyline.getPath().push(nextSegment[k]);
-                //            bounds.extend(nextSegment[k]);
-                //        }
-                //    }
-                //}
+                var legs = response.routes[0].legs;
+                for (var i = 0; i < legs.length; i++) {
+                    var steps = legs[i].steps;
+                    for (var j = 0; j < steps.length; j++) {
+                        var nextSegment = steps[j].path;
+                        for (var k = 0; k < nextSegment.length; k++) {
+                            polyline.getPath().push(nextSegment[k]);
+                            bounds.extend(nextSegment[k]);
+                        }
+                    }
+                }
 
-                //polyline.setMap(mapControl);
-                //mapControl.fitBounds(bounds);
+                polyline.setMap(mapControl);
+                polylines.push(polyline);
+                mapControl.fitBounds(bounds);
 
 
-                //var test = {
-                //    "mc": {
-                //        destination: "49.99140828271532,36.28063201904297",
-                //        origin: "50.03906083112808,36.28337860107422",
-                //        travelMode: "DRIVING"
-                //    },
-                //    "routes": [
-                //        {
-                //            "legs": [
-                //            {
-                //                "end_address": "Bestuzheva Street, 8, Kharkiv, Kharkiv Oblast, Ukraine",
-                //                "end_location": {
-                //                    "lat": 49.9912883,
-                //                    "lng": 36.2807547
-                //                },
-                //                "start_address": "Lisoparkivska Street, 7, Kharkiv, Kharkiv Oblast, Ukraine",
-                //                "start_location": {
-                //                    "lat": 50.038954,
-                //                    "lng": 36.2836233
-                //                }
-                //            }]
-                //        }
-                //    ]
-                //};
+                var test = {
+                    "mc": {
+                        destination: "49.99140828271532,36.28063201904297",
+                        origin: "50.03906083112808,36.28337860107422",
+                        travelMode: "DRIVING"
+                    },
+                    "routes": [
+                        {
+                            "legs": [
+                            {
+                                "end_address": "Bestuzheva Street, 8, Kharkiv, Kharkiv Oblast, Ukraine",
+                                "end_location": {
+                                    "lat": 49.9912883,
+                                    "lng": 36.2807547
+                                },
+                                "start_address": "Lisoparkivska Street, 7, Kharkiv, Kharkiv Oblast, Ukraine",
+                                "start_location": {
+                                    "lat": 50.038954,
+                                    "lng": 36.2836233
+                                }
+                            }]
+                        }
+                    ]
+                };
 
-                //directionsDisplay.setDirections(test);
-                directionsDisplay.setDirections(response);
+                directionsDisplay.setDirections(test);
+                //directionsDisplay.setDirections(response);
 
                 if (returnRouteInfo) {
                     var routeInfo = getRouteInfo(response.routes[0]);
@@ -289,6 +292,11 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         directions.forEach(function (dir) {
             dir.set('directions', null);
         });
+
+        polylines.forEach(function (pol) {
+            pol.setMap(null);
+        });
+        //polylines
 
         directions = [];
 
