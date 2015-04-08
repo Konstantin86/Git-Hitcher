@@ -53,8 +53,10 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         driveAside.hide();
     };
 
-    var setRoute = function () {
-        mapService.setRoute($scope.route, false, true).then(function (routeData) {
+    $scope.declareRoute = function () {
+        $scope.route.type = userService.user.type;
+
+        mapService.declareRoute($scope.route, false, true).then(function (routeData) {
 
             if (!routeData) {
                 initAside();
@@ -77,12 +79,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 initAside();
             });
         });
-    };
-
-    $scope.declareRoute = function () {
-        $scope.route.type = userService.user.type;
-
-        setRoute();
 
         mapService.removeRouteMarkers();
         driveAside.hide();

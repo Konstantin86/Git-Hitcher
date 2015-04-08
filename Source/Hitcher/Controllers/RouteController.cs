@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using System.Web.Http;
 using Hitcher.Controllers.Base;
 using Hitcher.DataAccess;
@@ -41,7 +42,7 @@ namespace Hitcher.Controllers
         return Ok(enumerable);
       }
 
-      IQueryable<Route> allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type);
+      IQueryable<Route> allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords);
 
       if (!request.Take.HasValue && !request.Skip.HasValue)
       {

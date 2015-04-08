@@ -13,7 +13,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var geocoder;
     var mapControl;
 
-    var loadCount;
+    //var loadCount;
 
     var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
 
@@ -135,24 +135,69 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     var getRouteInfo = function (route) {
         var totalDistance = 0;
         var totalDuration = 0;
+        var path = [];
+
+
         var legs = route.legs;
-        for (var i = 0; i < legs.length; ++i) {
+        for (var i = 0; i < legs.length; i++) {
             totalDistance += legs[i].distance.value;
             totalDuration += legs[i].duration.value;
+
+            var steps = legs[i].steps;
+            for (var j = 0; j < steps.length; j++) {
+                var nextSegment = steps[j].path;
+                for (var k = 0; k < nextSegment.length; k++) {
+                    //polyline.getPath().push(nextSegment[k]);
+                    path.push({ Lat: nextSegment[k].lat(), Lng: nextSegment[k].lng() });
+                }
+            }
         }
 
         return {
             totalDistance: totalDistance,
-            totalDuration: totalDistance,
-            path: route.overview_path.map(function (m) { return { lat: m.lat(), lng: m.lng() }; })
+            totalDuration: totalDuration,
+            //path: route.overview_path.map(function (m) { return { lat: m.lat(), lng: m.lng() }; })
+            path: path
         };
     };
 
-    var setRoute = function (routePoints, preserveViewport, returnRouteInfo, index) {
+    var declareRoute = function (route) {
         var deferred = $q.defer();
 
         var rendererOptions = {
             //draggable: true,   // TODO plan how to handle saving route coords to db
+            preserveViewport: false,
+            polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
+            //routeIndex: index
+        };
+
+        var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
+        directionsDisplay.setMap(mapControl);
+
+        directions.push(directionsDisplay);
+
+        var request = { origin: route.startLatLng, destination: route.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
+
+        var directionsService = new gmaps.DirectionsService();
+
+        directionsService.route(request, function (response, status) {
+            if (status === gmaps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+                deferred.resolve(getRouteInfo(response.routes[0]));
+            } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) { } else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                deferred.reject();
+            }
+
+            deferred.resolve();
+        });
+
+        return deferred.promise;
+    };
+
+    var setRoute = function (routePoints, preserveViewport, returnRouteInfo, index) {
+        //var deferred = $q.defer();
+
+        var rendererOptions = {
             preserveViewport: preserveViewport,
             polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
             routeIndex: index
@@ -163,77 +208,40 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
         directions.push(directionsDisplay);
 
-        var directionsService = new gmaps.DirectionsService();
         var request = { origin: routePoints.startLatLng, destination: routePoints.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
-        directionsService.route(request, function (response, status) {
-            if (status === gmaps.DirectionsStatus.OK) {
 
-                var polyline = new gmaps.Polyline({
-                    path: [],
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 0.6,
-                    strokeWeight: 4
-                });
-                var bounds = new gmaps.LatLngBounds();
-
-
-                var legs = response.routes[0].legs;
-                for (var i = 0; i < legs.length; i++) {
-                    var steps = legs[i].steps;
-                    for (var j = 0; j < steps.length; j++) {
-                        var nextSegment = steps[j].path;
-                        for (var k = 0; k < nextSegment.length; k++) {
-                            polyline.getPath().push(nextSegment[k]);
-                            bounds.extend(nextSegment[k]);
-                        }
-                    }
-                }
-
-                polyline.setMap(mapControl);
-                polylines.push(polyline);
-                mapControl.fitBounds(bounds);
-
-
-                var test = {
-                    "mc": {
-                        destination: "49.99140828271532,36.28063201904297",
-                        origin: "50.03906083112808,36.28337860107422",
-                        travelMode: "DRIVING"
-                    },
-                    "routes": [
-                        {
-                            "legs": [
-                            {
-                                "end_address": "Bestuzheva Street, 8, Kharkiv, Kharkiv Oblast, Ukraine",
-                                "end_location": {
-                                    "lat": 49.9912883,
-                                    "lng": 36.2807547
-                                },
-                                "start_address": "Lisoparkivska Street, 7, Kharkiv, Kharkiv Oblast, Ukraine",
-                                "start_location": {
-                                    "lat": 50.038954,
-                                    "lng": 36.2836233
-                                }
-                            }]
-                        }
-                    ]
-                };
-
-                directionsDisplay.setDirections(test);
-                //directionsDisplay.setDirections(response);
-
-                if (returnRouteInfo) {
-                    var routeInfo = getRouteInfo(response.routes[0]);
-                    deferred.resolve(routeInfo);
-                }
-            } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) { } else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                deferred.reject(index);
-            }
-
-            deferred.resolve(index);
+        var polyline = new gmaps.Polyline({
+            path: routePoints.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.6,
+            strokeWeight: 5
         });
 
-        return deferred.promise;
+        polyline.setMap(mapControl);
+        polylines.push(polyline);
+
+        var test = {
+            "mc": { destination: routePoints.startLatLng, origin: routePoints.endLatLng, travelMode: "DRIVING" },
+            "routes": [{
+                "legs": [{
+                    "end_address": routePoints.endName,
+                    "end_location": { "lat": routePoints.coords[routePoints.coords.length - 1].lat, "lng": routePoints.coords[routePoints.coords.length - 1].lng },
+                    "start_address": routePoints.startName,
+                    "start_location": { "lat": routePoints.coords[0].lat, "lng": routePoints.coords[0].lng }
+                }]
+            }]
+        };
+
+        directionsDisplay.setDirections(test);
+
+        //if (returnRouteInfo) {
+        //    var routeInfo = getRouteInfo(response.routes[0]);
+        //    deferred.resolve(routeInfo);
+        //}
+
+        //deferred.resolve(index);
+
+        //return deferred.promise;
     };
 
     var onMapConfigChanged = function (callback) { onMapConfigChangedCallback = callback; };
@@ -296,36 +304,38 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         polylines.forEach(function (pol) {
             pol.setMap(null);
         });
-        //polylines
 
         directions = [];
 
         routeService.resource.query(request, function (result) {
             if (result && result.length) {
-                loadCount = result.length - 1;
-                statusService.loading("Загрузка маршрутов...");
+                //loadCount = result.length - 1;
+                //statusService.loading("Загрузка маршрутов...");
 
-                var drawRoute = function (i) {
-                    setRoute(result[i], true, false, i).then(function () {
-                        if (loadCount > 0) {
-                            loadCount--;
-                        }
+                //var drawRoute = function (i) {
+                //    setRoute(result[i], true, false, i).then(function () {
+                //        //if (loadCount > 0) {
+                //        //    loadCount--;
+                //        //}
 
-                        if (loadCount === 0) {
-                            statusService.clear();
-                            deferred.resolve(result.length);
-                        }
-                    }, function (index) {
-                        var timer = $timeout(function () {
-                            $timeout.cancel(timer);
-                            drawRoute(index);
-                        }, 500);
-                    });
-                };
+                //        //if (loadCount === 0) {
+                //            //statusService.clear();
+                //            deferred.resolve(result.length);
+                //        //}
+                //    }, function (index) {
+                //        var timer = $timeout(function () {
+                //            $timeout.cancel(timer);
+                //            drawRoute(index);
+                //        }, 500);
+                //    });
+                //};
 
                 for (var i = 0; i < result.length; i++) {
-                    drawRoute(i);
+                    setRoute(result[i], true, false, i);
+                    //drawRoute(i);
                 }
+
+                deferred.resolve(result.length);
             }
 
             deferred.resolve(0);
@@ -424,6 +434,7 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
     this.geocode = geocode;
     this.setMarker = setMarker;
     this.setRoute = setRoute;
+    this.declareRoute = declareRoute;
     this.ready = ready.promise;
     this.contextMenuReady = contextMenuReady.promise;
     this.onMapConfigChanged = onMapConfigChanged;
