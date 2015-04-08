@@ -1,8 +1,8 @@
 ﻿<ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
     <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
     </ui-gmap-markers>
-    <ui-gmap-polyline ng-repeat="p in polylines" path="p.path" stroke="p.stroke" visible='p.visible'
-                      geodesic='p.geodesic' fit="false" editable="p.editable" draggable="p.draggable" icons='p.icons'></ui-gmap-polyline>
+    <!--<ui-gmap-polyline ng-repeat="p in polylines" path="p.path" stroke="p.stroke" visible='p.visible'
+                      geodesic='p.geodesic' fit="false" editable="p.editable" draggable="p.draggable" icons='p.icons'></ui-gmap-polyline>-->
     <ui-gmap-map-control template="app/views/modal/custom.map.control.html" controller="controlCtrl" position="top-right" index="-1"></ui-gmap-map-control>
 </ui-gmap-google-map>
 

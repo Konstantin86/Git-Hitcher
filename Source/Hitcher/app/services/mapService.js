@@ -8,7 +8,7 @@
 
 "use strict";
 
-app.service("mapService", function ($q, $http, $timeout, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
+app.service("mapService", function ($q, $http, $timeout, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
     var mapControl;
@@ -212,7 +212,9 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
 
                     // TODO Updating path of the latest saved entity. Approach will fail in simulateneous routes creation. So we need to suspend route saving until we completed editing it!
                     // Make up some workflow on how routes will be created (include editing)...
-                    routeService.resource.query(request, function (result) {
+                    // TODO: Bug for driver we get incorrect route with incorrect type (hitcher type)
+                    // TODO: Bug sometimes routes are not rendered correctly. Probably small delay is still needed.
+                    routeService.resource.query({ type: userService.user.type }, function (result) {
                         if (result && result.length) {
                             result[result.length - 1].path = path;
 
@@ -244,16 +246,10 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
             routeIndex: index
         };
 
-        var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
-        directionsDisplay.setMap(mapControl);
-
-        directions.push(directionsDisplay);
-
-        var request = { origin: routePoints.startLatLng, destination: routePoints.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
-
         var polyline = new gmaps.Polyline({
             path: routePoints.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
-            strokeColor: '#FF0000',
+            //strokeColor: '#FF0000',
+            strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)],
             strokeOpacity: 0.6,
             strokeWeight: 5
         });
@@ -272,6 +268,11 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
                 }]
             }]
         };
+
+        var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
+        directionsDisplay.setMap(mapControl);
+
+        directions.push(directionsDisplay);
 
         directionsDisplay.setDirections(test);
     };
@@ -338,9 +339,20 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
         });
 
         directions = [];
+        polylines = [];
+
 
         routeService.resource.query(request, function (result) {
             if (result && result.length) {
+
+                //for (var i = 0; i < result.length; i++) {
+                //    (function (i) {  // i will now become available for the someMethod to call
+                //        $timeout(function () {
+                //            setRoute(result[i], i);
+                //        }, i * 100);
+                //    })(i); // Pass in i here
+                //}
+
                 for (var i = 0; i < result.length; i++) {
                     setRoute(result[i], i);
                 }

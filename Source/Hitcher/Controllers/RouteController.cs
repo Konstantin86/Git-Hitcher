@@ -35,14 +35,25 @@ namespace Hitcher.Controllers
     [HttpGet]
     public IHttpActionResult Get([FromUri]QueryRouteRequest request)
     {
-      if (request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
+      if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
       {
         int resultsCount = request.Take ?? DefaultResultsCount;
-        var enumerable = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount);
+        var enumerable = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount).ToList();
+
+        foreach (var route in enumerable)
+        {
+          route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
+        }
+
         return Ok(enumerable);
       }
 
       IQueryable<Route> allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords);
+
+      foreach (var route in allRoutes)
+      {
+        route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
+      }
 
       if (!request.Take.HasValue && !request.Skip.HasValue)
       {
@@ -58,9 +69,7 @@ namespace Hitcher.Controllers
     public IHttpActionResult Post(PostRouteRequest route)
     {
       int id = _routeService.Save(route);
-      //int id = _unitOfWork.RouteRepository.Update(route);
-      return Ok(id);
-      return Ok(1);
+      return Ok(new { id });
     }
   }
 }
