@@ -199,6 +199,17 @@ app.service("mapService", function ($q, $http, $timeout, routeService, statusSer
                         }
                     }
 
+                    //Save route flow:
+                    //- User selects 'Go From'
+                    //- User selects 'Go To'
+                    //- Draggable route is actually created but is not saved to db yet
+                    //   * User can adjust route using all available options (including direction dragging)
+                    //   * User clicks 'Cancel' - created route is removed, route points are cleared (i.e. as it works now + removing temporary route from map)
+                    //* User clicks Save, route is saved to DB, then mapService.showRoutes call is executed that updates map with all routes (including created one)
+
+                    //Notes:
+                    //- we need to keep direction object (including points (path)) until user either click save or cancel.
+
                     // TODO Updating path of the latest saved entity. Approach will fail in simulateneous routes creation. So we need to suspend route saving until we completed editing it!
                     // Make up some workflow on how routes will be created (include editing)...
                     routeService.resource.query(request, function (result) {
