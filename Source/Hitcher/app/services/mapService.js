@@ -13,7 +13,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var geocoder;
     var mapControl;
 
-    var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
+    //var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
+    var colors = ["#DB0042", "#DB00B3", "#A100DB", "#3700DB", "#0066DB", "#00B7DB", "#00D17D", "#42D100", "#80B300", "#B37A00", "#B32100"];
 
     var currentColor = null;
 
@@ -22,6 +23,19 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var directions = [];
 
     var polylines = [];
+
+    String.prototype.toHHMMSS = function () {
+        var sec_num = parseInt(this, 10); // don't forget the second param
+        var hours = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours < 10) { hours = "0" + hours; }
+        if (minutes < 10) { minutes = "0" + minutes; }
+        if (seconds < 10) { seconds = "0" + seconds; }
+        var time = hours + ':' + minutes + ':' + seconds;
+        return time;
+    }
 
     var currentLocation;
 
@@ -214,6 +228,9 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
         var polyline = new gmaps.Polyline({
             path: routePoints.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
+
+            // TODO uncomment to display each 10 point
+            //path: routePoints.coords.filter(function (element) { return routePoints.coords.indexOf(element) % 10 === 0; }).map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
             strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)],
             strokeOpacity: 0.6,
             strokeWeight: 5
@@ -239,8 +256,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             var content = '<div style="width:200px;">'
     + '<b>From: </b>' + info.startName + '<br/>'
     + '<b>To: </b>' + info.endName + '<br/>'
-    + '<b>Distance: </b>' + info.totalDistance + ' метров<br/>'
-    + '<b>Duration: </b>' + info.totalDuration + ' секунд<br/>'
+    + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'
+    + '<b>Duration: </b>' + (' ' + info.totalDuration).toHHMMSS() + '<br/>'
     + '<b>Driver: </b>Василий Залупенко' + '<br/>'
     + '<b>Phone: </b>+3(096)123-45-67'
     + '</div>';
