@@ -117,6 +117,8 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
             };
 
             $scope.route.path = routeData.path;
+            $scope.route.totalDistance = routeData.totalDistance;
+            $scope.route.totalDuration = routeData.totalDuration;
 
             mapService.removeRouteMarkers();
 
