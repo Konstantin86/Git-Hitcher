@@ -27,10 +27,12 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         mapService.geocode(params, false, true)
         .then(function (res) {
             if (markerKey === "fromMarker") {
-                $scope.route.startName = res.data.results[0].formatted_address;
+                //$scope.route.startName = res.data.results[0].formatted_address;
+                $scope.route.startName = mapService.getShortAddress(res.data.results[0]);
                 $scope.route.startLatLng = coords;
             } else if (markerKey === "toMarker") {
-                $scope.route.endName = res.data.results[0].formatted_address;
+                //$scope.route.endName = res.data.results[0].formatted_address;
+                $scope.route.endName = mapService.getShortAddress(res.data.results[0]);
                 $scope.route.endLatLng = coords;
             }
         });
@@ -63,6 +65,34 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         $scope.route.type = userService.user.type;
         $scope.route.startLatLng = $scope.route.startLatLng.lat() + "," + $scope.route.startLatLng.lng();
         $scope.route.endLatLng = $scope.route.endLatLng.lat() + "," + $scope.route.endLatLng.lng();
+
+        var km = $scope.route.totalDistance / 1000;
+
+        if (km >= 10) {
+            var granularity = 4;
+
+            if (km > 50 && km <= 75) {
+                granularity = 3;
+            } else if (km > 75 && km <= 100) {
+                granularity = 2;
+            } else if (km > 100) {
+                granularity = 1;
+            }
+
+            var maxPoints = Math.floor(km * granularity);
+            var step = Math.floor($scope.route.path.length / maxPoints);
+            //alert($scope.route.path.length + ' - ' + maxPoints + ' - every ' + step + ' gran ' + granularity);
+
+            var pountsToSave = [];
+
+            for (var i = 0; i < $scope.route.path.length; i++) {
+                if ((i === 0) || (i === $scope.route.path.length - 1) || (i % step === 0)) {
+                    pountsToSave.push($scope.route.path[i]);
+                }
+            }
+
+            $scope.route.path = pountsToSave;
+        }
 
         routeService.resource.save($scope.route, function (result) {
             if (result) {
@@ -116,6 +146,10 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
                 return;
             };
 
+            //var maxPoints = Math.floor((routeData.totalDistance / 1000) * 3);
+            //alert(routeData.path.length + ' - ' + maxPoints);
+
+            //$scope.route.path = routeData.path.filter(function (element) { return routeData.path.indexOf(element) % 10 === 0; });
             $scope.route.path = routeData.path;
             $scope.route.totalDistance = routeData.totalDistance;
             $scope.route.totalDuration = routeData.totalDuration;
@@ -228,11 +262,13 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         $scope.route.endLatLng = directions.mc.destination;
 
         mapService.geocode({ 'latlng': $scope.route.startLatLng.lat() + ',' + $scope.route.startLatLng.lng(), 'language': 'ru' }, false, true).then(function (res) {
-            $scope.route.startName = res.data.results[0].formatted_address;
+            //$scope.route.startName = res.data.results[0].formatted_address;
+            $scope.route.startName = mapService.getShortAddress(res.data.results[0]);
         });
 
         mapService.geocode({ 'latlng': $scope.route.endLatLng.lat() + ',' + $scope.route.endLatLng.lng(), 'language': 'ru' }, false, true).then(function (res) {
-            $scope.route.endName = res.data.results[0].formatted_address;
+            //$scope.route.endName = res.data.results[0].formatted_address;
+            $scope.route.endName = mapService.getShortAddress(res.data.results[0]);
         });
     });
 

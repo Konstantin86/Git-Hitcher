@@ -188,6 +188,10 @@ function initGmapsContextMenu(googleMaps) {
             $this.map_.inmenu = false;
             //console.log('mouseout Menu');
         };
+
+        menu.onclick = function() {
+            $this.hide();
+        };
         //delete this.classNames_;
         delete this.menuItems_;
 
@@ -196,7 +200,11 @@ function initGmapsContextMenu(googleMaps) {
         this.position_ = new gmaps.LatLng(0, 0);
 
         gmaps.event.addListener(this.map_, 'click', function (mouseEvent) {
-            $this.hide();
+            //setTimeout(function() {
+            //    $this.hide();
+            //}, 100);
+
+            //$this.hide();
         });
         this.getPanes().floatPane.parentNode.parentNode.appendChild(menu);
 

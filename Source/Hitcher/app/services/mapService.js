@@ -19,6 +19,9 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var currentColor = null;
 
     var tempRouteDirection = null;
+    var infowindow = null;
+    var infoCreating = null;
+    var timer = null;
 
     var directions = [];
 
@@ -44,6 +47,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var onFromMarkerSelectedCallback;
     var onToMarkerSelectedCallback;
 
+    var underMouseLatLng = null;
+
     var onResetSelectedCallbacks = [];
 
     var onSearchFromMarkerSelectedCallback;
@@ -57,6 +62,23 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
     var map = { center: { latitude: 49.1451, longitude: 35.6680 }, zoom: 4, control: {}, bounds: {} };
     var markers = [];
+
+    var getShortAddress = function (address) {
+        var route = '';
+        var streetNum = '';
+
+        for (var j = 0; j < address.address_components.length; j++) {
+            if ($.inArray("route", address.address_components[j].types) >= 0) {
+                route = address.address_components[j].short_name;
+            }
+
+            if ($.inArray("street_number", address.address_components[j].types) >= 0) {
+                streetNum = address.address_components[j].short_name;
+            }
+        }
+
+        return route + ' ' + streetNum;
+    };
 
     var geocode = function (request, local, plain) {
         if (local && request.address) {
@@ -245,26 +267,18 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
         polyline.setMap(mapControl);
 
+        //gmaps.event.addListener(polyline, "click", function (e) {
+        //    var content = '<div style="width:200px;">'
+        //                + '<b>From: </b>' + info.startName + '<br/>'
+        //                + '<b>To: </b>' + info.endName + '<br/>'
+        //                + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'
+        //                + '<b>Duration: </b>' + (' ' + info.totalDuration).toHHMMSS() + '<br/>'
+        //                + '<b>Driver: </b>Василий Залупенко' + '<br/>'
+        //                + '<b>Phone: </b>+3(096)123-45-67'
+        //                + '</div>';
 
-        var infowindow = new gmaps.InfoWindow({
-            content: 'tesdt'
-        });
-
-        //infowindow.open(mapControl);
-
-        gmaps.event.addListener(polyline, "click", function (e) {
-            var content = '<div style="width:200px;">'
-    + '<b>From: </b>' + info.startName + '<br/>'
-    + '<b>To: </b>' + info.endName + '<br/>'
-    + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'
-    + '<b>Duration: </b>' + (' ' + info.totalDuration).toHHMMSS() + '<br/>'
-    + '<b>Driver: </b>Василий Залупенко' + '<br/>'
-    + '<b>Phone: </b>+3(096)123-45-67'
-    + '</div>';
-
-            //infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.001, e.latLng.lng()));
-            infowindow.setContent(content);
-        });
+        //    infowindow.setContent(content);
+        //});
 
         gmaps.event.addListener(polyline, "mouseover", function (e) {
             var polylinePoints = this.getPath().getArray();
@@ -274,7 +288,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             var info;
 
             polylines.forEach(function (p) {
-                p.polyline.setOptions({ strokeOpacity: 0.3 });
+                //p.polyline.setOptions({ strokeOpacity: 0.3 });
 
                 var points = p.polyline.getPath().getArray();
                 if (points[0] === polylineStartPoint && points[points.length - 1] === polylineEndPoint) {
@@ -288,39 +302,75 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             //var content = this.getPath().getArray()[this.getPath().getArray().length - 1];
 
             var content = '<div style="width:200px;">'
-                //+ '<b>From:</b>' + info.startName + '<br/>'
-                //+ '<b>To:</b>' + info.endName + '<br/>'
-                //+ '<b>Distance:</b>' + info.totalDistance + '<br/>'
-                //+ '<b>Duration:</b>' + info.totalDuration + '<br/>'
+                + '<b>From: </b>' + info.startName + '<br/>'
+                + '<b>To: </b>' + info.endName + '<br/>'
+                + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'
+                + '<b>Duration: </b>' + (' ' + info.totalDuration).toHHMMSS() + '<br/>'
                 + '<b>Driver: </b>Василий Залупенко' + '<br/>'
                 + '<b>Phone: </b>+3(096)123-45-67' + '<br/><br/>'
-                + '<i>Click for more details...</i>'
+                //+ '<i>Click for more details...</i>'
                 + '</div>';
 
-            infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.001, e.latLng.lng()));
-            infowindow.setContent(content);
-            //if (!infowindow.isOpen()) {
-            infowindow.open(mapControl);
+            if (infowindow && infowindow.isOpen()) {
+                infowindow.close();
+                infowindow = null;
+            }
+
+            if (!infoCreating) {
+                timer = $timeout(function () {
+                    //if (infowindow && infowindow.isOpen()) {
+                    //    infowindow.close();
+                    //    infowindow = null;
+                    //}
+
+                    if (infoCreating) {
+                        infowindow = new gmaps.InfoWindow({ disableAutoPan: true });
+                        if (underMouseLatLng) {
+                            infowindow.setPosition(new gmaps.LatLng(underMouseLatLng.lat() + 0.003, underMouseLatLng.lng()));
+                        } else {
+                            infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
+                        }
+                        infowindow.setContent(content);
+
+                        if (!infowindow.isOpen()) {
+                            infowindow.open(mapControl);
+
+                            gmaps.event.addListener(infowindow, "click", function (e) {
+                                alert('test');
+                            });
+                        }
+                    }
+
+                    infoCreating = false;
+                }, 1000);
+
+                infoCreating = true;
+            }
+
             //}
         });
 
         gmaps.event.addListener(polyline, "mousemove", function (e) {
-            infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.001, e.latLng.lng()));
+            if (infowindow && infowindow.isOpen()) {
+                infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
+            }
         });
 
         gmaps.event.addListener(polyline, "mouseout", function (e) {
-            polylines.forEach(function (p) {
-                p.polyline.setOptions({ strokeOpacity: 0.6 });
-            });
-
             if (currentColor) {
                 this.setOptions({ strokeColor: currentColor, strokeOpacity: 0.6, zIndex: 1, strokeWeight: 5 });
             }
 
+            infoCreating = false;
+
+            if (timer) {
+                $timeout.cancel(timer);
+            };
+
             //$timeout(function() {
-                infowindow.close();
+            //infowindow.close();
             //}, 500);
-            
+
         });
 
         var polylineInfo = {
@@ -444,6 +494,10 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     uiGmapIsReady.promise().then(function (googlemap) {
         mapControl = map.control.getGMap();
 
+        gmaps.event.addListener(mapControl, 'mousemove', function (event) {
+            underMouseLatLng = event.latLng;
+        });
+
         initGmapsContextMenu(gmaps);
 
         var menuStyle = { menu: 'context_menu', menuSeparator: 'context_menu_separator', menuItem: 'context_menu_item' };
@@ -470,7 +524,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
             geocode({ 'latlng': coords.lat() + ',' + coords.lng(), 'language': 'ru' }, false, true).then(function (result) {
                 if (result.data.results && result.data.results.length && typeof (callback) == "function") {
-                    callback(result.data.results[0].formatted_address, coords);
+                    //callback(result.data.results[0].formatted_address, coords);
+                    callback(getShortAddress(result.data.results[0]), coords);
                 }
             });
         };
@@ -549,4 +604,5 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     this.removeSearchMarkers = removeSearchMarkers;
     this.showRoutes = showRoutes;
     this.markerEvents = markerEvents;
+    this.getShortAddress = getShortAddress;
 });
