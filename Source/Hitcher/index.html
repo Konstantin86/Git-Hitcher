@@ -42,7 +42,7 @@
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li data-ng-hide="authData.isAuth"><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
+                        <li data-ng-hide="authData.isAuth" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
                         <li data-ng-hide="authData.isAuth"> <a href="#/login">Login</a></li>
                         <li data-ng-hide="authData.isAuth"> <a href="#/signup">Sign Up</a></li>
                     </ul>
@@ -54,7 +54,7 @@
         <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
-    <div style="height: 85%;" ng-controller="homeController">
+    <div style="height: 85%;" ng-cloak ng-controller="homeController">
         <div id="map_canvas" class="ng-scope">
             <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
                 <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
@@ -73,15 +73,12 @@
         <div ng-view></div>
     </div>
 
-    <div class="container" ng-controller="searchController" ng-show="config.visible" style="margin: 20px auto">
+    <div class="container" ng-controller="searchController" ng-show="config.visible" ng-cloak style="margin: 20px auto">
         <div class="jumbotron">
             Search results will be displayed here...
         </div>
     </div>
-
-
     <hr />
-
     <footer class="container">
         <div class="row">
             <div class="col-md-6">
