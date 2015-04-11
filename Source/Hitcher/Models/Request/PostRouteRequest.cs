@@ -5,6 +5,8 @@ namespace Hitcher.Models.Request
   public class PostRouteRequest
   {
     public int Id { get; set; }
+    public string Name { get; set; }
+    public string Phone { get; set; }
     public string StartName { get; set; }
     public string EndName { get; set; }
     public string StartLatLng { get; set; }

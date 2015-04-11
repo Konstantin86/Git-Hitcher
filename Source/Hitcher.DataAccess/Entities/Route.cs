@@ -5,6 +5,10 @@ namespace Hitcher.DataAccess.Entities
 {
   public class Route : EntityBase
   {
+    public string Name { get; set; }
+
+    public string Phone { get; set; }
+
     public string StartName { get; set; }
 
     public string StartLatLng { get; set; }

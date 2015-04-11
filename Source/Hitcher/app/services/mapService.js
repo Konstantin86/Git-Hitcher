@@ -17,6 +17,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var colors = ["#DB0042", "#DB00B3", "#A100DB", "#3700DB", "#0066DB", "#00B7DB", "#00D17D", "#42D100", "#80B300", "#B37A00", "#B32100"];
 
     var currentColor = null;
+    var currentOpacity = null;
 
     var tempRouteDirection = null;
     var infowindow = null;
@@ -197,7 +198,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         var rendererOptions = {
             draggable: true,
             preserveViewport: false,
-            polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 }
+            polylineOptions: { strokeColor: "#FF5900", strokeOpacity: 1, strokeWeight: 7, zIndex: 1000 }
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
@@ -244,7 +245,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var setRoute = function (routePoints, index) {
         var rendererOptions = {
             preserveViewport: true,
-            polylineOptions: { strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)], strokeOpacity: 0.7, strokeWeight: 5 },
             routeIndex: index
         };
 
@@ -259,6 +259,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         });
 
         var info = {
+            name: routePoints.name,
+            phone: routePoints.phone,
             startName: routePoints.startName,
             endName: routePoints.endName,
             totalDistance: routePoints.totalDistance,
@@ -297,6 +299,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             });
 
             currentColor = this.strokeColor;
+            currentOpacity = this.strokeOpacity;
+            
             this.setOptions({ strokeColor: "#ffffff", strokeOpacity: 1, zIndex: 999, strokeWeight: 10 });
 
             //var content = this.getPath().getArray()[this.getPath().getArray().length - 1];
@@ -305,9 +309,9 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
                 + '<b>From: </b>' + info.startName + '<br/>'
                 + '<b>To: </b>' + info.endName + '<br/>'
                 + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'
-                + '<b>Duration: </b>' + (' ' + info.totalDuration).toHHMMSS() + '<br/>'
-                + '<b>Driver: </b>Василий Залупенко' + '<br/>'
-                + '<b>Phone: </b>+3(096)123-45-67' + '<br/><br/>'
+                + '<b>Duration: </b>' + info.totalDuration.toString().toHHMMSS() + '<br/>'
+                + '<b>Driver: </b>' + info.name + '<br/>'
+                + '<b>Phone: </b>' + info.phone + '<br/><br/>'
                 //+ '<i>Click for more details...</i>'
                 + '</div>';
 
@@ -358,7 +362,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
         gmaps.event.addListener(polyline, "mouseout", function (e) {
             if (currentColor) {
-                this.setOptions({ strokeColor: currentColor, strokeOpacity: 0.6, zIndex: 1, strokeWeight: 5 });
+                this.setOptions({ strokeColor: currentColor, strokeOpacity: currentOpacity, zIndex: 1, strokeWeight: 5 });
             }
 
             infoCreating = false;
@@ -366,11 +370,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             if (timer) {
                 $timeout.cancel(timer);
             };
-
-            //$timeout(function() {
-            //infowindow.close();
-            //}, 500);
-
         });
 
         var polylineInfo = {
@@ -565,6 +564,18 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         }
     };
 
+    var maskRoutes = function() {
+        polylines.forEach(function(p) {
+            p.polyline.setOptions({ strokeOpacity: 0.3 });
+        });
+    };
+
+    var unmaskRoutes = function () {
+        polylines.forEach(function (p) {
+            p.polyline.setOptions({ strokeOpacity: 0.6 });
+        });
+    };
+
     var onMarkerDrag = function (callback) {
         onMarkerDragCallbacks.push(callback);
     };
@@ -605,4 +616,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     this.showRoutes = showRoutes;
     this.markerEvents = markerEvents;
     this.getShortAddress = getShortAddress;
+    this.maskRoutes = maskRoutes;
+    this.unmaskRoutes = unmaskRoutes;
 });

@@ -76,6 +76,10 @@
     <Compile Include="Migrations\201504012213328_Coord_Added_1.Designer.cs">
       <DependentUpon>201504012213328_Coord_Added_1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504110807449_NameAndPhone_Added.cs" />
+    <Compile Include="Migrations\201504110807449_NameAndPhone_Added.Designer.cs">
+      <DependentUpon>201504110807449_NameAndPhone_Added.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
@@ -98,6 +102,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504012213328_Coord_Added_1.resx">
       <DependentUpon>201504012213328_Coord_Added_1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504110807449_NameAndPhone_Added.resx">
+      <DependentUpon>201504110807449_NameAndPhone_Added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

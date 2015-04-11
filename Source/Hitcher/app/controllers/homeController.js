@@ -42,6 +42,8 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         if (!driveAside || !driveAside.$isShown) {
             driveAside = $aside({ scope: $scope, backdrop: false, dismissable: false, placement: 'left', template: 'app/views/modal/aside.html' });
             driveAside.$promise.then(function () { driveAside.show(); });
+
+            mapService.maskRoutes();
         }
     };
 
@@ -59,12 +61,16 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         mapService.removeTempRoute();
         routeCreating = false;
         driveAside.hide();
+        mapService.unmaskRoutes();
     };
 
     $scope.declareRoute = function () {
         $scope.route.type = userService.user.type;
         $scope.route.startLatLng = $scope.route.startLatLng.lat() + "," + $scope.route.startLatLng.lng();
         $scope.route.endLatLng = $scope.route.endLatLng.lat() + "," + $scope.route.endLatLng.lng();
+
+        $scope.route.totalDistance = $scope.route.totalDistanceToSave;
+        $scope.route.totalDuration = $scope.route.totalDurationToSave;
 
         var km = $scope.route.totalDistance / 1000;
 
@@ -151,8 +157,11 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
 
             //$scope.route.path = routeData.path.filter(function (element) { return routeData.path.indexOf(element) % 10 === 0; });
             $scope.route.path = routeData.path;
-            $scope.route.totalDistance = routeData.totalDistance;
-            $scope.route.totalDuration = routeData.totalDuration;
+
+            $scope.route.totalDistanceToSave = routeData.totalDistance;
+            $scope.route.totalDistance = Math.floor(routeData.totalDistance / 1000) + ' км, ' + routeData.totalDistance % 1000 + ' м';
+            $scope.route.totalDurationToSave = routeData.totalDuration;
+            $scope.route.totalDuration = routeData.totalDuration.toString().toHHMMSS();
 
             mapService.removeRouteMarkers();
 
@@ -260,7 +269,13 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         $scope.route.path = path;
         $scope.route.startLatLng = directions.mc.origin;
         $scope.route.endLatLng = directions.mc.destination;
-
+        var distance = directions.routes[0].legs[0].distance.value;
+        $scope.route.totalDistanceToSave = distance;
+        $scope.route.totalDistance = Math.floor(distance / 1000) + ' км, ' + distance % 1000 + ' м';
+        var duration = directions.routes[0].legs[0].duration.value;
+        $scope.route.totalDurationToSave = duration;
+        $scope.route.totalDuration = duration.toString().toHHMMSS();
+        
         mapService.geocode({ 'latlng': $scope.route.startLatLng.lat() + ',' + $scope.route.startLatLng.lng(), 'language': 'ru' }, false, true).then(function (res) {
             //$scope.route.startName = res.data.results[0].formatted_address;
             $scope.route.startName = mapService.getShortAddress(res.data.results[0]);
@@ -275,6 +290,6 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     initAside();
 
     function initAside() {
-        $scope.route = { startName: null, endName: null };
+        $scope.route = { startName: null, endName: null, name: null, phone: null };
     };
 });
