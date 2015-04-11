@@ -67,20 +67,18 @@
                 <span class="glyphicon glyphicon-plus"></span><b style="margin-left: 5px">Добавить маршрут</b>
             </button>
         </div>
-        <!--<div ng-show="config.visible" ng-controller="searchController">
-            Search results will be displayed here...
-        </div>-->
     </div>
 
     <div class="container">
         <div ng-view></div>
-
-        <!--<br />
-
-        <div class="jumbotron" ng-show="config.visible" ng-controller="searchController">
-            Search results will be displayed here...
-        </div>-->
     </div>
+
+    <div class="container" ng-controller="searchController" ng-show="config.visible" style="margin: 20px auto">
+        <div class="jumbotron">
+            Search results will be displayed here...
+        </div>
+    </div>
+
 
     <hr />
 
