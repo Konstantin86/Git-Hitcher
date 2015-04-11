@@ -1,11 +1,20 @@
 ﻿body {
     padding-top: 60px; /*This is intended to place body content under the nav bar which overlaps the content placed on the top*/
     padding-bottom: 40px;
+    height: 100%;
+}
+
+#map_canvas {
+    position: relative;
+    height: 95%;
 }
 
 .angular-google-map-container {
-    margin: 1px auto;
-    height: 600px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
 
 #loading-bar .bar {

@@ -42,7 +42,7 @@
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li data-ng-hide="authData.isAuth"><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()" ><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
+                        <li data-ng-hide="authData.isAuth"><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
                         <li data-ng-hide="authData.isAuth"> <a href="#/login">Login</a></li>
                         <li data-ng-hide="authData.isAuth"> <a href="#/signup">Sign Up</a></li>
                     </ul>
@@ -54,18 +54,34 @@
         <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
-    <div class="container">
-        <div ng-view class="at-view-fade-in">
+    <div style="height: 85%;" ng-controller="homeController">
+        <div id="map_canvas" class="ng-scope">
+            <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
+                <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
+                </ui-gmap-markers>
+                <ui-gmap-map-control template="app/views/modal/custom.map.control.html" controller="controlCtrl" position="top-right" index="-1"></ui-gmap-map-control>
+            </ui-gmap-google-map>
         </div>
+        <div class="container">
+            <button type="button" class="btn btn-lg btn-primary" style="margin-top: 5px; padding: 7px 10px;" ng-click="toggleAside()">
+                <span class="glyphicon glyphicon-plus"></span><b style="margin-left: 5px">Добавить маршрут</b>
+            </button>
+        </div>
+        <!--<div ng-show="config.visible" ng-controller="searchController">
+            Search results will be displayed here...
+        </div>-->
+    </div>
 
-        <br/>
+    <div class="container">
+        <div ng-view></div>
 
-        <!--TODO Implement Info panel here-->
+        <!--<br />
+
         <div class="jumbotron" ng-show="config.visible" ng-controller="searchController">
             Search results will be displayed here...
-        </div>
+        </div>-->
     </div>
-    
+
     <hr />
 
     <footer class="container">

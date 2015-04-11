@@ -70,7 +70,9 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
             if (contextMenu.length) {
                 contextMenu.children()[2].style.display = value ? 'none' : 'block';
                 contextMenu.children()[3].style.display = value ? 'block' : 'none';
-                contextMenu.children()[5].style.display = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+                var resetVisible = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+                contextMenu.children()[4].style.display = resetVisible;
+                contextMenu.children()[5].style.display = resetVisible;
             }
         });
 
