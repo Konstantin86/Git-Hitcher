@@ -204,7 +204,7 @@ function initGmapsContextMenu(googleMaps) {
             //    $this.hide();
             //}, 100);
 
-            //$this.hide();
+            $this.hide();
         });
         this.getPanes().floatPane.parentNode.parentNode.appendChild(menu);
 

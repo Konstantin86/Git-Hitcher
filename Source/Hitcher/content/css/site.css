@@ -32,7 +32,15 @@
     background: #ffffff;
     border: 1px solid darkgray;
     z-index: 10;
-    width: 140px;
+    width: 165px;
+}
+
+.context_menu_separator {
+    border: solid darkgray;
+    border-width: 0px 0px 1px 0px;
+    margin: 0px auto;
+    z-index: 10;
+    width: 165px;
 }
 
 .context_menu_item {

@@ -57,13 +57,15 @@
     <div class="container">
         <div ng-view class="at-view-fade-in">
         </div>
+
+        <br/>
+
+        <!--TODO Implement Info panel here-->
+        <div class="jumbotron" ng-show="config.visible" ng-controller="searchController">
+            Search results will be displayed here...
+        </div>
     </div>
     
-    <br/>
-    
-    <!--TODO Implement Info panel here-->
-    <!--<div style="background-color: red; height: 500px"></div>-->
-
     <hr />
 
     <footer class="container">
@@ -156,8 +158,10 @@
 <script type="text/javascript" src="app/services/userService.js"></script>
 <script type="text/javascript" src="app/services/mapService.js"></script>
 <script type="text/javascript" src="app/services/routeService.js"></script>
+<script type="text/javascript" src="app/services/searchService.js"></script>
 <!--Filters-->
 <!--Controllers-->
 <script type="text/javascript" src="app/controllers/indexController.js"></script>
 <script type="text/javascript" src="app/controllers/homeController.js"></script>
+<script type="text/javascript" src="app/controllers/searchController.js"></script>
 <script type="text/javascript" src="app/controllers/controlCtrl.js"></script>

@@ -2,10 +2,11 @@
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/services/mapService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
+/// <reference path="~/app/services/searchService.js"/>
 
 "use strict";
 
-app.controller("indexController", function ($scope, $location, $aside, userService, routeService, mapService, statusService) {
+app.controller("indexController", function ($scope, $location, $aside, userService, searchService, routeService, mapService, statusService) {
     var searchAside;
 
     var showAside = function () {
@@ -130,6 +131,8 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
             }
 
             initAside();
+
+            searchService.show();
         });
 
         mapService.removeSearchMarkers();

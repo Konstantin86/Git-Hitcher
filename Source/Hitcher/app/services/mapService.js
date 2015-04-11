@@ -507,10 +507,10 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             classNames: menuStyle,
             menuItems:
             [
-               { label: 'Еду отсюда', id: 'menu_go_from', eventName: 'onGoFromClick' },
-               { label: 'Еду сюда', id: 'menu_go_to', eventName: 'onGoToClick' },
-               { label: 'Ищу отсюда', id: 'menu_search_from', eventName: 'onSearchFromClick' },
-               { label: 'Ищу сюда', id: 'menu_search_to', eventName: 'onSearchToClick' },
+               { label: 'Проложить маршрут отсюда', id: 'menu_go_from', eventName: 'onGoFromClick' },
+               { label: 'Проложить маршрут сюда', id: 'menu_go_to', eventName: 'onGoToClick' },
+               { label: 'Искать отсюда', id: 'menu_search_from', eventName: 'onSearchFromClick' },
+               { label: 'Искать сюда', id: 'menu_search_to', eventName: 'onSearchToClick' },
                { id: 'Separator' },
                { label: 'Сброс', id: 'menu_reset', eventName: 'onResetClick' }
             ]

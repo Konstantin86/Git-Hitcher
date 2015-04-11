@@ -222,7 +222,11 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
             if (contextMenu.length) {
                 contextMenu.children()[0].style.display = value ? 'none' : 'block';
                 contextMenu.children()[1].style.display = value ? 'block' : 'none';
-                contextMenu.children()[5].style.display = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+
+                var resetDisplay = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+
+                contextMenu.children()[4].style.display = resetDisplay;
+                contextMenu.children()[5].style.display = resetDisplay;
             }
         });
 
