@@ -151,7 +151,8 @@
     <Content Include="scripts\angular-sanitize.min.js.map" />
     <Content Include="packages.config" />
     <Content Include="content\css\bootstrap-theme.min" />
-    <Content Include="app\views\modal\custom.map.control.html" />
+    <Content Include="app\views\modal\custom.map.top-right-control.html" />
+    <Content Include="app\views\modal\custom.map.bottom-center-control.html" />
     <None Include="Properties\PublishProfiles\hitcher.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
