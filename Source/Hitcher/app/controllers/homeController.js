@@ -15,7 +15,7 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     $scope.markers = mapService.markers;
     $scope.markerEvents = mapService.markerEvents;
 
-    $scope.mapHeight = "50%";
+    $scope.mapHeight = "85%";
 
     $scope.user = userService.user;
 

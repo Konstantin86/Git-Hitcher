@@ -54,7 +54,7 @@
         <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
-    <div ng-style="{'height': mapHeight}" ng-cloak ng-controller="homeController">
+    <!--<div ng-style="{'height': mapHeight}" ng-cloak ng-controller="homeController">
         <div id="map_canvas" class="ng-scope">
             <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
                 <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
@@ -67,11 +67,9 @@
                 <span class="glyphicon glyphicon-plus"></span><b style="margin-left: 5px">Добавить маршрут</b>
             </button>
         </div>
-    </div>
+    </div>-->
 
-    <div class="container">
-        <div ng-view></div>
-    </div>
+    <div ng-view ng-style="{'height': mapHeight}"></div>
 
     <div class="container" ng-controller="searchController" ng-show="config.visible" ng-cloak style="margin: 20px auto">
         <div class="jumbotron">

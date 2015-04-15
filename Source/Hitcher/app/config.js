@@ -5,12 +5,12 @@
 "use strict";
 
 app.config(function ($routeProvider) {
-    //$routeProvider.when("/home", {
-    //    controller: "homeController",
-    //    templateUrl: "app/views/home.html"
-    //});
+    $routeProvider.when("/home", {
+        controller: "homeController",
+        templateUrl: "app/views/home.html"
+    });
 
-    //$routeProvider.otherwise({ redirectTo: "/home" });
+    $routeProvider.otherwise({ redirectTo: "/home" });
 });
 
 app.config(function($asideProvider) {
