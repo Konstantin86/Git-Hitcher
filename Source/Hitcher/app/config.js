@@ -10,6 +10,11 @@ app.config(function ($routeProvider) {
         templateUrl: "app/views/home.html"
     });
 
+    $routeProvider.when("/login", {
+        controller: "loginController",
+        templateUrl: "/app/views/login.html"
+    });
+
     $routeProvider.otherwise({ redirectTo: "/home" });
 });
 

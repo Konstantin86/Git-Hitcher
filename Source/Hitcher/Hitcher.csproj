@@ -126,12 +126,14 @@
     <Content Include="app\const\appConst.js" />
     <Content Include="app\controllers\controlCtrl.js" />
     <Content Include="app\controllers\indexController.js" />
+    <Content Include="app\controllers\loginController.js" />
     <Content Include="app\controllers\searchController.js" />
     <Content Include="app\services\mapService.js" />
     <Content Include="app\services\routeService.js" />
     <Content Include="app\services\searchService.js" />
     <Content Include="app\services\statusService.js" />
     <Content Include="app\services\userService.js" />
+    <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />
     <Content Include="app\views\modal\search.html" />
     <Content Include="content\css\bootstrap-theme.css" />

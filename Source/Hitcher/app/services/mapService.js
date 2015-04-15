@@ -13,6 +13,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var geocoder;
     var mapControl;
 
+    var loaded;
+
     //var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
     var colors = ["#DB0042", "#DB00B3", "#A100DB", "#3700DB", "#0066DB", "#00B7DB", "#00D17D", "#42D100", "#80B300", "#B37A00", "#B32100"];
 
@@ -43,7 +45,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
     var currentLocation;
 
-    var onMapConfigChangedCallback;
     var onMapMarkersChangedCallback;
     var onFromMarkerSelectedCallback;
     var onToMarkerSelectedCallback;
@@ -104,10 +105,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var centerMap = function (lat, lng, zoom) {
         mapControl.panTo(new gmaps.LatLng(lat, lng));
         mapControl.setZoom(zoom);
-
-        if (typeof (onMapConfigChangedCallback) == "function") {
-            onMapConfigChangedCallback();
-        }
     };
 
     var centerOnMe = function () {
@@ -166,10 +163,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             markers[markerIndex].longitude = lng;
         } else {
             markers.push(marker);
-        }
-
-        if (typeof (onMapConfigChangedCallback) == "function") {
-            onMapConfigChangedCallback();
         }
     };
 
@@ -400,8 +393,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         directionsDisplay.setDirections(test);
     };
 
-    var onMapConfigChanged = function (callback) { onMapConfigChangedCallback = callback; };
-
     var onMapMarkersChanged = function (callback) { onMapMarkersChangedCallback = callback; };
 
     var onFromMarkerSelected = function (callback) { onFromMarkerSelectedCallback = callback; };
@@ -551,6 +542,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         gmaps.event.addListener(contextMenu, 'onResetClick', function () { handleContextMenyResetClick(onResetSelectedCallbacks); });
 
         ready.resolve(googlemap);
+
+        loaded = true;
     });
 
     var markerEvents = {
@@ -590,6 +583,11 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         }
     };
 
+    var isLoaded = function() {
+        return loaded;
+    };
+
+    this.isLoaded = isLoaded;
     this.map = map;
     this.markers = markers;
     this.centerOnMe = centerOnMe;
@@ -600,7 +598,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     this.declareRoute = declareRoute;
     this.ready = ready.promise;
     this.contextMenuReady = contextMenuReady.promise;
-    this.onMapConfigChanged = onMapConfigChanged;
     this.onMapMarkersChanged = onMapMarkersChanged;
     this.onFromMarkerSelected = onFromMarkerSelected;
     this.onToMarkerSelected = onToMarkerSelected;

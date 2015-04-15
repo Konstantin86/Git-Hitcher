@@ -6,16 +6,16 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, uiGmapGoogleMapApi, userService, mapService, uiGmapIsReady, statusService, routeService) {
+app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, userService, mapService, statusService, routeService) {
     var driveAside;
     var routeCreating = false;
     var type;
 
-    $scope.map = mapService.map;
-    $scope.markers = mapService.markers;
-    $scope.markerEvents = mapService.markerEvents;
-
-    $scope.mapHeight = "85%";
+    //if (!mapService.isLoaded()) {
+        $scope.map = mapService.map;
+        $scope.markers = mapService.markers;
+        $scope.markerEvents = mapService.markerEvents;
+    //}
 
     $scope.user = userService.user;
 
@@ -29,11 +29,9 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         mapService.geocode(params, false, true)
         .then(function (res) {
             if (markerKey === "fromMarker") {
-                //$scope.route.startName = res.data.results[0].formatted_address;
                 $scope.route.startName = mapService.getShortAddress(res.data.results[0]);
                 $scope.route.startLatLng = coords;
             } else if (markerKey === "toMarker") {
-                //$scope.route.endName = res.data.results[0].formatted_address;
                 $scope.route.endName = mapService.getShortAddress(res.data.results[0]);
                 $scope.route.endLatLng = coords;
             }

@@ -54,7 +54,7 @@
         <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
-    <div ng-view ng-style="{'height': mapHeight}"></div>
+    <div ng-view></div>
 
     <div class="container" ng-controller="searchController" ng-show="config.visible" ng-cloak style="margin: 20px auto">
         <div class="jumbotron">
@@ -158,4 +158,5 @@
 <script type="text/javascript" src="app/controllers/indexController.js"></script>
 <script type="text/javascript" src="app/controllers/homeController.js"></script>
 <script type="text/javascript" src="app/controllers/searchController.js"></script>
+<script type="text/javascript" src="app/controllers/loginController.js"></script>
 <script type="text/javascript" src="app/controllers/controlCtrl.js"></script>
