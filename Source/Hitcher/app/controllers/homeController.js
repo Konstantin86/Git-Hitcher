@@ -15,6 +15,8 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
     $scope.markers = mapService.markers;
     $scope.markerEvents = mapService.markerEvents;
 
+    $scope.mapHeight = "50%";
+
     $scope.user = userService.user;
 
     mapService.onMarkerDrag(function (marker, eventName, args) {

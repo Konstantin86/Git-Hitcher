@@ -54,7 +54,7 @@
         <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
-    <div style="height: 85%;" ng-cloak ng-controller="homeController">
+    <div ng-style="{'height': mapHeight}" ng-cloak ng-controller="homeController">
         <div id="map_canvas" class="ng-scope">
             <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
                 <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
