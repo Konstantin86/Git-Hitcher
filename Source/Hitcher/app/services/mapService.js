@@ -13,7 +13,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var geocoder;
     var mapControl;
 
-    var loaded;
 
     //var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
     var colors = ["#DB0042", "#DB00B3", "#A100DB", "#3700DB", "#0066DB", "#00B7DB", "#00D17D", "#42D100", "#80B300", "#B37A00", "#B32100"];
@@ -56,6 +55,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     var onSearchFromMarkerSelectedCallback;
     var onSearchToMarkerSelectedCallback;
 
+    var onAddRouteCallbacks = [];
     var onMarkerDragCallbacks = [];
     var onRouteChangedCallbacks = [];
 
@@ -542,8 +542,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         gmaps.event.addListener(contextMenu, 'onResetClick', function () { handleContextMenyResetClick(onResetSelectedCallbacks); });
 
         ready.resolve(googlemap);
-
-        loaded = true;
     });
 
     var markerEvents = {
@@ -583,11 +581,20 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         }
     };
 
-    var isLoaded = function() {
-        return loaded;
+    var onAddRoute = function (callback) {
+        onAddRouteCallbacks.push(callback);
     };
 
-    this.isLoaded = isLoaded;
+    var addRoute = function() {
+        if (onAddRouteCallbacks.length) {
+            onAddRouteCallbacks.forEach(function (callback) {
+                if (typeof (callback) == "function") { callback(); }
+            });
+        }
+    };
+
+    this.addRoute = addRoute;
+    this.onAddRoute = onAddRoute;
     this.map = map;
     this.markers = markers;
     this.centerOnMe = centerOnMe;

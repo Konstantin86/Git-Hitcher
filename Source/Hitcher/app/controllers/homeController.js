@@ -6,7 +6,7 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $timeout, $interval, userService, mapService, statusService, routeService) {
+app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $q, $timeout, $interval, userService, mapService, statusService, routeService) {
     var driveAside;
     var routeCreating = false;
     var type;
@@ -16,6 +16,10 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         $scope.markers = mapService.markers;
         $scope.markerEvents = mapService.markerEvents;
     //}
+
+        $scope.$on('$routeChangeSuccess', function () {
+            $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
+        });
 
     $scope.user = userService.user;
 
@@ -139,6 +143,14 @@ app.controller("homeController", function ($scope, $alert, $aside, $http, $q, $t
         //mapService.removeMarkers();
         //initAside();
         if (driveAside && driveAside.$isShown) {
+            $scope.hideDriveAside();
+        }
+    });
+
+    mapService.onAddRoute(function() {
+        if (!driveAside || !driveAside.$isShown) {
+            showAside();
+        } else {
             $scope.hideDriveAside();
         }
     });

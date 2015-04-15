@@ -54,6 +54,15 @@
         <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
+    <div id="map_canvas" ng-controller="homeController" ng-show="mapVisible">
+        <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
+            <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
+            </ui-gmap-markers>
+            <ui-gmap-map-control template="app/views/modal/custom.map.top-right-control.html" controller="controlCtrl" position="top-right" index="-1"></ui-gmap-map-control>
+            <ui-gmap-map-control template="app/views/modal/custom.map.bottom-center-control.html" controller="controlCtrl" position="bottom-center" index="-1"></ui-gmap-map-control>
+        </ui-gmap-google-map>
+    </div>
+
     <div ng-view></div>
 
     <div class="container" ng-controller="searchController" ng-show="config.visible" ng-cloak style="margin: 20px auto">
