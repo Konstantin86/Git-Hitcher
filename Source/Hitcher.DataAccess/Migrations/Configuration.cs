@@ -1,4 +1,7 @@
-﻿using Hitcher.DataAccess.Entities;
+﻿using System.Collections.Generic;
+using Hitcher.DataAccess.Entities;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Hitcher.DataAccess.Migrations
 {
@@ -16,43 +19,59 @@ namespace Hitcher.DataAccess.Migrations
 
     protected override void Seed(Hitcher.DataAccess.AppDbContext context)
     {
-      //  This method will be called after migrating to the latest version.
+      var appDbContext = new AppDbContext();
+      var userManager = new UserManager<AppUser>(new UserStore<AppUser>(appDbContext));
+      var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(appDbContext));
 
-      //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-      //  to avoid creating duplicate seed data. E.g.
-      //
-      //    context.People.AddOrUpdate(
-      //      p => p.FullName,
-      //      new Person { FullName = "Andrew Peters" },
-      //      new Person { FullName = "Brice Lambson" },
-      //      new Person { FullName = "Rowan Miller" }
-      //    );
-      //
+      List<AppUser> existingUsers = userManager.Users.ToList();
 
-      //context.Routes.AddRange(new[]
-      //{
-      //  new Route
-      //  {
-      //    StartLatLng = "49.941001,36.301818000000026",
-      //    StartName = "Харьков, Новгородская 3б",
-      //    EndLatLng = "50.0210186,36.2179946",
-      //    EndName = "Харьков, героев сталинграда 136б"
-      //  },
-      //  new Route
-      //  {
-      //    StartLatLng = "49.922001,36.321818000000026",
-      //    StartName = "Харьков, Новгородская 3б",
-      //    EndLatLng = "50.0410186,36.2079946",
-      //    EndName = "Харьков, героев сталинграда 136б"
-      //  },
-      //  new Route
-      //  {
-      //    StartLatLng = "49.522001,36.021818000000026",
-      //    StartName = "Харьков, Новгородская 3б",
-      //    EndLatLng = "51.0410186,35.9079946",
-      //    EndName = "Харьков, героев сталинграда 136б"
-      //  }
-      //});
+      foreach (var usr in existingUsers)
+      {
+        var roles = userManager.GetRoles(usr.Id);
+        foreach (var roleName in roles)
+        {
+          userManager.RemoveFromRole(usr.Id, roleName);
+        }
+      }
+
+      List<IdentityRole> existingRoles = roleManager.Roles.ToList();
+      foreach (var identityRole in existingRoles)
+      {
+        roleManager.Delete(identityRole);
+      }
+
+      foreach (var usr in existingUsers)
+      {
+        userManager.Delete(usr);
+      }
+
+      IdentityRole userRole = new IdentityRole("user");
+      IdentityRole adminRole = new IdentityRole("admin");
+
+      roleManager.Create(userRole);
+      roleManager.Create(adminRole);
+
+      var user = new AppUser
+      {
+        UserName = "PowerUser",
+        Email = "test@gmail.com",
+        EmailConfirmed = true,
+        FirstName = "Konstantin",
+        LastName = "Lazurenko",
+        JoinDate = DateTime.Now.AddDays(-1)
+      };
+
+      //TODO create rolemanager and add two roles: user and admin
+
+      IdentityResult ir = userManager.Create(user, "mtecPass123");
+      if (ir.Succeeded)
+      {
+        userManager.AddToRoles(user.Id, "user", "admin");
+      }
+      else
+      {
+        Console.WriteLine(string.Join(Environment.NewLine, ir.Errors));
+      }
     }
   }
 }

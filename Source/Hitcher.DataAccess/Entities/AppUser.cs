@@ -22,7 +22,7 @@ namespace Hitcher.DataAccess.Entities
 
     public DateTime? BirthDate { get; set; }
 
-    public string Sex { get; set; }
+    public string Gender { get; set; }
 
     public string Country { get; set; }
 

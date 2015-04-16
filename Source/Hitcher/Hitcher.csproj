@@ -137,16 +137,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\const\appConst.js" />
+    <Content Include="app\const\msgConst.js" />
     <Content Include="app\controllers\controlCtrl.js" />
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
     <Content Include="app\controllers\searchController.js" />
     <Content Include="app\controllers\signupController.js" />
+    <Content Include="app\services\authService.js" />
+    <Content Include="app\services\errorService.js" />
     <Content Include="app\services\mapService.js" />
     <Content Include="app\services\routeService.js" />
     <Content Include="app\services\searchService.js" />
     <Content Include="app\services\statusService.js" />
     <Content Include="app\services\userService.js" />
+    <Content Include="app\utils\system\system-format.js" />
+    <Content Include="app\utils\system\system-json.js" />
+    <Content Include="app\utils\system\system-ns.js" />
+    <Content Include="app\utils\system\system-string.js" />
+    <Content Include="app\utils\system\system-time.js" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />
     <Content Include="app\views\modal\search.html" />
@@ -243,7 +251,14 @@
     <Compile Include="Auth\Providers\FacebookAuthProvider.cs" />
     <Compile Include="Auth\Providers\GoogleAuthProvider.cs" />
     <Compile Include="CompositionRoot\Bootstrapper.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Base\ControllerBase.cs" />
+    <Compile Include="Models\External\ExternalAccessToken.cs" />
+    <Compile Include="Models\External\ExternalLoginData.cs" />
+    <Compile Include="Models\External\ExternalLoginViewModel.cs" />
+    <Compile Include="Models\Factory\ModelFactory.cs" />
+    <Compile Include="Models\Request\AccountRequests.cs" />
+    <Compile Include="Models\Response\UserResponse.cs" />
     <Compile Include="Service\IRouteService.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Models\Request\PostRouteRequest.cs" />
