@@ -68,10 +68,19 @@ namespace Hitcher
       };
       app.UseGoogleAuthentication(GoogleAuthOptions);
 
+      // Prod:
+      //FacebookAuthOptions = new FacebookAuthenticationOptions
+      //{
+      //  AppId = "1564101533872186",
+      //  AppSecret = "82828e2f0763e9e561c25d14fbf24c34",
+      //  Provider = new FacebookAuthProvider()
+      //};
+
+      // Dev:
       FacebookAuthOptions = new FacebookAuthenticationOptions
       {
-        AppId = "1540544966219959",
-        AppSecret = "afd3895f4a0dd8dc179f7d8a62ece758",
+        AppId = "1564102313872108",
+        AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
         Provider = new FacebookAuthProvider()
       };
       app.UseFacebookAuthentication(FacebookAuthOptions);

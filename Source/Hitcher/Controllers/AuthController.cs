@@ -19,7 +19,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Hitcher.Controllers
 {
-  [RoutePrefix("api/account")]
+  [RoutePrefix("api/auth")]
   public class AuthController : ControllerBase
   {
     private IAuthenticationManager Authentication
@@ -271,7 +271,7 @@ namespace Hitcher.Controllers
       }
 
       appUser = new AppUser { UserName = model.Username, Email = model.Email, EmailConfirmed = true, JoinDate = DateTime.Now };
-
+      
       IdentityResult result = await AppUserManager.CreateAsync(appUser, model.Password);
 
       if (!result.Succeeded)
