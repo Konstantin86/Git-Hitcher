@@ -32,9 +32,26 @@ app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptorService');
 });
 
+app.config(["flowFactoryProvider", "appConst", function (flowFactoryProvider, appConst) {
+    flowFactoryProvider.defaults = {
+        target: appConst.serviceBase + "api/blob/upload",
+        testChunks: false,
+        permanentErrors: [404, 500, 501],
+        maxChunkRetries: 1,
+        chunkRetryInterval: 5000,
+        simultaneousUploads: 4,
+        singleFile: true
+    };
+
+    flowFactoryProvider.on("catchAll", function () {
+        console.log("catchAll", arguments);
+    });
+}]);
+
 app.config(function($asideProvider) {
     angular.extend($asideProvider.defaults, {
         container: "body",
         html: true
     });
-})
+});
+

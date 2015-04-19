@@ -2,6 +2,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Integration.WebApi;
+using Hitcher.Blob;
 using Hitcher.DataAccess;
 using Hitcher.Service;
 
@@ -62,7 +63,7 @@ namespace Hitcher.CompositionRoot
 
     private void RegisterManagers(bool webapi)
     {
-      //RegisterDependency<AzureBlobStorageRepository, IBlobStorageRepository>(webapi);
+      RegisterDependency<AzureBlobStorageRepository, IBlobStorageRepository>(webapi);
     }
 
     private void RegisterDataAccessComponents(bool webapi)

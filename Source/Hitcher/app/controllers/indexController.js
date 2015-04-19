@@ -1,12 +1,13 @@
 ﻿/// <reference path="~/scripts/angular.min.js"/>
 /// <reference path="~/app/app.js"/>
+/// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/mapService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
 /// <reference path="~/app/services/searchService.js"/>
 
 "use strict";
 
-app.controller("indexController", function ($scope, $location, $aside, userService, searchService, routeService, mapService, statusService) {
+app.controller("indexController", function ($scope, $location, $aside, authService, userService, searchService, routeService, mapService, statusService) {
     var searchAside;
 
     var showAside = function () {
@@ -45,8 +46,10 @@ app.controller("indexController", function ($scope, $location, $aside, userServi
 
     $scope.closeAlert = function () { statusService.clear(); };
 
+    $scope.authData = authService.userData;
+
     $scope.logout = function () {
-        //authService.logout();
+        authService.logout();
         $location.path("/home");
     }
 

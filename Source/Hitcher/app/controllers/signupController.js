@@ -22,7 +22,17 @@ app.controller("signupController", function ($scope, $location, $timeout, msgCon
 
         function onSignupSucceed() {
             $scope.success = true;
-            statusService.success(system.string.format(msgConst.SIGNUP_SUCCESS_FORMAT, $scope.formData.userName, $scope.formData.email));
+
+            statusService.success(system.string.format(msgConst.SIGNUP_SUCCESS_FORMAT, $scope.formData.userName));
+
+            var startTimer = function () {
+                var timer = $timeout(function () {
+                    $timeout.cancel(timer);
+                    $location.path("/login");
+                }, 5000);
+            }
+
+            startTimer();
         }
 
         function onSignupFailed(response) {
