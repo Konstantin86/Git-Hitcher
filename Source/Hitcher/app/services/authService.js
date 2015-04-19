@@ -63,6 +63,20 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
         return deferred.promise;
     };
 
+    //var externalLogin = function (externalLoginData) {
+    //    var deferred = $q.defer();
+
+    //    resource.obtainAccessToken(externalLoginData, function (response) {
+    //        saveAuthData(response.access_token, response.userName);
+    //        getUserData();
+    //        deferred.resolve(response);
+    //    }, function (response) {
+    //        deferred.reject(response);
+    //    });
+
+    //    return deferred.promise;
+    //}
+
     var init = function () {
         var authorizationData = localStorageService.get('authorizationData');
         if (authorizationData) {
@@ -72,25 +86,26 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
         }
     };
 
-    var registerExternal = function (registerExternalData) {
-        var deferred = $q.defer();
+    //var registerExternal = function (registerExternalData) {
+    //    var deferred = $q.defer();
 
-        resource.registerExternal(registerExternalData, function (response) {
-            saveAuthData(response.access_token, response.userName);
-            getUserData();
-            deferred.resolve(response);
-        }, function (err) {
-            deferred.reject(err);
-        });
+    //    resource.registerExternal(registerExternalData, function (response) {
+    //        saveAuthData(response.access_token, response.userName);
+    //        getUserData();
+    //        deferred.resolve(response);
+    //    }, function (err) {
+    //        deferred.reject(err);
+    //    });
 
-        return deferred.promise;
-    };
+    //    return deferred.promise;
+    //};
 
     var obtainAccessToken = function (externalData) {
         var deferred = $q.defer();
 
         resource.getLocalAccessToken({ provider: externalData.provider, externalAccessToken: externalData.externalAccessToken }, function (response) {
             saveAuthData(response.access_token, response.userName);
+            getUserData();
             deferred.resolve(response);
         }, function (err) {
             deferred.reject(err);
@@ -102,8 +117,9 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     var getAuthHeader = function () { return "Bearer " + localStorageService.get("authorizationData").token; };
     var setPhoto = function (fileName) { userData.photoPath = appConst.cdnMediaBase + fileName + "?width=" + appConst.userPhotoWidth; };
 
-    this.registerExternal = registerExternal;
+    //this.registerExternal = registerExternal;
     this.login = login;
+    //this.externalLogin = externalLogin;
     this.logout = logout;
     this.init = init;
     this.userData = userData;

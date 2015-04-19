@@ -138,6 +138,7 @@
   <ItemGroup>
     <Content Include="app\const\appConst.js" />
     <Content Include="app\const\msgConst.js" />
+    <Content Include="app\controllers\accountController.js" />
     <Content Include="app\controllers\controlCtrl.js" />
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
@@ -145,6 +146,7 @@
     <Content Include="app\controllers\signupController.js" />
     <Content Include="app\services\authService.js" />
     <Content Include="app\services\errorService.js" />
+    <Content Include="app\services\interceptors\authInterceptorService.js" />
     <Content Include="app\services\mapService.js" />
     <Content Include="app\services\routeService.js" />
     <Content Include="app\services\searchService.js" />
@@ -155,11 +157,14 @@
     <Content Include="app\utils\system\system-ns.js" />
     <Content Include="app\utils\system\system-string.js" />
     <Content Include="app\utils\system\system-time.js" />
+    <Content Include="app\views\account.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />
     <Content Include="app\views\modal\search.html" />
+    <Content Include="app\views\modal\yes-no-dialog.html" />
     <Content Include="app\views\signup.html" />
     <Content Include="authComplete.html" />
+    <Content Include="content\css\bootstrap-theme-custom.css" />
     <Content Include="content\css\bootstrap-theme.css" />
     <Content Include="content\css\bootstrap.css.map" />
     <Content Include="content\fonts\fontawesome-webfont.eot" />

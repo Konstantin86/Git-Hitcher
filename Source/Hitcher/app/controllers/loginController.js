@@ -50,25 +50,17 @@ app.controller("loginController", function ($scope, $location, authService, erro
 
     $scope.authCompletedCB = function (fragment) {
         $scope.$apply(function () {
-            if (fragment.haslocalaccount === "False") {
-                authService.logout();
+            //authService.externalLogin({ provider: fragment.provider, externalAccessToken: fragment.external_access_token }).then(function () {
+            //    $location.path("/account");
+            //}, function (response) {
+            //    statusService.error(errorService.parseDataResponse(response));
+            //});
 
-                authService.externalAuthData = {
-                    provider: fragment.provider,
-                    userName: fragment.external_user_name,
-                    email: fragment.email,
-                    externalAccessToken: fragment.external_access_token
-                };
-
-                $location.path("/associate");
-            }
-            else {
-                authService.obtainAccessToken({ provider: fragment.provider, externalAccessToken: fragment.external_access_token }).then(function () {
-                    $location.path("/workouts");
-                }, function (response) {
-                    statusService.error(errorService.parseDataResponse(response));
-                });
-            }
+            authService.obtainAccessToken({ provider: fragment.provider, externalAccessToken: fragment.external_access_token }).then(function () {
+                $location.path("/account");
+            }, function (response) {
+                statusService.error(errorService.parseDataResponse(response));
+            });
         });
     }
 });

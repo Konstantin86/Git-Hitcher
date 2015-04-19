@@ -20,7 +20,16 @@ app.config(function ($routeProvider) {
         templateUrl: "/app/views/signup.html"
     });
 
+    $routeProvider.when("/account", {
+        controller: "accountController",
+        templateUrl: "/app/views/account.html"
+    });
+
     $routeProvider.otherwise({ redirectTo: "/home" });
+});
+
+app.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('authInterceptorService');
 });
 
 app.config(function($asideProvider) {
