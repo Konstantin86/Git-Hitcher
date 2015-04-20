@@ -43,19 +43,13 @@ app.controller("loginController", function ($scope, $location, authService, erro
 
     $scope.authExternalProvider = function (provider) {
         var redirectUri = location.protocol + "//" + location.host + "/authcomplete.html";
-        var externalProviderUrl = appConst.serviceBase + "api/auth/externalLogin?provider=" + provider + "&response_type=token&client_id=" + "Keepfit" + "&redirect_uri=" + redirectUri;
+        var externalProviderUrl = appConst.serviceBase + "api/auth/externalLogin?provider=" + provider + "&response_type=token&client_id=" + "Hitcher" + "&redirect_uri=" + redirectUri;
         window.$windowScope = $scope;
         window.open(externalProviderUrl, "Authenticate Account", "location=0,status=0,width=600,height=750");
     };
 
     $scope.authCompletedCB = function (fragment) {
         $scope.$apply(function () {
-            //authService.externalLogin({ provider: fragment.provider, externalAccessToken: fragment.external_access_token }).then(function () {
-            //    $location.path("/account");
-            //}, function (response) {
-            //    statusService.error(errorService.parseDataResponse(response));
-            //});
-
             authService.obtainAccessToken({ provider: fragment.provider, externalAccessToken: fragment.external_access_token }).then(function () {
                 $location.path("/account");
             }, function (response) {
