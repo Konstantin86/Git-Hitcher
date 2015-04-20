@@ -37,11 +37,10 @@ app.controller("loginController", function ($scope, $location, authService, erro
                 modal.$hide();
                 statusService.error(errorService.parseDataResponse(response));
             });
-
         }
     };
 
-    $scope.authExternalProvider = function (provider) {
+    $scope.externalLogin = function (provider) {
         var redirectUri = location.protocol + "//" + location.host + "/authcomplete.html";
         var externalProviderUrl = appConst.serviceBase + "api/auth/externalLogin?provider=" + provider + "&response_type=token&client_id=" + "Hitcher" + "&redirect_uri=" + redirectUri;
         window.$windowScope = $scope;
