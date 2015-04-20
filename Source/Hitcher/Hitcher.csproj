@@ -50,6 +50,10 @@
     <Reference Include="Autofac.Integration.WebApi.Owin">
       <HintPath>..\packages\Autofac.WebApi2.Owin.3.2.0\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Duke.Owin.VkontakteMiddleware, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Duke.Owin.VkontakteMiddleware.1.2.0.0\lib\net45\Duke.Owin.VkontakteMiddleware.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -283,6 +287,7 @@
   <ItemGroup>
     <Compile Include="Auth\ChallengeResult.cs" />
     <Compile Include="Auth\Providers\AppAuthorizationServerProvider.cs" />
+    <Compile Include="Auth\Providers\CustomVkAuthenticationProvider.cs" />
     <Compile Include="Auth\Providers\FacebookAuthProvider.cs" />
     <Compile Include="Auth\Providers\GoogleAuthProvider.cs" />
     <Compile Include="Blob\AzureBlobStorageRepository.cs" />

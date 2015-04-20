@@ -239,7 +239,18 @@ namespace Hitcher.Controllers
       if (!registered)
       {
         string userName = Translit(externalLogin.UserName).Replace(" ", string.Empty);
+        // TODO temporary workaround. It's better to redirect user to associate view to allow him provide e-mail
+        
+        
         user = new AppUser { UserName = userName, Email = externalLogin.Email, EmailConfirmed = true, JoinDate = DateTime.Now };
+
+        user.Email = string.IsNullOrEmpty(user.Email) ? "test@t.ua" : user.Email;
+        
+        var existingUserWithSameName = await AppUserManager.FindByNameAsync(userName);
+        if (existingUserWithSameName != null)
+        {
+          user.UserName += "_1";
+        }
 
         IdentityResult result = await AppUserManager.CreateAsync(user);
 
@@ -257,10 +268,17 @@ namespace Hitcher.Controllers
 
         var externalAccessToken = await VerifyExternalAccessToken(provider, externalLogin.ExternalAccessToken);
 
+        string userId = externalLogin.UserId;
+
+        if (externalAccessToken != null)
+        {
+          userId = externalAccessToken.user_id;
+        }
+
         var info = new ExternalLoginInfo
         {
           DefaultUserName = user.UserName,
-          Login = new UserLoginInfo(provider, externalAccessToken.user_id)
+          Login = new UserLoginInfo(provider, userId)
         };
 
         var addLoginResult = await AppUserManager.AddLoginAsync(user.Id, info.Login);
@@ -274,13 +292,14 @@ namespace Hitcher.Controllers
         //return result.Succeeded ? Ok(GenerateLocalAccessTokenResponse(user.UserName)) : GetErrorResult(result);
       }
 
-      redirectUri = string.Format("{0}#external_access_token={1}&provider={2}&haslocalaccount={3}&external_user_name={4}&email={5}",
+      redirectUri = string.Format("{0}#external_access_token={1}&provider={2}&haslocalaccount={3}&external_user_name={4}&email={5}&user_id={6}",
                                       redirectUri,
                                       externalLogin.ExternalAccessToken,
                                       externalLogin.LoginProvider,
                                       registered.ToString(),
                                       externalLogin.UserName,
-                                      externalLogin.Email);
+                                      externalLogin.Email,
+                                      externalLogin.UserId);
 
       return Redirect(redirectUri);
     }
@@ -309,7 +328,7 @@ namespace Hitcher.Controllers
       }
 
       appUser = new AppUser { UserName = model.Username, Email = model.Email, EmailConfirmed = true, JoinDate = DateTime.Now };
-      
+
       IdentityResult result = await AppUserManager.CreateAsync(appUser, model.Password);
 
       if (!result.Succeeded)
@@ -335,10 +354,10 @@ namespace Hitcher.Controllers
       return result.Succeeded ? Ok(GenerateLocalAccessTokenResponse(model.Username)) : GetErrorResult(result);
     }
 
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [HttpGet]
     [Route("LocalAccessToken")]
-    public async Task<IHttpActionResult> GetLocalAccessToken(string provider, string externalAccessToken)
+    public async Task<IHttpActionResult> GetLocalAccessToken(string provider, string externalAccessToken, string userId)
     {
       if (string.IsNullOrWhiteSpace(provider) || string.IsNullOrWhiteSpace(externalAccessToken))
       {
@@ -347,12 +366,12 @@ namespace Hitcher.Controllers
 
       var verifiedAccessToken = await VerifyExternalAccessToken(provider, externalAccessToken);
 
-      if (verifiedAccessToken == null)
+      if (verifiedAccessToken == null && string.IsNullOrEmpty(userId))
       {
         return BadRequest("Invalid Provider or External Access Token");
       }
 
-      IdentityUser user = await AppUserManager.FindAsync(new UserLoginInfo(provider, verifiedAccessToken.user_id));
+      IdentityUser user = await AppUserManager.FindAsync(new UserLoginInfo(provider, verifiedAccessToken != null ? verifiedAccessToken.user_id : userId));
 
       if (user == null)
       {

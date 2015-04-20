@@ -3,7 +3,8 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
-
+using Duke.Owin.VkontakteMiddleware;
+using Duke.Owin.VkontakteMiddleware.Provider;
 using Hitcher.Auth.Providers;
 using Hitcher.CompositionRoot;
 using Hitcher.DataAccess;
@@ -84,6 +85,13 @@ namespace Hitcher
         Provider = new FacebookAuthProvider()
       };
       app.UseFacebookAuthentication(FacebookAuthOptions);
+
+      app.UseVkontakteAuthentication(new VkAuthenticationOptions
+      {
+        AppId = "4886156",
+        AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
+        Provider = new CustomVkAuthenticationProvider()
+      });
 
       app.UseOAuthAuthorizationServer(oAuthServerOptions);
       app.UseOAuthBearerAuthentication(OAuthBearerOptions);

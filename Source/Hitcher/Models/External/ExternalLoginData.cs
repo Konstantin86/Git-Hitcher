@@ -9,6 +9,7 @@ namespace Hitcher.Models.External
     public string LoginProvider { get; set; }
     public string ProviderKey { get; set; }
     public string UserName { get; set; }
+    public string UserId { get; set; }
     public string Email { get; set; }
     public string ExternalAccessToken { get; set; }
 
@@ -48,6 +49,7 @@ namespace Hitcher.Models.External
         LoginProvider = providerKeyClaim.Issuer,
         ProviderKey = providerKeyClaim.Value,
         UserName = identity.FindFirstValue(ClaimTypes.Name),
+        UserId = identity.FindFirstValue(ClaimTypes.NameIdentifier),
         Email = email,
         ExternalAccessToken = identity.FindFirstValue("ExternalAccessToken")
       };

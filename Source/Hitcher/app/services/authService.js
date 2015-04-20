@@ -103,7 +103,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     var obtainAccessToken = function (externalData) {
         var deferred = $q.defer();
 
-        resource.getLocalAccessToken({ provider: externalData.provider, externalAccessToken: externalData.externalAccessToken }, function (response) {
+        resource.getLocalAccessToken({ provider: externalData.provider, externalAccessToken: externalData.externalAccessToken, userId: externalData.userId }, function (response) {
             saveAuthData(response.access_token, response.userName);
             getUserData();
             deferred.resolve(response);
