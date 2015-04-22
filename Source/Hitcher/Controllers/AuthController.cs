@@ -252,6 +252,12 @@ namespace Hitcher.Controllers
           user.UserName += "_1";
         }
 
+        var existingUserWithSameEmail = await AppUserManager.FindByEmailAsync(user.Email);
+        if (existingUserWithSameEmail != null)
+        {
+          user.Email += "_1";
+        }
+
         IdentityResult result = await AppUserManager.CreateAsync(user);
 
         if (!result.Succeeded)
@@ -289,7 +295,6 @@ namespace Hitcher.Controllers
         }
 
         registered = true;
-        //return result.Succeeded ? Ok(GenerateLocalAccessTokenResponse(user.UserName)) : GetErrorResult(result);
       }
 
       redirectUri = string.Format("{0}#external_access_token={1}&provider={2}&haslocalaccount={3}&external_user_name={4}&email={5}&user_id={6}",
