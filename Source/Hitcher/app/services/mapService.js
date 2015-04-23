@@ -11,6 +11,7 @@
 app.service("mapService", function ($q, $http, $timeout, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
+    var control;
     var mapControl;
 
 
@@ -315,11 +316,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
             if (!infoCreating) {
                 timer = $timeout(function () {
-                    //if (infowindow && infowindow.isOpen()) {
-                    //    infowindow.close();
-                    //    infowindow = null;
-                    //}
-
                     if (infoCreating) {
                         infowindow = new gmaps.InfoWindow({ disableAutoPan: true });
                         if (underMouseLatLng) {
@@ -482,7 +478,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
     });
 
     uiGmapIsReady.promise().then(function (googlemap) {
-        mapControl = map.control.getGMap();
+        control = map.control;
+        mapControl = control.getGMap();
 
         gmaps.event.addListener(mapControl, 'mousemove', function (event) {
             underMouseLatLng = event.latLng;
@@ -593,6 +590,19 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         }
     };
 
+    var refresh = function() {
+        if (control) {
+            //control.refresh();
+            $timeout(function () {
+                //gmaps.event.trigger(map, 'resize');
+                //gmaps.event.trigger(control, 'resize');
+                gmaps.event.trigger(mapControl, 'resize');
+                centerOnMe();
+            }, 10);
+        }
+    };
+
+    this.refresh = refresh;
     this.addRoute = addRoute;
     this.onAddRoute = onAddRoute;
     this.map = map;

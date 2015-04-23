@@ -12,14 +12,20 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     var type;
 
     //if (!mapService.isLoaded()) {
-        $scope.map = mapService.map;
-        $scope.markers = mapService.markers;
-        $scope.markerEvents = mapService.markerEvents;
+    $scope.map = mapService.map;
+    $scope.markers = mapService.markers;
+    $scope.markerEvents = mapService.markerEvents;
     //}
 
-        $scope.$on('$routeChangeSuccess', function () {
-            $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
-        });
+    $scope.$on('$routeChangeSuccess', function () {
+        $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
+    });
+
+    $scope.$watch('mapVisible', function (value) {
+        if (value) {
+            mapService.refresh();
+        }
+    });
 
     $scope.user = userService.user;
 
@@ -147,7 +153,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
         }
     });
 
-    mapService.onAddRoute(function() {
+    mapService.onAddRoute(function () {
         if (!driveAside || !driveAside.$isShown) {
             showAside();
         } else {
@@ -291,7 +297,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
         var duration = directions.routes[0].legs[0].duration.value;
         $scope.route.totalDurationToSave = duration;
         $scope.route.totalDuration = duration.toString().toHHMMSS();
-        
+
         mapService.geocode({ 'latlng': $scope.route.startLatLng.lat() + ',' + $scope.route.startLatLng.lng(), 'language': 'ru' }, false, true).then(function (res) {
             //$scope.route.startName = res.data.results[0].formatted_address;
             $scope.route.startName = mapService.getShortAddress(res.data.results[0]);

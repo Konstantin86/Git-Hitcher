@@ -36,18 +36,18 @@
                 </div>
                 <div class="collapse navbar-collapse" data-collapse="!navbarExpanded">
                     <ul class="nav navbar-nav" style="margin: 9px 0px 0px 15px" ng-cloak>
-                        <div class="btn-group" ng-model="user.type" bs-radio-group>
+                        <div class="btn-group" ng-model="user.type" bs-radio-group ng-show="mapVisible">
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0">Попутчик</label>
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1">Водитель</label>
                         </div>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li data-ng-hide="authData.isAuth" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
-                        <li data-ng-hide="!authData.isAuth"><a href="#/account">Welcome {{authData.userName}}</a></li>
-                        <li data-ng-hide="!authData.isAuth"><a href="" data-ng-click="logout()">Logout</a></li>
-                        <li data-ng-hide="authData.isAuth"> <a href="#/login">Login</a></li>
-                        <li data-ng-hide="authData.isAuth"> <a href="#/signup">Sign Up</a></li>
+                        <li ng-hide="!mapVisible" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
+                        <li ng-hide="!authData.isAuth" ng-cloak><a href="#/account">Welcome {{authData.firstName + " " + authData.lastName}}</a></li>
+                        <li ng-hide="!authData.isAuth"><a href="" data-ng-click="logout()">Logout</a></li>
+                        <li ng-hide="authData.isAuth"> <a href="#/login">Login</a></li>
+                        <li ng-hide="authData.isAuth"> <a href="#/signup">Sign Up</a></li>
                     </ul>
                 </div>
             </div>

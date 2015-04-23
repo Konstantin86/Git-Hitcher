@@ -69,37 +69,37 @@ namespace Hitcher
       app.UseGoogleAuthentication(GoogleAuthOptions);
 
       // Prod:
-      //FacebookAuthOptions = new FacebookAuthenticationOptions
-      //{
-      //  AppId = "1564101533872186",
-      //  AppSecret = "82828e2f0763e9e561c25d14fbf24c34",
-      //  Provider = new FacebookAuthProvider()
-      //};
-
-      // Dev:
       FacebookAuthOptions = new FacebookAuthenticationOptions
       {
-        AppId = "1564102313872108",
-        AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
+        AppId = "1564101533872186",
+        AppSecret = "82828e2f0763e9e561c25d14fbf24c34",
         Provider = new FacebookAuthProvider()
       };
+
+      // Dev:
+      //FacebookAuthOptions = new FacebookAuthenticationOptions
+      //{
+      //  AppId = "1564102313872108",
+      //  AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
+      //  Provider = new FacebookAuthProvider()
+      //};
       app.UseFacebookAuthentication(FacebookAuthOptions);
 
       // Prod:
-      //app.UseVkontakteAuthentication(new VkAuthenticationOptions
-      //{
-      //  AppId = "4887889",
-      //  AppSecret = "JgT4ZDrcxZvQYLa5o0zI",
-      //  Provider = new CustomVkAuthenticationProvider()
-      //});
-
-      // Dev:
       app.UseVkontakteAuthentication(new VkAuthenticationOptions
       {
-        AppId = "4886156",
-        AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
+        AppId = "4887889",
+        AppSecret = "JgT4ZDrcxZvQYLa5o0zI",
         Provider = new CustomVkAuthenticationProvider()
       });
+
+      // Dev:
+      //app.UseVkontakteAuthentication(new VkAuthenticationOptions
+      //{
+      //  AppId = "4886156",
+      //  AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
+      //  Provider = new CustomVkAuthenticationProvider()
+      //});
 
       app.UseOAuthAuthorizationServer(oAuthServerOptions);
       app.UseOAuthBearerAuthentication(OAuthBearerOptions);

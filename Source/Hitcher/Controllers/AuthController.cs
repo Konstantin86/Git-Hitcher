@@ -239,9 +239,24 @@ namespace Hitcher.Controllers
       if (!registered)
       {
         string userName = Translit(externalLogin.UserName).Replace(" ", string.Empty);
+        var nameParts = externalLogin.UserName.Split(' ');
+
+        string firstName = string.Empty;
+        string lastName = string.Empty;
+
+        if (nameParts.Length > 0)
+        {
+          firstName = nameParts[0];
+        }
+
+        if (nameParts.Length > 1)
+        {
+          lastName = nameParts[1];
+        }
+
         // TODO temporary workaround. It's better to redirect user to associate view to allow him provide e-mail
         
-        user = new AppUser { UserName = userName, Email = externalLogin.Email, EmailConfirmed = true, JoinDate = DateTime.Now };
+        user = new AppUser { UserName = userName, FirstName = firstName, LastName = lastName, Email = externalLogin.Email, EmailConfirmed = true, JoinDate = DateTime.Now };
 
         user.Email = string.IsNullOrEmpty(user.Email) ? "test@t.ua" : user.Email;
         

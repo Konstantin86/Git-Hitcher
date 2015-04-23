@@ -46,9 +46,9 @@ namespace Hitcher.DataAccess.Auth
       appUserManager.PasswordValidator = new PasswordValidator
       {
         RequiredLength = 6,
-        RequireDigit = false,
-        RequireLowercase = true,
-        RequireUppercase = true,
+        //RequireDigit = false,
+        //RequireLowercase = true,
+        //RequireUppercase = true,
       };
     }
   }

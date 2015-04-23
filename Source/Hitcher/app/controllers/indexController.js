@@ -17,6 +17,10 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     };
 
+    $scope.$on('$routeChangeSuccess', function () {
+        $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
+    });
+
     $scope.state = statusService.state;
     $scope.user = userService.user;
     $scope.markerEvents = mapService.markerEvents;

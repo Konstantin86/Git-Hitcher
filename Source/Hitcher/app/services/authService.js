@@ -63,20 +63,6 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
         return deferred.promise;
     };
 
-    //var externalLogin = function (externalLoginData) {
-    //    var deferred = $q.defer();
-
-    //    resource.obtainAccessToken(externalLoginData, function (response) {
-    //        saveAuthData(response.access_token, response.userName);
-    //        getUserData();
-    //        deferred.resolve(response);
-    //    }, function (response) {
-    //        deferred.reject(response);
-    //    });
-
-    //    return deferred.promise;
-    //}
-
     var init = function () {
         var authorizationData = localStorageService.get('authorizationData');
         if (authorizationData) {
@@ -85,20 +71,6 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
             getUserData();
         }
     };
-
-    //var registerExternal = function (registerExternalData) {
-    //    var deferred = $q.defer();
-
-    //    resource.registerExternal(registerExternalData, function (response) {
-    //        saveAuthData(response.access_token, response.userName);
-    //        getUserData();
-    //        deferred.resolve(response);
-    //    }, function (err) {
-    //        deferred.reject(err);
-    //    });
-
-    //    return deferred.promise;
-    //};
 
     var obtainAccessToken = function (externalData) {
         var deferred = $q.defer();
@@ -117,9 +89,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     var getAuthHeader = function () { return "Bearer " + localStorageService.get("authorizationData").token; };
     var setPhoto = function (fileName) { userData.photoPath = appConst.cdnMediaBase + fileName + "?width=" + appConst.userPhotoWidth; };
 
-    //this.registerExternal = registerExternal;
     this.login = login;
-    //this.externalLogin = externalLogin;
     this.logout = logout;
     this.init = init;
     this.userData = userData;
