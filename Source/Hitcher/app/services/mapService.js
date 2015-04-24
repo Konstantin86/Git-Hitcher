@@ -598,7 +598,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
                 //gmaps.event.trigger(control, 'resize');
                 gmaps.event.trigger(mapControl, 'resize');
                 centerOnMe();
-            }, 10);
+            }, 100);
         }
     };
 

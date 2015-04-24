@@ -27,34 +27,54 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <form class="form-signin" name="accountForm">
-                    <h2 class="form-signin-heading">{{formData.userName}}</h2>
+                <div bs-active-pane="0" style="margin-top: 5px" bs-tabs>
+                    <div title="Personal" bs-pane>
+                        <form class="form-signin" name="accountForm">
+                            <h2 class="form-signin-heading">{{formData.userName}}</h2>
 
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="firstName" placeholder="First Name" ng-model="formData.firstName">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="lastName" placeholder="Last Name" ng-model="formData.lastName">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="sex" placeholder="Gender" ng-model="formData.sex">
-                    </div>
-                    <div class="form-group" ng-class="{'has-error': accountForm.birthDate.$invalid}">
-                        <label class="control-label"><i class="fa fa-calendar"></i> Birth Date</label>
-                        <input type="text" class="form-control" ng-model="formData.birthDate" data-date-format="yyyy-MM-dd" data-max-date="today" name="birthDate" data-autoclose="1" bs-datepicker>
-                    </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="firstName" placeholder="First Name" ng-model="formData.firstName">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="lastName" placeholder="Last Name" ng-model="formData.lastName">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="sex" placeholder="Gender" ng-model="formData.sex">
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': accountForm.birthDate.$invalid}">
+                                <label class="control-label"><i class="fa fa-calendar"></i> Birth Date</label>
+                                <input type="text" class="form-control" ng-model="formData.birthDate" data-date-format="yyyy-MM-dd" data-max-date="today" name="birthDate" data-autoclose="1" bs-datepicker>
+                            </div>
 
 
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="country" placeholder="Country" ng-model="formData.country">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="country" placeholder="Country" ng-model="formData.country">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="city" placeholder="City" ng-model="formData.city">
+                            </div>
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="accountForm.birthDate.$invalid" ng-click="update()">Update</button>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="city" placeholder="City" ng-model="formData.city">
+                    <div title="Security" disabled="{{formData.isExternal}}" bs-pane>
+                        <form class="form-signin" name="form" ng-hide="success">
+                            <h2 class="form-signin-heading">Change Password</h2>
+                            <div class="form-group" ng-class="{ 'has-error': form.oldPassword.$invalid && (form.oldPassword.$dirty || submitted) }">
+                                <input type="password" class="form-control" name="oldPassword" placeholder="Old Password" ng-model="securityFormData.oldPassword" required>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': form.password.$invalid && (form.password.$dirty || submitted) }">
+                                <input type="password" class="form-control" name="password" placeholder="New Password" ng-model="securityFormData.password" required>
+                            </div>
+                            <div class="form-group" ng-class="{ 'has-error': form.confirmPassword.$invalid && (form.confirmPassword.$dirty || submitted) }">
+                                <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" ng-model="securityFormData.confirmPassword" required>
+                            </div>
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="changePassword()">Change</button>
+                        </form>
                     </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="accountForm.birthDate.$invalid" ng-click="update()">Update</button>
-                </form>
+                </div>
+                
 
-                <div class="panel panel-default" style="margin: 10px 30px">
+                <!--<div class="panel panel-default" style="margin: 10px 30px">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a bs-collapse-toggle>
@@ -79,7 +99,7 @@
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
             <div class="col-md-2">
                 &nbsp;

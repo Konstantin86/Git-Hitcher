@@ -51,6 +51,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
         var onLoginSucceed = function (response) {
             saveAuthData(response.access_token, credentials.userName);
             getUserData();
+            userData.isExternal = false;
             deferred.resolve(response);
         };
 
@@ -78,6 +79,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
         resource.getLocalAccessToken({ provider: externalData.provider, externalAccessToken: externalData.externalAccessToken, userId: externalData.userId }, function (response) {
             saveAuthData(response.access_token, response.userName);
             getUserData();
+            userData.isExternal = true;
             deferred.resolve(response);
         }, function (err) {
             deferred.reject(err);
