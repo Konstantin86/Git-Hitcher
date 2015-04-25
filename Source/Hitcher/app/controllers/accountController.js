@@ -10,14 +10,22 @@
 app.controller("accountController", function ($scope, $location, authService, errorService, appConst, msgConst, statusService) {
     statusService.clear();
 
-    //$scope.selectedDate = "";
-
+    var maxdate = new Date();
+    maxdate.setDate(maxdate.getDate() - 12 * 365);
+    $scope.maxDate = maxdate;
 
     $scope.formData = authService.userData;
-    $scope.securityFormData = authService.securityData;
+    resetSecurityFormData();
     $scope.photoWidth = appConst.userPhotoWidth;
 
-    $scope.onFilesAdded = function () { this.$flow.defaults.headers.Authorization = authService.getAuthHeader(); };
+    $scope.onFilesAdded = function () {
+        if ((arguments[0][0].file.type.indexOf("image") === -1) || arguments[0][0].size > 20000000) {
+            statusService.warning("You are allowed to upload only image files up to 20 Mb size");
+            return false;
+        } else {
+            this.$flow.defaults.headers.Authorization = authService.getAuthHeader();
+        }
+    };
     $scope.onUploadProgress = function () { statusService.loading("Uploading photo..."); };
 
     $scope.onUploadSuccess = function (file, message) {
@@ -52,9 +60,13 @@ app.controller("accountController", function ($scope, $location, authService, er
 
     $scope.changePassword = function () {
         authService.auth.updatePassword($scope.securityFormData, function () {
+            resetSecurityFormData();
             statusService.success(msgConst.ACCOUNT_PWD_CHANGE_SUCCESS);
         }, function (response) {
+            resetSecurityFormData();
             statusService.error(errorService.parseFormResponse(response));
         });
     };
+
+    function resetSecurityFormData() { $scope.securityFormData = { oldPassword: "", password: "", confirmPassword: "" }; };
 });

@@ -97,7 +97,7 @@ namespace Hitcher.Controllers
 
     [HttpGet]
     [Route("ResetPassword", Name = "ResetPasswordRoute")]
-    public async Task<IHttpActionResult> ResetPassword(string userId = "", string code = "", string password = "")
+    public async Task<IHttpActionResult> ResetPassword(string callbackLink, string userId = "", string code = "", string password = "")
     {
       if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code) || string.IsNullOrWhiteSpace(password))
       {
@@ -108,26 +108,27 @@ namespace Hitcher.Controllers
       IdentityResult result = await AppUserManager.ResetPasswordAsync(userId, code, password);
 
       return result.Succeeded
-        ? Redirect(new Uri(ConfigurationManager.AppSettings["webClientHostBaseUri"] + @"#/login"))
+        ? Redirect(callbackLink)
+        //? Redirect(new Uri(ConfigurationManager.AppSettings["webClientHostBaseUri"] + @"#/login"))
         : GetErrorResult(result);
     }
 
     [HttpGet]
     [Route("password")]
-    public async Task<IHttpActionResult> RecoverPassword(string email)
+    public async Task<IHttpActionResult> RecoverPassword(string email, string callbackLink)
     {
       var user = await AppUserManager.FindByEmailAsync(email);
 
-      if (user == null)
+      if (user == null || user.Logins.Any())
       {
-        return BadRequest("E-mail is not registered");
+        return BadRequest("User with provided e-mail is not registered in the system");
       }
 
       string code = await AppUserManager.GeneratePasswordResetTokenAsync(user.Id);
 
       string password = GetAutoGenPwd();
 
-      var callbackUrl = new Uri(Url.Link("ResetPasswordRoute", new { userId = user.Id, code, password }));
+      var callbackUrl = new Uri(Url.Link("ResetPasswordRoute", new { callbackLink, userId = user.Id, code, password }));
 
       await AppUserManager.SendEmailAsync(user.Id, "KeetFit Password Recovery", "Please follow <a href=\"" + callbackUrl + "\">this</a> link to reset your password. Then you'll be able to use new generated password: '" + password + "' for login.");
 

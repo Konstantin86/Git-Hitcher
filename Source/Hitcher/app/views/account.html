@@ -43,7 +43,7 @@
                             </div>
                             <div class="form-group" ng-class="{'has-error': accountForm.birthDate.$invalid}">
                                 <label class="control-label"><i class="fa fa-calendar"></i> Birth Date</label>
-                                <input type="text" class="form-control" ng-model="formData.birthDate" data-date-format="yyyy-MM-dd" data-max-date="today" name="birthDate" data-autoclose="1" bs-datepicker>
+                                <input type="text" class="form-control" ng-model="formData.birthDate" data-date-format="yyyy-MM-dd" data-max-date="{{maxDate}}" name="birthDate" data-autoclose="1" bs-datepicker>
                             </div>
 
 
@@ -72,34 +72,6 @@
                         </form>
                     </div>
                 </div>
-                
-
-                <!--<div class="panel panel-default" style="margin: 10px 30px">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a bs-collapse-toggle>
-                                Security
-                            </a>
-                        </h4>
-                    </div>
-                    <div class="panel-collapse" bs-collapse-target>
-                        <div class="panel-body">
-                            <form class="form-signin" name="form" ng-hide="success">
-                                <h2 class="form-signin-heading">Change Password</h2>
-                                <div class="form-group" ng-class="{ 'has-error': form.oldPassword.$invalid && (form.oldPassword.$dirty || submitted) }">
-                                    <input type="password" class="form-control" name="oldPassword" placeholder="Old Password" ng-model="securityFormData.oldPassword" required>
-                                </div>
-                                <div class="form-group" ng-class="{ 'has-error': form.password.$invalid && (form.password.$dirty || submitted) }">
-                                    <input type="password" class="form-control" name="password" placeholder="New Password" ng-model="securityFormData.password" required>
-                                </div>
-                                <div class="form-group" ng-class="{ 'has-error': form.confirmPassword.$invalid && (form.confirmPassword.$dirty || submitted) }">
-                                    <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" ng-model="securityFormData.confirmPassword" required>
-                                </div>
-                                <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="changePassword()">Change</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>-->
             </div>
             <div class="col-md-2">
                 &nbsp;

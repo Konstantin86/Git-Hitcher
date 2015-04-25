@@ -18,6 +18,7 @@ app.controller("loginController", function ($scope, $location, authService, erro
         authService.login($scope.formData).then(function () {
             $location.path("/home");
         }, function (response) {
+            $scope.formData = { userName: "", password: "" };
             statusService.error(errorService.parseAuthResponse(response));
         });
     };
@@ -30,7 +31,7 @@ app.controller("loginController", function ($scope, $location, authService, erro
         content: msgConst.LOGIN_PWD_RECOVERY_INSTRUCTIONS,
         yes: function () {
             var modal = this;
-            authService.auth.resetPassword({ email: modal.input }, function () {
+            authService.auth.resetPassword({ email: modal.input, callbackLink: appConst.serviceBase + "#/login" }, function () {
                 modal.$hide();
                 statusService.success(system.string.format(msgConst.LOGIN_PWD_RECOVERY_LINK_SENT_FORMAT, modal.input));
             }, function (response) {

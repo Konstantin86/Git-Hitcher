@@ -77,29 +77,36 @@ namespace Hitcher
       };
 
       // Dev:
-      //FacebookAuthOptions = new FacebookAuthenticationOptions
-      //{
-      //  AppId = "1564102313872108",
-      //  AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
-      //  Provider = new FacebookAuthProvider()
-      //};
+      #if DEBUG
+      FacebookAuthOptions = new FacebookAuthenticationOptions
+      {
+        AppId = "1564102313872108",
+        AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
+        Provider = new FacebookAuthProvider()
+      };
+      #endif
+      
       app.UseFacebookAuthentication(FacebookAuthOptions);
 
       // Prod:
-      app.UseVkontakteAuthentication(new VkAuthenticationOptions
+      var vkAuthenticationOptions = new VkAuthenticationOptions
       {
         AppId = "4887889",
         AppSecret = "JgT4ZDrcxZvQYLa5o0zI",
         Provider = new CustomVkAuthenticationProvider()
-      });
+      };
 
       // Dev:
-      //app.UseVkontakteAuthentication(new VkAuthenticationOptions
-      //{
-      //  AppId = "4886156",
-      //  AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
-      //  Provider = new CustomVkAuthenticationProvider()
-      //});
+      #if DEBUG
+      vkAuthenticationOptions = new VkAuthenticationOptions
+      {
+        AppId = "4886156",
+        AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
+        Provider = new CustomVkAuthenticationProvider()
+      };
+      #endif
+
+      app.UseVkontakteAuthentication(vkAuthenticationOptions);
 
       app.UseOAuthAuthorizationServer(oAuthServerOptions);
       app.UseOAuthBearerAuthentication(OAuthBearerOptions);

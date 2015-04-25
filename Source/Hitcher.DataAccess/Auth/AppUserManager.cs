@@ -39,7 +39,7 @@ namespace Hitcher.DataAccess.Auth
     {
       appUserManager.UserValidator = new UserValidator<AppUser>(appUserManager)
       {
-        AllowOnlyAlphanumericUserNames = true,
+        //AllowOnlyAlphanumericUserNames = true,
         RequireUniqueEmail = true
       };
 

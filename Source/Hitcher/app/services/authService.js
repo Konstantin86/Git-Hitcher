@@ -18,7 +18,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
 
     var userData = {};
     var externalAuthData = { provider: "", userName: "", email: "", externalAccessToken: "", password: "", confirmPassword: "" };
-    var securityData = { oldPassword: "", password: "", confirmPassword: "" };
+    //var securityData = { oldPassword: "", password: "", confirmPassword: "" };
 
     var logout = function () {
         localStorageService.remove("authorizationData");
@@ -98,7 +98,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     this.externalAuthData = externalAuthData;
     this.setPhoto = setPhoto;
     this.getAuthHeader = getAuthHeader;
-    this.securityData = securityData;
+    //this.securityData = securityData;
     this.obtainAccessToken = obtainAccessToken;
     this.auth = resource;
 });
