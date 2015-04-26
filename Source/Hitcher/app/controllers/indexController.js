@@ -180,7 +180,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     });
 
-    $scope.hideSearch = hideSearch();
+    $scope.hideSearch = hideSearch;
 
     $scope.onSearchClick = function () {
         if (!searchAside || !searchAside.$isShown) {
