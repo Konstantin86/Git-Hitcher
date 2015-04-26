@@ -17,8 +17,20 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     };
 
+    var hideSearch = function () {
+        if (searchAside) {
+            initAside();
+            mapService.removeSearchMarkers();
+            searchAside.hide();
+        }
+    };
+
     $scope.$on('$routeChangeSuccess', function () {
         $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
+
+        if (!$scope.mapVisible) {
+            hideSearch();
+        }
     });
 
     $scope.state = statusService.state;
@@ -168,11 +180,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     });
 
-    $scope.hideSearch = function () {
-        initAside();
-        mapService.removeSearchMarkers();
-        searchAside.hide();
-    };
+    $scope.hideSearch = hideSearch();
 
     $scope.onSearchClick = function () {
         if (!searchAside || !searchAside.$isShown) {

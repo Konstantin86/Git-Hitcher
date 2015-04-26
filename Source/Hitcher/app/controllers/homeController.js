@@ -2,11 +2,12 @@
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/services/mapService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
+/// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/routeService.js"/>
 
 "use strict";
 
-app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $q, $timeout, $interval, userService, mapService, statusService, routeService) {
+app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService) {
     var driveAside;
     var routeCreating = false;
     var type;
@@ -17,6 +18,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     $scope.markerEvents = mapService.markerEvents;
     //}
 
+    $scope.userData = authService.userData;
+
     $scope.$on('$routeChangeSuccess', function () {
         $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
     });
@@ -24,6 +27,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     $scope.$watch('mapVisible', function (value) {
         if (value) {
             mapService.refresh();
+        } else {
+            $scope.hideDriveAside();
         }
     });
 
@@ -57,6 +62,17 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
         }
     };
 
+    $scope.hideDriveAside = function () {
+        if (driveAside) {
+            initAside();
+            mapService.removeRouteMarkers();
+            mapService.removeTempRoute();
+            routeCreating = false;
+            driveAside.hide();
+            mapService.unmaskRoutes();
+        }
+    };
+
     $scope.toggleAside = function () {
         if (!driveAside || !driveAside.$isShown) {
             showAside();
@@ -64,15 +80,6 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
             $scope.hideDriveAside();
         }
     }
-
-    $scope.hideDriveAside = function () {
-        initAside();
-        mapService.removeRouteMarkers();
-        mapService.removeTempRoute();
-        routeCreating = false;
-        driveAside.hide();
-        mapService.unmaskRoutes();
-    };
 
     $scope.declareRoute = function () {
         $scope.route.type = userService.user.type;

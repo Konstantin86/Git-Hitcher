@@ -217,11 +217,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
                     }
                 });
 
-                //var infowindow = new gmaps.InfoWindow({
-                //    content: 'tesdt'
-                //});
-
-                //infowindow.open(mapControl);
                 var routeInfo = getRouteInfo(response.routes[0]);
                 routeInfo.totalDistance = response.routes[0].legs[0].distance.value;
                 routeInfo.totalDuration = response.routes[0].legs[0].duration.value;
@@ -317,7 +312,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             if (!infoCreating) {
                 timer = $timeout(function () {
                     if (infoCreating) {
-                        infowindow = new gmaps.InfoWindow({ disableAutoPan: true });
+                        infowindow = new gmaps.InfoWindow({ disableAutoPan: false });
                         if (underMouseLatLng) {
                             infowindow.setPosition(new gmaps.LatLng(underMouseLatLng.lat() + 0.003, underMouseLatLng.lng()));
                         } else {
