@@ -119,6 +119,10 @@
     <Compile Include="Migrations\201504162217387_Auth_Added.Designer.cs">
       <DependentUpon>201504162217387_Auth_Added.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504281957327_LinkedRoutesToUser.cs" />
+    <Compile Include="Migrations\201504281957327_LinkedRoutesToUser.Designer.cs">
+      <DependentUpon>201504281957327_LinkedRoutesToUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
@@ -146,6 +150,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504162217387_Auth_Added.resx">
       <DependentUpon>201504162217387_Auth_Added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504281957327_LinkedRoutesToUser.resx">
+      <DependentUpon>201504281957327_LinkedRoutesToUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

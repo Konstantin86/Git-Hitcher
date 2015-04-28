@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Hitcher.Controllers.Base;
 using Hitcher.DataAccess;
@@ -67,8 +68,17 @@ namespace Hitcher.Controllers
 
     [Route("")]
     [HttpPost]
-    public IHttpActionResult Post(PostRouteRequest route)
+    public async Task<IHttpActionResult> Post(PostRouteRequest route)
     {
+      var user = await AppUserManager.FindByNameAsync(User.Identity.Name);
+
+      if (user == null)
+      {
+        return BadRequest("Auth db corrupted");
+      }
+
+      route.UserId = user.Id;
+      
       int id = _routeService.Save(route);
       return Ok(new { id });
     }

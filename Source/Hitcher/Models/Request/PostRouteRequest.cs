@@ -5,6 +5,7 @@ namespace Hitcher.Models.Request
   public class PostRouteRequest
   {
     public int Id { get; set; }
+    public string UserId { get; set; }
     public string Name { get; set; }
     public string Phone { get; set; }
     public string StartName { get; set; }
@@ -16,11 +17,4 @@ namespace Hitcher.Models.Request
     public int TotalDuration { get; set; }
     public Coord[] Path { get; set; }
   }
-
-  //public class Coord
-  //{
-  //  public float Lat { get; set; }
-  //  public float Lng { get; set; }
-  //}
-
 }

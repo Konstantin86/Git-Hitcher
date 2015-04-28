@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -29,5 +30,7 @@ namespace Hitcher.DataAccess.Entities
     public string City { get; set; }
 
     public string PhotoPath { get; set; }
+
+    public virtual ICollection<Route> Routes { get; set; }
   }
 }

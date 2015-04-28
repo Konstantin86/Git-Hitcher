@@ -23,6 +23,7 @@ namespace Hitcher.Service
       Route newRoute = new Route
       {
         Id = route.Id,
+        UserId = route.UserId,
         EndLatLng = route.EndLatLng,
         StartLatLng = route.StartLatLng,
         Name = route.Name,
