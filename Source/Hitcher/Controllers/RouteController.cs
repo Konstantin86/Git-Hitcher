@@ -9,6 +9,7 @@ using Hitcher.Service;
 
 namespace Hitcher.Controllers
 {
+  [Authorize]
   [RoutePrefix("api/route")]
   public class RouteController : ControllerBase
   {
