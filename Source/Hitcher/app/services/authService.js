@@ -38,6 +38,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
             userData.lastName = user.lastName;
             userData.sex = user.sex;
             userData.birthDate = user.birthDate;
+            userData.phoneNumber = user.phoneNumber;
             userData.joinDate = user.joinDate;
             userData.country = user.country;
             userData.city = user.city;

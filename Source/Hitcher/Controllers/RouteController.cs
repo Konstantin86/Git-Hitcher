@@ -35,7 +35,7 @@ namespace Hitcher.Controllers
 
     [Route("")]
     [HttpGet]
-    public IHttpActionResult Get([FromUri]QueryRouteRequest request)
+    public async Task<IHttpActionResult> Get([FromUri]QueryRouteRequest request)
     {
       if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
       {
@@ -54,6 +54,14 @@ namespace Hitcher.Controllers
 
       foreach (var route in allRoutes)
       {
+        var user = await AppUserManager.FindByIdAsync(route.UserId);
+
+        if (user != null)
+        {
+          route.Phone = user.PhoneNumber;
+          route.Name = user.UserName;
+        }
+
         route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
       }
 

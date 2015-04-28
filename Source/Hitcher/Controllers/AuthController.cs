@@ -174,6 +174,7 @@ namespace Hitcher.Controllers
       user.BirthDate = model.BirthDate;
       user.Country = model.Country;
       user.City = model.City;
+      user.PhoneNumber = model.PhoneNumber;
 
       IdentityResult result = await AppUserManager.UpdateAsync(user);
 

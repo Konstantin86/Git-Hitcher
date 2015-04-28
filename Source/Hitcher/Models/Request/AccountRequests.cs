@@ -53,6 +53,8 @@ namespace Hitcher.Models.Request
     public string Country { get; set; }
 
     public string City { get; set; }
+
+    public string PhoneNumber { get; set; }
   }
 
   public class PasswordUpdateRequest : PasswordRequestBase
