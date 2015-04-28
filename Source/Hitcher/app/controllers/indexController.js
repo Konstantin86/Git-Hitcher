@@ -84,23 +84,48 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     mapService.contextMenuReady.then(function (gmaps) {
         $scope.$watch('searchModel.startLat', function (value) {
-            var contextMenu = $('.context_menu');
+            //var contextMenu = $('.context_menu');
 
-            if (contextMenu.length) {
-                contextMenu.children()[2].style.display = value ? 'none' : 'block';
-                contextMenu.children()[3].style.display = value ? 'block' : 'none';
-                var resetVisible = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
-                contextMenu.children()[4].style.display = resetVisible;
-                contextMenu.children()[5].style.display = resetVisible;
+            //if (contextMenu.length) {
+            if ($('#menu_search_from').length) {
+                $('#menu_search_from')[0].style.display = value ? 'none' : 'block';
             }
+
+            if ($('#menu_search_to').length) {
+                $('#menu_search_to')[0].style.display = value ? 'block' : 'none';
+            }
+
+
+            var resetDisplay = ((($('#menu_go_from').length && $('#menu_go_from')[0].style.display === 'none') && $scope.authData.isAuth) || ($('#menu_search_from').length && $('#menu_search_from')[0].style.display === 'none')) ? 'block' : 'none';
+            //var resetDisplay = (($('#menu_go_from').length && $('#menu_go_from')[0].style.display === 'none') || ($('#menu_search_from').length && $('#menu_search_from')[0].style.display === 'none')) ? 'block' : 'none';
+            //var resetDisplay = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+
+            if ($('#menu_reset').length) {
+                $('#menu_reset')[0].style.display = resetDisplay;
+            }
+
+            if ($('.context_menu_separator').length) {
+                $('.context_menu_separator')[0].style.display = resetDisplay;
+            }
+                //contextMenu.children()[2].style.display = value ? 'none' : 'block';
+                //contextMenu.children()[3].style.display = value ? 'block' : 'none';
+                //var resetVisible = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+                //contextMenu.children()[4].style.display = resetVisible;
+                //contextMenu.children()[5].style.display = resetVisible;
+            //}
         });
 
         $scope.$watch('searchModel.endLat', function (value) {
-            var contextMenu = $('.context_menu');
 
-            if (contextMenu.length) {
-                contextMenu.children()[3].style.display = ($scope.searchModel.startLat && $scope.searchModel.endLat) || (!$scope.searchModel.startLat) ? 'none' : 'block';
+            if ($('#menu_search_to').length) {
+                $('#menu_search_to')[0].style.display = ($scope.searchModel.startLat && $scope.searchModel.endLat) || (!$scope.searchModel.startLat) ? 'none' : 'block';
             }
+
+            //var contextMenu = $('.context_menu');
+
+            //if (contextMenu.length) {
+            //    contextMenu.children()[3].style.display = ($scope.searchModel.startLat && $scope.searchModel.endLat) || (!$scope.searchModel.startLat) ? 'none' : 'block';
+            //}
         });
     });
 

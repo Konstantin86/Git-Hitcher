@@ -20,6 +20,22 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
 
     $scope.userData = authService.userData;
 
+    var updateMenuCommandsAvailability = function (onMapVisChange) {
+        if ($('#menu_go_from').length) {
+            if (onMapVisChange) {
+                $('#menu_go_from')[0].style.display = $scope.userData.isAuth ? 'block' : 'none';
+            } else {
+                $('#menu_go_from')[0].style.display = $scope.userData.isAuth && $('#menu_go_from')[0].style.display === 'block' ? 'block' : 'none';
+            }
+        }
+
+        if ($('#menu_go_to').length) {
+            $('#menu_go_to')[0].style.display = $scope.userData.isAuth && $('#menu_go_to')[0].style.display === 'block' ? 'block' : 'none';
+        }
+    };
+
+    $scope.$watch('userData.isAuth', function () { updateMenuCommandsAvailability(true); });
+
     $scope.$on('$routeChangeSuccess', function () {
         $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
     });
@@ -30,6 +46,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
         } else {
             $scope.hideDriveAside();
         }
+
+        updateMenuCommandsAvailability(true);
     });
 
     $scope.user = userService.user;
@@ -242,25 +260,50 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
 
     mapService.contextMenuReady.then(function (gmaps) {
         $scope.$watch('route.startLatLng', function (value) {
-            var contextMenu = $('.context_menu');
+            //var contextMenu = $('.context_menu');
 
-            if (contextMenu.length) {
-                contextMenu.children()[0].style.display = value ? 'none' : 'block';
-                contextMenu.children()[1].style.display = value ? 'block' : 'none';
+            //if (contextMenu.length) {
+                if ($('#menu_go_from').length) {
+                    $('#menu_go_from')[0].style.display = value ? 'none' : 'block';
+                }
 
-                var resetDisplay = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+                if ($('#menu_go_to').length) {
+                    $('#menu_go_to')[0].style.display = value ? 'block' : 'none';
+                }
+                //contextMenu.children()[0].style.display = value ? 'none' : 'block';
+                //contextMenu.children()[1].style.display = value ? 'block' : 'none';
 
-                contextMenu.children()[4].style.display = resetDisplay;
-                contextMenu.children()[5].style.display = resetDisplay;
-            }
+                var resetDisplay = ((($('#menu_go_from').length && $('#menu_go_from')[0].style.display === 'none') && $scope.userData.isAuth) || ($('#menu_search_from').length && $('#menu_search_from')[0].style.display === 'none')) ? 'block' : 'none';
+                //var resetDisplay = contextMenu.children()[2].style.display === 'none' || contextMenu.children()[0].style.display === 'none' ? 'block' : 'none';
+
+                if ($('#menu_reset').length) {
+                    $('#menu_reset')[0].style.display = resetDisplay;
+                }
+
+                if ($('.context_menu_separator').length) {
+                    $('.context_menu_separator')[0].style.display = resetDisplay;
+                }
+
+                //contextMenu.children()[4].style.display = resetDisplay;
+                //contextMenu.children()[5].style.display = resetDisplay;
+            //}
+
+            updateMenuCommandsAvailability();
         });
 
         $scope.$watch('route.endLatLng', function (value) {
-            var contextMenu = $('.context_menu');
+            //var contextMenu = $('.context_menu');
 
-            if (contextMenu.length) {
-                contextMenu.children()[1].style.display = ($scope.route.startLatLng && $scope.route.endLatLng) || (!$scope.route.startLatLng) ? 'none' : 'block';
-            }
+            //if (contextMenu.length) {
+
+                if ($('#menu_go_to').length) {
+                    $('#menu_go_to')[0].style.display = ($scope.route.startLatLng && $scope.route.endLatLng) || (!$scope.route.startLatLng) ? 'none' : 'block';
+                }
+
+            //    contextMenu.children()[1].style.display = ($scope.route.startLatLng && $scope.route.endLatLng) || (!$scope.route.startLatLng) ? 'none' : 'block';
+            //}
+
+            updateMenuCommandsAvailability();
         });
     });
 
