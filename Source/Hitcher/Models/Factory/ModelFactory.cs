@@ -30,6 +30,7 @@ namespace Hitcher.Models.Factory
         Email = appUser.Email,
         EmailConfirmed = appUser.EmailConfirmed,
         Gender = appUser.Gender,
+        PhoneNumber = appUser.PhoneNumber,
         Country = appUser.Country,
         City = appUser.City,
         BirthDate = appUser.BirthDate,

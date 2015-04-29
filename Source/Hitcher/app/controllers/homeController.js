@@ -72,6 +72,9 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     });
 
     var showAside = function () {
+        $scope.route.name = $scope.userData.userName;
+        $scope.route.phone = $scope.userData.phoneNumber;
+
         if (!driveAside || !driveAside.$isShown) {
             driveAside = $aside({ scope: $scope, backdrop: false, dismissable: false, placement: 'left', template: 'app/views/modal/aside.html' });
             driveAside.$promise.then(function () { driveAside.show(); });
@@ -333,6 +336,6 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     initAside();
 
     function initAside() {
-        $scope.route = { startName: null, endName: null, name: null, phone: null };
+        $scope.route = { startName: null, endName: null, name: $scope.userData.userName, phone: $scope.userData.phoneNumber };
     };
 });
