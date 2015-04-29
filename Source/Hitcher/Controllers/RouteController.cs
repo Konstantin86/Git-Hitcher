@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -60,7 +61,7 @@ namespace Hitcher.Controllers
         {
           route.Phone = user.PhoneNumber;
           route.Name = user.UserName;
-          route.PhotoPath = user.PhotoPath;
+          route.PhotoPath = ConfigurationManager.AppSettings["cdnMediaBase"] + user.PhotoPath;
         }
 
         route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
