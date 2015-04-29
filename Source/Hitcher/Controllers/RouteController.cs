@@ -28,6 +28,7 @@ namespace Hitcher.Controllers
 
     [Route("")]
     [HttpGet]
+    [AllowAnonymous]
     public IHttpActionResult Get(int id)
     {
       var route = _unitOfWork.RouteRepository.Get(r => r.Id == id);
@@ -36,6 +37,7 @@ namespace Hitcher.Controllers
 
     [Route("")]
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IHttpActionResult> Get([FromUri]QueryRouteRequest request)
     {
       if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)

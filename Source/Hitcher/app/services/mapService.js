@@ -240,8 +240,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         var polyline = new gmaps.Polyline({
             path: routePoints.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
 
-            // TODO uncomment to display each 10 point
-            //path: routePoints.coords.filter(function (element) { return routePoints.coords.indexOf(element) % 10 === 0; }).map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
             strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)],
             strokeOpacity: 0.6,
             strokeWeight: 5
@@ -259,19 +257,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
         polyline.setMap(mapControl);
 
-        //gmaps.event.addListener(polyline, "click", function (e) {
-        //    var content = '<div style="width:200px;">'
-        //                + '<b>From: </b>' + info.startName + '<br/>'
-        //                + '<b>To: </b>' + info.endName + '<br/>'
-        //                + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'
-        //                + '<b>Duration: </b>' + (' ' + info.totalDuration).toHHMMSS() + '<br/>'
-        //                + '<b>Driver: </b>Василий Залупенко' + '<br/>'
-        //                + '<b>Phone: </b>+3(096)123-45-67'
-        //                + '</div>';
-
-        //    infowindow.setContent(content);
-        //});
-
         gmaps.event.addListener(polyline, "mouseover", function (e) {
             var polylinePoints = this.getPath().getArray();
             var polylineStartPoint = polylinePoints[0];
@@ -280,8 +265,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             var info;
 
             polylines.forEach(function (p) {
-                //p.polyline.setOptions({ strokeOpacity: 0.3 });
-
                 var points = p.polyline.getPath().getArray();
                 if (points[0] === polylineStartPoint && points[points.length - 1] === polylineEndPoint) {
                     info = p.info;
@@ -292,8 +275,6 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             currentOpacity = this.strokeOpacity;
             
             this.setOptions({ strokeColor: "#ffffff", strokeOpacity: 1, zIndex: 999, strokeWeight: 10 });
-
-            //var content = this.getPath().getArray()[this.getPath().getArray().length - 1];
 
             var content = '<div style="width:200px;">'
                 + '<img width="200" src="' + info.photoPath + '" /><br/>'
