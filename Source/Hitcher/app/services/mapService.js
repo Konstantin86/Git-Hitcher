@@ -250,6 +250,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         var info = {
             name: routePoints.name,
             phone: routePoints.phone,
+            photoPath: routePoints.photoPath,
             startName: routePoints.startName,
             endName: routePoints.endName,
             totalDistance: routePoints.totalDistance,
@@ -295,6 +296,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
             //var content = this.getPath().getArray()[this.getPath().getArray().length - 1];
 
             var content = '<div style="width:200px;">'
+                + '<img width="200" src="' + info.photoPath + '" /><br/>'
                 + '<b>From: </b>' + info.startName + '<br/>'
                 + '<b>To: </b>' + info.endName + '<br/>'
                 + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'

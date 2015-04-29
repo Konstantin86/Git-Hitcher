@@ -60,6 +60,7 @@ namespace Hitcher.Controllers
         {
           route.Phone = user.PhoneNumber;
           route.Name = user.UserName;
+          route.PhotoPath = user.PhotoPath;
         }
 
         route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
