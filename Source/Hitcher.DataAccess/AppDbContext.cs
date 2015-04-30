@@ -20,5 +20,15 @@ namespace Hitcher.DataAccess
     {
       return new AppDbContext();
     }
+
+    //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    //{
+    //  modelBuilder.Entity<AppUser>()
+    //      .HasRequired(a => a.Routes)
+    //      .WithRequiredDependent()
+    //      .WillCascadeOnDelete(true);
+
+    //  base.OnModelCreating(modelBuilder);
+    //}
   }
 }

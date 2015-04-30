@@ -28,8 +28,8 @@ namespace Hitcher.DataAccess.Entities
 
     public string UserId { get; set; }
 
-    [ForeignKey("UserId")]
-    public virtual AppUser User { get; set; }
+    //[ForeignKey("UserId")]
+    //public virtual AppUser User { get; set; }
 
     public string PhotoPath { get; set; }
   }

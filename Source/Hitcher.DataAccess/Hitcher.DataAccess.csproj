@@ -127,6 +127,10 @@
     <Compile Include="Migrations\201504290606050_ExtendedRoute.Designer.cs">
       <DependentUpon>201504290606050_ExtendedRoute.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504300917583_fixedRoutestoUsersRelations.cs" />
+    <Compile Include="Migrations\201504300917583_fixedRoutestoUsersRelations.Designer.cs">
+      <DependentUpon>201504300917583_fixedRoutestoUsersRelations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
@@ -160,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504290606050_ExtendedRoute.resx">
       <DependentUpon>201504290606050_ExtendedRoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504300917583_fixedRoutestoUsersRelations.resx">
+      <DependentUpon>201504300917583_fixedRoutestoUsersRelations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
