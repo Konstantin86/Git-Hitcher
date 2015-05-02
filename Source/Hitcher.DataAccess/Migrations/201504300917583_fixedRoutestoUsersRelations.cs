@@ -12,7 +12,7 @@ namespace Hitcher.DataAccess.Migrations
             AddColumn("dbo.Routes", "AppUser_Id", c => c.String(maxLength: 128));
             AlterColumn("dbo.Routes", "UserId", c => c.String());
             CreateIndex("dbo.Routes", "AppUser_Id");
-            AddForeignKey("dbo.Routes", "AppUser_Id", "dbo.AspNetUsers", "Id");
+            AddForeignKey("dbo.Routes", "AppUser_Id", "dbo.AspNetUsers", "Id", true);
         }
         
         public override void Down()

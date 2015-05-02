@@ -26,8 +26,6 @@ namespace Hitcher.Service
         UserId = route.UserId,
         EndLatLng = route.EndLatLng,
         StartLatLng = route.StartLatLng,
-        Name = route.Name,
-        Phone = route.Phone,
         StartName = route.StartName,
         EndName = route.EndName,
         TotalDistance = route.TotalDistance,

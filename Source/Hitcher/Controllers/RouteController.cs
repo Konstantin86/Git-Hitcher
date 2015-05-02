@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Hitcher.Controllers.Base;
 using Hitcher.DataAccess;
 using Hitcher.DataAccess.Entities;
 using Hitcher.Models.Request;
+using Hitcher.Models.Response;
 using Hitcher.Service;
 
 namespace Hitcher.Controllers
@@ -53,9 +55,11 @@ namespace Hitcher.Controllers
         return Ok(enumerable);
       }
 
-      IQueryable<Route> allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords);
+      List<Route> allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords).ToList();
 
-      foreach (var route in allRoutes)
+      List<RouteResponse> responseRows = allRoutes.Select(m => new RouteResponse(m)).ToList();
+
+      foreach (var route in responseRows)
       {
         var user = await AppUserManager.FindByIdAsync(route.UserId);
 
@@ -71,7 +75,7 @@ namespace Hitcher.Controllers
 
       if (!request.Take.HasValue && !request.Skip.HasValue)
       {
-        return Ok(allRoutes);
+        return Ok(responseRows);
       }
 
       var routes = allRoutes.Skip(request.Skip.GetValueOrDefault()).ToList();

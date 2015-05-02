@@ -304,6 +304,7 @@
     <Compile Include="Models\External\ExternalLoginViewModel.cs" />
     <Compile Include="Models\Factory\ModelFactory.cs" />
     <Compile Include="Models\Request\AccountRequests.cs" />
+    <Compile Include="Models\Response\RouteResponse.cs" />
     <Compile Include="Models\Response\UserResponse.cs" />
     <Compile Include="Service\IRouteService.cs" />
     <Compile Include="Controllers\RouteController.cs" />

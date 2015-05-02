@@ -30,7 +30,5 @@ namespace Hitcher.DataAccess.Entities
     public string City { get; set; }
 
     public string PhotoPath { get; set; }
-
-    public virtual ICollection<Route> Routes { get; set; }
   }
 }

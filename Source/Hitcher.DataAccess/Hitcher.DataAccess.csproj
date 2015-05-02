@@ -131,6 +131,14 @@
     <Compile Include="Migrations\201504300917583_fixedRoutestoUsersRelations.Designer.cs">
       <DependentUpon>201504300917583_fixedRoutestoUsersRelations.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505020736337_removed_strong_route_to_user_relation.cs" />
+    <Compile Include="Migrations\201505020736337_removed_strong_route_to_user_relation.Designer.cs">
+      <DependentUpon>201505020736337_removed_strong_route_to_user_relation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505020801201_removed_redundant_route_fields.cs" />
+    <Compile Include="Migrations\201505020801201_removed_redundant_route_fields.Designer.cs">
+      <DependentUpon>201505020801201_removed_redundant_route_fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
@@ -167,6 +175,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504300917583_fixedRoutestoUsersRelations.resx">
       <DependentUpon>201504300917583_fixedRoutestoUsersRelations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505020736337_removed_strong_route_to_user_relation.resx">
+      <DependentUpon>201505020736337_removed_strong_route_to_user_relation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505020801201_removed_redundant_route_fields.resx">
+      <DependentUpon>201505020801201_removed_redundant_route_fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

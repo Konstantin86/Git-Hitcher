@@ -63,15 +63,15 @@ namespace Hitcher.DataAccess.Migrations
 
       //TODO create rolemanager and add two roles: user and admin
 
-      IdentityResult ir = userManager.Create(user, "mtecPass123");
-      if (ir.Succeeded)
-      {
-        userManager.AddToRoles(user.Id, "user", "admin");
-      }
-      else
-      {
-        Console.WriteLine(string.Join(Environment.NewLine, ir.Errors));
-      }
+      //IdentityResult ir = userManager.Create(user, "mtecPass123");
+      //if (ir.Succeeded)
+      //{
+//        userManager.AddToRoles(user.Id, "user", "admin");
+  //    }
+    //  else
+      //{
+      //  Console.WriteLine(string.Join(Environment.NewLine, ir.Errors));
+      //}
     }
   }
 }

@@ -6,10 +6,6 @@ namespace Hitcher.DataAccess.Entities
 {
   public class Route : EntityBase
   {
-    public string Name { get; set; }
-
-    public string Phone { get; set; }
-
     public string StartName { get; set; }
 
     public string StartLatLng { get; set; }
@@ -27,10 +23,5 @@ namespace Hitcher.DataAccess.Entities
     public virtual ICollection<Coord> Coords { get; set; }
 
     public string UserId { get; set; }
-
-    //[ForeignKey("UserId")]
-    //public virtual AppUser User { get; set; }
-
-    public string PhotoPath { get; set; }
   }
 }
