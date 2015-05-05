@@ -161,6 +161,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             }
 
             //initAside();
+            resultRoutes[0].isActive = true;
             $scope.searchModel.routes = resultRoutes;
         });
 

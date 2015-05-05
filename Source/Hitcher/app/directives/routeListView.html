@@ -1,11 +1,13 @@
 ﻿<div class="list-group">
-    <a href="#" class="list-group-item" data-ng-repeat="route in routesInfo">
-        <h4 class="list-group-item-heading">{{route.name}}</h4>
-        <p class="list-group-item-text">{{route.distance}}</p>
-        <p class="list-group-item-text">{{route.duration}}</p>
-        <p class="list-group-item-text">{{route.driver}}</p>
-        <p class="list-group-item-text">{{route.phone}}</p>
-    </a>
+    <div data-ng-repeat="route in routesInfo">
+        <a href="#" class="list-group-item" ng-class="{'active': route.isActive}">
+            <h4 class="list-group-item-heading">{{route.name}}</h4>
+            <p class="list-group-item-text">{{route.distance}}</p>
+            <p class="list-group-item-text">{{route.duration}}</p>
+            <p class="list-group-item-text">{{route.driver}}</p>
+            <p class="list-group-item-text">{{route.phone}}</p>
+        </a>
+    </div>
 </div>
 
 <!--<div class="list-group" data-ng-repeat="route in routesInfo">
