@@ -177,6 +177,8 @@
     <Content Include="app\controllers\loginController.js" />
     <Content Include="app\controllers\searchController.js" />
     <Content Include="app\controllers\signupController.js" />
+    <Content Include="app\directives\routeListDirective.js" />
+    <Content Include="app\directives\routeListView.html" />
     <Content Include="app\services\authService.js" />
     <Content Include="app\services\errorService.js" />
     <Content Include="app\services\interceptors\authInterceptorService.js" />

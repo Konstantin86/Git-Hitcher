@@ -102,7 +102,11 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         $scope.searchModel = {
             from: null,
             to: null,
-            take: 2
+            take: 2,
+            routes: [
+                { name: 'test1', description: 'descr1' }
+            ],
+            test: 'sss'
         };
     };
 

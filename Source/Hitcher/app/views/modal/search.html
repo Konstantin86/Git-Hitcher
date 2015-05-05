@@ -14,20 +14,7 @@
                 <label><i class="fa fa-home"></i> Количество результатов </label>
                 <input type="number" min="1" max="10" class="form-control input-sm" ng-model="searchModel.take">
             </div>
-            <div class="list-group">
-                <a href="#" class="list-group-item active">
-                    <h4 class="list-group-item-heading">List group item heading</h4>
-                    <p class="list-group-item-text">Custom description</p>
-                </a>
-                <a href="#" class="list-group-item">
-                    <h4 class="list-group-item-heading">List group item heading 2</h4>
-                    <p class="list-group-item-text">Custom description</p>
-                </a>
-                <a href="#" class="list-group-item">
-                    <h4 class="list-group-item-heading">List group item heading 3</h4>
-                    <p class="list-group-item-text">Custom description</p>
-                </a>
-            </div>
+            <route-list-view routelist="searchModel.routes" test="searchModel.test"></route-list-view>
             <div class="aside-footer">
                 <button type="button" class="btn btn-default" ng-click="$parent.hideSearch()">Отмена</button>
                 <button type="button" class="btn btn-primary" ng-disabled="!searchModel.from || !searchModel.to || !searchModel.startLat || !searchModel.startLng || !searchModel.endLat || !searchModel.endLng" ng-click="$parent.search()">Ок</button>
