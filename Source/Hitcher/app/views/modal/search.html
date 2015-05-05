@@ -14,7 +14,7 @@
                 <label><i class="fa fa-home"></i> Количество результатов </label>
                 <input type="number" min="1" max="10" class="form-control input-sm" ng-model="searchModel.take">
             </div>
-            <route-list-view routelist="searchModel.routes" test="searchModel.test"></route-list-view>
+            <route-list-view routelist="searchModel.routes"></route-list-view>
             <div class="aside-footer">
                 <button type="button" class="btn btn-default" ng-click="$parent.hideSearch()">Отмена</button>
                 <button type="button" class="btn btn-primary" ng-disabled="!searchModel.from || !searchModel.to || !searchModel.startLat || !searchModel.startLng || !searchModel.endLat || !searchModel.endLng" ng-click="$parent.search()">Ок</button>

@@ -42,20 +42,24 @@ namespace Hitcher.Controllers
     [AllowAnonymous]
     public async Task<IHttpActionResult> Get([FromUri]QueryRouteRequest request)
     {
+      List<Route> allRoutes = null;
+
       if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
       {
         int resultsCount = request.Take ?? DefaultResultsCount;
-        var enumerable = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount).ToList();
+        allRoutes = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount).ToList();
 
-        foreach (var route in enumerable)
+        foreach (var route in allRoutes)
         {
           route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
         }
 
-        return Ok(enumerable);
+        //return Ok(enumerable);
       }
-
-      List<Route> allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords).ToList();
+      else
+      {
+        allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords).ToList();
+      }
 
       List<RouteResponse> responseRows = allRoutes.Select(m => new RouteResponse(m)).ToList();
 
@@ -78,7 +82,7 @@ namespace Hitcher.Controllers
         return Ok(responseRows);
       }
 
-      var routes = allRoutes.Skip(request.Skip.GetValueOrDefault()).ToList();
+      var routes = responseRows.Skip(request.Skip.GetValueOrDefault()).ToList();
       return Ok(routes.Any() ? (request.Take.HasValue ? routes.Take(request.Take.Value) : routes) : null);
     }
 

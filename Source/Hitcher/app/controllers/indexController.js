@@ -3,11 +3,10 @@
 /// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/mapService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
-/// <reference path="~/app/services/searchService.js"/>
 
 "use strict";
 
-app.controller("indexController", function ($scope, $location, $aside, authService, userService, searchService, routeService, mapService, statusService) {
+app.controller("indexController", function ($scope, $location, $aside, authService, userService, routeService, mapService, statusService) {
     var searchAside;
 
     var showAside = function () {
@@ -102,11 +101,10 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         $scope.searchModel = {
             from: null,
             to: null,
-            take: 2,
-            routes: [
-                { name: 'test1', description: 'descr1' }
-            ],
-            test: 'sss'
+            take: 2
+            //routes: [
+            //    { name: 'test1', description: 'descr1' }
+            //],
         };
     };
 
@@ -144,18 +142,30 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         $scope.searchModel.type = userService.user.type;
         //var search = { type: userService.user.type, take: $scope.aside.resultsCount };
 
-        mapService.showRoutes($scope.searchModel).then(function (routesCount) {
-            if (routesCount === 0) {
+        mapService.showRoutes($scope.searchModel).then(function (result) {
+
+            var resultRoutes = [];
+
+            if (result && result.length) {
+                for (var i = 0; i < result.length; i++) {
+                    resultRoutes.push({
+                        name: result[i].startName + "-" + result[i].endName,
+                        driver: result[i].name,
+                        phone: result[i].phone,
+                        distance: result[i].totalDistance,
+                        duration: result[i].totalDuration
+                    });
+                }
+            } else {
                 statusService.warning("Подходящих результатов не найдено");
             }
 
-            initAside();
-
-            searchService.show();
+            //initAside();
+            $scope.searchModel.routes = resultRoutes;
         });
 
         mapService.removeSearchMarkers();
-        searchAside.hide();
+        //searchAside.hide();
     };
 
     $scope.$on('$typeahead.select', function (value, index) {

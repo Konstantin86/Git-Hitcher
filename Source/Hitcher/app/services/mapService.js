@@ -428,12 +428,10 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
         polylines.forEach(function (pol) {
             pol.polyline.setMap(null);
-            //pol.setMap(null);
         });
 
         directions = [];
         polylines = [];
-
 
         routeService.resource.query(request, function (result) {
             if (result && result.length) {
@@ -441,7 +439,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
                     setRoute(result[i], i);
                 }
 
-                deferred.resolve(result.length);
+                deferred.resolve(result);
             }
 
             deferred.resolve(0);

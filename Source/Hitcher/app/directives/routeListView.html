@@ -1,12 +1,25 @@
-﻿{{testInfo}}
-<div class="list-group" data-ng-repeat="route in routesInfo">
+﻿<div class="list-group">
+    <a href="#" class="list-group-item" data-ng-repeat="route in routesInfo">
+        <h4 class="list-group-item-heading">{{route.name}}</h4>
+        <p class="list-group-item-text">{{route.distance}}</p>
+        <p class="list-group-item-text">{{route.duration}}</p>
+        <p class="list-group-item-text">{{route.driver}}</p>
+        <p class="list-group-item-text">{{route.phone}}</p>
+    </a>
+</div>
 
+<!--<div class="list-group" data-ng-repeat="route in routesInfo">
     <a href="#" class="list-group-item">
         <h4 class="list-group-item-heading">{{route.name}}</h4>
-        <p class="list-group-item-text">{{route.description}}</p>
+        <p class="list-group-item-text">{{route.distance}}</p>
+        <p class="list-group-item-text">{{route.duration}}</p>
+        <p class="list-group-item-text">{{route.driver}}</p>
+        <p class="list-group-item-text">{{route.phone}}</p>
     </a>
+</div>-->
 
-    <!--<a href="#" class="list-group-item active">
+<!--<div class="list-group">
+    <a href="#" class="list-group-item active">
         <h4 class="list-group-item-heading">List group item heading</h4>
         <p class="list-group-item-text">Custom description</p>
     </a>
@@ -17,5 +30,5 @@
     <a href="#" class="list-group-item">
         <h4 class="list-group-item-heading">List group item heading 3</h4>
         <p class="list-group-item-text">Custom description</p>
-    </a>-->
-</div>
+    </a>
+</div>-->

@@ -14,6 +14,7 @@ namespace Hitcher.Models.Response
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
     public bool EmailConfirmed { get; set; }
+    public bool HasExternalLogins { get; set; }
     public string Gender { get; set; }
     public string Country { get; set; }
     public string City { get; set; }

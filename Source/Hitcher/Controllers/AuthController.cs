@@ -10,6 +10,7 @@ using Hitcher.Controllers.Base;
 using Hitcher.DataAccess.Entities;
 using Hitcher.Models.External;
 using Hitcher.Models.Request;
+using Hitcher.Models.Response;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -41,7 +42,14 @@ namespace Hitcher.Controllers
     public async Task<IHttpActionResult> GetUser()
     {
       var user = await AppUserManager.FindByNameAsync(User.Identity.Name);
-      return user != null ? (IHttpActionResult)Ok(TheModelFactory.Create(user)) : NotFound();
+      if (user != null)
+      {
+        var userResponse = TheModelFactory.Create(user);
+        userResponse.HasExternalLogins = (await AppUserManager.GetLoginsAsync(user.Id)).Any();
+        return (IHttpActionResult)Ok(userResponse);
+      }
+
+      return NotFound();
     }
 
     [Route("")]
@@ -257,11 +265,11 @@ namespace Hitcher.Controllers
         }
 
         // TODO temporary workaround. It's better to redirect user to associate view to allow him provide e-mail
-        
+
         user = new AppUser { UserName = userName, FirstName = firstName, LastName = lastName, Email = externalLogin.Email, EmailConfirmed = true, JoinDate = DateTime.Now };
 
         user.Email = string.IsNullOrEmpty(user.Email) ? "test@t.ua" : user.Email;
-        
+
         var existingUserWithSameName = await AppUserManager.FindByNameAsync(userName);
         if (existingUserWithSameName != null)
         {

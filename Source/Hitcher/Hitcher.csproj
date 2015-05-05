@@ -175,7 +175,6 @@
     <Content Include="app\controllers\controlCtrl.js" />
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
-    <Content Include="app\controllers\searchController.js" />
     <Content Include="app\controllers\signupController.js" />
     <Content Include="app\directives\routeListDirective.js" />
     <Content Include="app\directives\routeListView.html" />
@@ -184,7 +183,6 @@
     <Content Include="app\services\interceptors\authInterceptorService.js" />
     <Content Include="app\services\mapService.js" />
     <Content Include="app\services\routeService.js" />
-    <Content Include="app\services\searchService.js" />
     <Content Include="app\services\statusService.js" />
     <Content Include="app\services\userService.js" />
     <Content Include="app\utils\system\system-format.js" />
@@ -210,6 +208,7 @@
     <Content Include="content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="favicon.ico" />
     <Content Include="scripts\angular-google-maps.js" />
     <Content Include="scripts\angular-google-maps.min.js" />
     <Content Include="scripts\angular-resource.min.js.map" />

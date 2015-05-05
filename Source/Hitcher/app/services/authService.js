@@ -40,6 +40,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
             userData.phoneNumber = user.phoneNumber;
             userData.joinDate = user.joinDate;
             userData.country = user.country;
+            userData.isExternal = user.hasExternalLogins;
             userData.city = user.city;
             userData.photoPath = appConst.cdnMediaBase + user.photoPath + "?width=" + appConst.userPhotoWidth;
         });

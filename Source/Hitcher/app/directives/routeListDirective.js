@@ -2,8 +2,7 @@
     return {
         restrict: 'E',
         scope: {
-            routesInfo: '=routelist',
-            testInfo: '=test'
+            routesInfo: '=routelist'
         },
         templateUrl: "/app/directives/routeListView.html"
     };
