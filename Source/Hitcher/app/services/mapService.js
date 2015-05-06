@@ -22,6 +22,9 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
     var currentOpacity = null;
 
     var tempRouteDirection = null;
+    var highlightRouteDirection = null;
+    var highlightRoutePolyline = null;
+    var tempRouteDirection = null;
     var infowindow = null;
     var infoCreating = null;
     var timer = null;
@@ -244,7 +247,19 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         polylines = [];
     };
 
-    var setRoute = function (routePoints) {
+    var clearTemp = function () {
+        if (highlightRouteDirection) {
+            highlightRouteDirection.set('directions', null);
+            highlightRouteDirection = null;
+        }
+
+        if (highlightRoutePolyline) {
+            highlightRoutePolyline.polyline.setMap(null);
+            highlightRoutePolyline = null;
+        }
+    };
+
+    var setRoute = function (routePoints, temp) {
         var rendererOptions = {
             preserveViewport: true
         };
@@ -350,8 +365,11 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
             info: info
         };
 
-        polylines.push(polylineInfo);
-        //polylines.push(polyline);
+        if (temp) {
+            highlightRoutePolyline = polylineInfo;
+        } else {
+            polylines.push(polylineInfo);
+        }
 
         var test = {
             "mc": { destination: routePoints.startLatLng, origin: routePoints.endLatLng, travelMode: "DRIVING" },
@@ -368,7 +386,11 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
         directionsDisplay.setMap(mapControl);
 
-        directions.push(directionsDisplay);
+        if (temp) {
+            highlightRouteDirection = directionsDisplay;
+        } else {
+            directions.push(directionsDisplay);
+        }
 
         directionsDisplay.setDirections(test);
     };
@@ -421,28 +443,23 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
     };
 
     // mode: 0 - hitcher, 1 driver
-    var showRoutes = function (request) {
+    var showRoutes = function (request, showOnMap) {
         var deferred = $q.defer();
 
-        if (tempRouteDirection) {
-            tempRouteDirection.set('directions', null);
-        }
+        //if (tempRouteDirection) {
+        //    tempRouteDirection.set('directions', null);
+        //}
+        removeTempRoute();
+        clearTemp();
 
-        directions.forEach(function (dir) {
-            dir.set('directions', null);
-        });
-
-        polylines.forEach(function (pol) {
-            pol.polyline.setMap(null);
-        });
-
-        directions = [];
-        polylines = [];
+        clearAll();
 
         routeService.resource.query(request, function (result) {
             if (result && result.length) {
                 for (var i = 0; i < result.length; i++) {
-                    setRoute(result[i], i);
+                    if (showOnMap) {
+                        setRoute(result[i]);
+                    }
                 }
 
                 deferred.resolve(result);
@@ -592,6 +609,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
     this.setMarker = setMarker;
     this.setRoute = setRoute;
     this.clearAll = clearAll;
+    this.clearTemp = clearTemp;
     this.declareRoute = declareRoute;
     this.ready = ready.promise;
     this.contextMenuReady = contextMenuReady.promise;

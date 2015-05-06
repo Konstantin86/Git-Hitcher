@@ -75,7 +75,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                     $scope.hideSearch();
                 }
 
-                mapService.showRoutes({ type: value });
+                mapService.showRoutes({ type: value }, true);
                 type = value;
             }
         });
@@ -152,13 +152,15 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
                     routeViewModel.events.mouseenter = function (routeModel) {
                         return function () {
-                            mapService.setRoute(routeModel);
+                            mapService.setRoute(routeModel, true);
                         }
                     }(routeViewModel.model);
 
-                    routeViewModel.events.mouseout = function () {
-                        mapService.clearAll();
-                    };
+                    routeViewModel.events.mouseout = function (routeModel) {
+                        return function () {
+                            mapService.clearTemp();
+                        }
+                    }(routeViewModel.model);
 
                     resultRoutes.push(routeViewModel);
                 }
