@@ -148,15 +148,16 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
             if (result && result.length) {
                 for (var i = 0; i < result.length; i++) {
-                    resultRoutes.push({
-                        //name: result[i].startName + "-" + result[i].endName,
-                        startName: result[i].startName,
-                        endName: result[i].endName,
-                        driver: result[i].name,
-                        phone: result[i].phone,
-                        distance: result[i].totalDistance,
-                        duration: result[i].totalDuration
-                    });
+                    //resultRoutes.push({
+                    //    startName: result[i].startName,
+                    //    endName: result[i].endName,
+                    //    driver: result[i].name,
+                    //    phone: result[i].phone,
+                    //    distance: result[i].totalDistance,
+                    //    duration: result[i].totalDuration,
+                    //    photoPath: result[i].photoPath,
+                    //});
+                    resultRoutes.push(routeService.getRouteViewModel(result[i]));
                 }
             } else {
                 statusService.warning("Подходящих результатов не найдено");

@@ -47,6 +47,22 @@ app.service("routeService", function ($resource, appConst) {
         ];
     };
 
+    var getRouteViewModel = function (route, showUserPhoto) {
+        return {
+            startName: route.startName,
+            endName: route.endName,
+            driver: route.name,
+            phone: route.phone,
+            distance: Math.floor(route.totalDistance / 1000) + " км, " + route.totalDistance % 1000 + " м",
+            duration: route.totalDuration.toString().toHHMMSS(),
+            photoPath: route.photoPath,
+            config: {
+                showUserPhoto: showUserPhoto
+            }
+        };
+    };
+
+    this.getRouteViewModel = getRouteViewModel;
     this.get = get;
     this.resource = resource;
 });

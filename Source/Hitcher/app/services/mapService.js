@@ -276,21 +276,9 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
 
             this.setOptions({ strokeColor: "#ffffff", strokeOpacity: 1, zIndex: 999, strokeWeight: 10 });
 
-
-            var content = "<img width='72' src='" + info.photoPath + "'/><br/>"
-                +"<table style='font-size:10pt'><tbody>"
-        + "<tr><td class='route-item-label'>От</td>" + "<td>" + info.startName + "</td></tr>"
-        + "<tr><td class='route-item-label'>До</td>" + "<td>" + info.endName + "</td></tr>"
-        + "<tr><td class='route-item-label'>Расстояние</td>" + "<td>" + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + " м</td></tr>"
-        + "<tr><td class='route-item-label'>Время</td>" + "<td>" + info.totalDuration.toString().toHHMMSS() + "</td></tr>"
-            + "<tr><td class='route-item-label'>Водитель</td>" + "<td>" + info.name + "</td></tr>"
-            + "<tr><td class='route-item-label'>Телефон</td>" + "<td>" + info.phone + "</td></tr>"
-    + "</tbody></table>"
-            //+ '<i>Click for more details...</i>'
-            ;
-
-            var content = '<route-list-view></route-list-view>';
-
+            $rootScope.highlightedRouteInfo = routeService.getRouteViewModel(info, true);
+            var content = "<div><route-view route='highlightedRouteInfo'></route-view></div>";
+            
             var compiled = $compile(content)($rootScope);
 
             if (infowindow && infowindow.isOpen()) {

@@ -1,1 +1,30 @@
-﻿
+﻿<img width='72' src='{{routeInfo.photoPath}}' ng-show="routeInfo.config.showUserPhoto" />
+<br ng-show="routeInfo.config.showUserPhoto" />
+<table style="font-size:10pt">
+    <tbody>
+        <tr>
+            <td class="route-item-label">От</td>
+            <td>{{routeInfo.startName}}</td>
+        </tr>
+        <tr>
+            <td class="route-item-label">До</td>
+            <td>{{routeInfo.endName}}</td>
+        </tr>
+        <tr>
+            <td class="route-item-label">Расстояние</td>
+            <td>{{routeInfo.distance}}</td>
+        </tr>
+        <tr>
+            <td class="route-item-label">Время</td>
+            <td>{{routeInfo.duration}}</td>
+        </tr>
+        <tr>
+            <td class="route-item-label">Водитель</td>
+            <td>{{routeInfo.driver}}</td>
+        </tr>
+        <tr>
+            <td class="route-item-label">Телефон</td>
+            <td>{{routeInfo.phone}}</td>
+        </tr>
+    </tbody>
+</table>
