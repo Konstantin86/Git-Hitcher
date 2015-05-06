@@ -231,10 +231,22 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         return deferred.promise;
     };
 
-    var setRoute = function (routePoints, index) {
+    var clearAll = function () {
+        directions.forEach(function (dir) {
+            dir.set('directions', null);
+        });
+
+        polylines.forEach(function (pol) {
+            pol.polyline.setMap(null);
+        });
+
+        directions = [];
+        polylines = [];
+    };
+
+    var setRoute = function (routePoints) {
         var rendererOptions = {
-            preserveViewport: true,
-            routeIndex: index
+            preserveViewport: true
         };
 
         var polyline = new gmaps.Polyline({
@@ -296,7 +308,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
                             infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
                         }
                         infowindow.setContent(compiled[0]);
-                        //infowindow.setContent(content);
 
                         if (!infowindow.isOpen()) {
                             infowindow.open(mapControl);
@@ -580,6 +591,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
     this.geocode = geocode;
     this.setMarker = setMarker;
     this.setRoute = setRoute;
+    this.clearAll = clearAll;
     this.declareRoute = declareRoute;
     this.ready = ready.promise;
     this.contextMenuReady = contextMenuReady.promise;

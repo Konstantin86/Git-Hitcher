@@ -49,6 +49,7 @@ app.service("routeService", function ($resource, appConst) {
 
     var getRouteViewModel = function (route, showUserPhoto) {
         return {
+            model: route,
             startName: route.startName,
             endName: route.endName,
             driver: route.name,

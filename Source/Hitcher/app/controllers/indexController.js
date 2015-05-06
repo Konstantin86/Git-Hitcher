@@ -148,7 +148,17 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
             if (result && result.length) {
                 for (var i = 0; i < result.length; i++) {
-                    resultRoutes.push(routeService.getRouteViewModel(result[i]));
+                    var routeViewModel = routeService.getRouteViewModel(result[i]);
+
+                    routeViewModel.events.mouseenter = function () {
+                        mapService.setRoute(routeViewModel.model);
+                    };
+
+                    routeViewModel.events.mouseout = function () {
+                        mapService.clearAll();
+                    };
+
+                    resultRoutes.push(routeViewModel);
                 }
             } else {
                 statusService.warning("Подходящих результатов не найдено");
@@ -156,12 +166,23 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
             //initAside();
             //resultRoutes[0].isActive = true;
-            resultRoutes[0].events.mousemove = function () {
-                alert('mousemove');
-            };
-            resultRoutes[0].events.click = function () {
-                alert('clicked');
-            };
+
+            //resultRoutes[0].events.mouseenter = function () {
+            //    mapService.setRoute(resultRoutes[0].model);
+            //};
+
+            //resultRoutes[0].events.mouseout = function () {
+            //    mapService.clearAll();
+            //};
+
+            //resultRoutes[0].events.mousemove = function () {
+            //    alert('mousemove');
+            //};
+
+
+            //resultRoutes[0].events.click = function () {
+            //    alert('clicked');
+            //};
             $scope.searchModel.routes = resultRoutes;
         });
 
