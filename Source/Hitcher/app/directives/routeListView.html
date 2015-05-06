@@ -1,6 +1,6 @@
 ﻿<div class="list-group">
     <div data-ng-repeat="route in routesInfo">
-        <a href="#" class="list-group-item" ng-class="{'active': route.isActive}">
+        <a href="#" class="list-group-item" ng-class="{'active': route.isActive}" ng-mousemove="route.events.mousemove()" ng-click="route.events.click()">
             <route-view route="route"></route-view>
         </a>
     </div>

@@ -58,7 +58,8 @@ app.service("routeService", function ($resource, appConst) {
             photoPath: route.photoPath,
             config: {
                 showUserPhoto: showUserPhoto
-            }
+            },
+            events: { }
         };
     };
 
