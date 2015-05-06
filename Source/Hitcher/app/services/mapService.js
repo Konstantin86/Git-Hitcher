@@ -267,8 +267,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         var polyline = new gmaps.Polyline({
             path: routePoints.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
 
-            strokeColor: colors[Math.floor((Math.random() * colors.length) + 0)],
-            strokeOpacity: 0.6,
+            strokeColor: temp ? 'red' : colors[Math.floor((Math.random() * colors.length) + 0)],
+            strokeOpacity: temp ? 0.3 : 0.6,
             strokeWeight: 5
         });
 

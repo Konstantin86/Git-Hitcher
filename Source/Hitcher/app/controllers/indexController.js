@@ -156,9 +156,14 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                         }
                     }(routeViewModel.model);
 
-                    routeViewModel.events.mouseout = function (routeModel) {
-                        return function () {
+                    routeViewModel.events.mouseout = function () {
                             mapService.clearTemp();
+                    };
+
+                    routeViewModel.events.click = function (routeModel) {
+                        return function () {
+                            mapService.clearAll();
+                            mapService.setRoute(routeModel);
                         }
                     }(routeViewModel.model);
 
