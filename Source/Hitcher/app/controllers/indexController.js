@@ -150,9 +150,11 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                 for (var i = 0; i < result.length; i++) {
                     var routeViewModel = routeService.getRouteViewModel(result[i]);
 
-                    routeViewModel.events.mouseenter = function () {
-                        mapService.setRoute(routeViewModel.model);
-                    };
+                    routeViewModel.events.mouseenter = function (routeModel) {
+                        return function () {
+                            mapService.setRoute(routeModel);
+                        }
+                    }(routeViewModel.model);
 
                     routeViewModel.events.mouseout = function () {
                         mapService.clearAll();
