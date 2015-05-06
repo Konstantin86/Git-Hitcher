@@ -200,6 +200,7 @@
     <Content Include="content\css\bootstrap-theme-custom.css" />
     <Content Include="content\css\bootstrap-theme.css" />
     <Content Include="content\css\bootstrap.css.map" />
+    <Content Include="content\css\hitcher.css" />
     <Content Include="content\fonts\fontawesome-webfont.eot" />
     <Content Include="content\fonts\fontawesome-webfont.ttf" />
     <Content Include="content\fonts\fontawesome-webfont.woff" />

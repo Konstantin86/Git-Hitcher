@@ -8,7 +8,7 @@
 
 "use strict";
 
-app.service("mapService", function ($q, $http, $timeout, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
+app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
     var control;
@@ -273,19 +273,25 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
 
             currentColor = this.strokeColor;
             currentOpacity = this.strokeOpacity;
-            
+
             this.setOptions({ strokeColor: "#ffffff", strokeOpacity: 1, zIndex: 999, strokeWeight: 10 });
 
-            var content = '<div style="width:200px;">'
-                + '<img width="200" src="' + info.photoPath + '" /><br/>'
-                + '<b>From: </b>' + info.startName + '<br/>'
-                + '<b>To: </b>' + info.endName + '<br/>'
-                + '<b>Distance: </b>' + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + ' м<br/>'
-                + '<b>Duration: </b>' + info.totalDuration.toString().toHHMMSS() + '<br/>'
-                + '<b>Driver: </b>' + info.name + '<br/>'
-                + '<b>Phone: </b>' + info.phone + '<br/><br/>'
-                //+ '<i>Click for more details...</i>'
-                + '</div>';
+
+            var content = "<img width='72' src='" + info.photoPath + "'/><br/>"
+                +"<table style='font-size:10pt'><tbody>"
+        + "<tr><td class='route-item-label'>От</td>" + "<td>" + info.startName + "</td></tr>"
+        + "<tr><td class='route-item-label'>До</td>" + "<td>" + info.endName + "</td></tr>"
+        + "<tr><td class='route-item-label'>Расстояние</td>" + "<td>" + Math.floor(info.totalDistance / 1000) + ' км, ' + info.totalDistance % 1000 + " м</td></tr>"
+        + "<tr><td class='route-item-label'>Время</td>" + "<td>" + info.totalDuration.toString().toHHMMSS() + "</td></tr>"
+            + "<tr><td class='route-item-label'>Водитель</td>" + "<td>" + info.name + "</td></tr>"
+            + "<tr><td class='route-item-label'>Телефон</td>" + "<td>" + info.phone + "</td></tr>"
+    + "</tbody></table>"
+            //+ '<i>Click for more details...</i>'
+            ;
+
+            var content = '<route-list-view></route-list-view>';
+
+            var compiled = $compile(content)($rootScope);
 
             if (infowindow && infowindow.isOpen()) {
                 infowindow.close();
@@ -301,7 +307,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
                         } else {
                             infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
                         }
-                        infowindow.setContent(content);
+                        infowindow.setContent(compiled[0]);
+                        //infowindow.setContent(content);
 
                         if (!infowindow.isOpen()) {
                             infowindow.open(mapControl);
@@ -528,8 +535,8 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         }
     };
 
-    var maskRoutes = function() {
-        polylines.forEach(function(p) {
+    var maskRoutes = function () {
+        polylines.forEach(function (p) {
             p.polyline.setOptions({ strokeOpacity: 0.3 });
         });
     };
@@ -558,7 +565,7 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         onAddRouteCallbacks.push(callback);
     };
 
-    var addRoute = function() {
+    var addRoute = function () {
         if (onAddRouteCallbacks.length) {
             onAddRouteCallbacks.forEach(function (callback) {
                 if (typeof (callback) == "function") { callback(); }
@@ -566,12 +573,9 @@ app.service("mapService", function ($q, $http, $timeout, userService, routeServi
         }
     };
 
-    var refresh = function() {
+    var refresh = function () {
         if (control) {
-            //control.refresh();
             $timeout(function () {
-                //gmaps.event.trigger(map, 'resize');
-                //gmaps.event.trigger(control, 'resize');
                 gmaps.event.trigger(mapControl, 'resize');
                 centerOnMe();
             }, 100);

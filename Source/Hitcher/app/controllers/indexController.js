@@ -149,7 +149,9 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             if (result && result.length) {
                 for (var i = 0; i < result.length; i++) {
                     resultRoutes.push({
-                        name: result[i].startName + "-" + result[i].endName,
+                        //name: result[i].startName + "-" + result[i].endName,
+                        startName: result[i].startName,
+                        endName: result[i].endName,
                         driver: result[i].name,
                         phone: result[i].phone,
                         distance: result[i].totalDistance,
@@ -161,7 +163,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             }
 
             //initAside();
-            resultRoutes[0].isActive = true;
+            //resultRoutes[0].isActive = true;
             $scope.searchModel.routes = resultRoutes;
         });
 

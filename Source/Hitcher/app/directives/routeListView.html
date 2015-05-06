@@ -1,36 +1,43 @@
-﻿<div class="list-group">
+﻿asdasdas
+Hello
+<div class="list-group">
     <div data-ng-repeat="route in routesInfo">
         <a href="#" class="list-group-item" ng-class="{'active': route.isActive}">
-            <h4 class="list-group-item-heading">{{route.name}}</h4>
+            <!--<h4 class="list-group-item-heading">{{route.name}}</h4>
             <p class="list-group-item-text">{{route.distance}}</p>
             <p class="list-group-item-text">{{route.duration}}</p>
             <p class="list-group-item-text">{{route.driver}}</p>
-            <p class="list-group-item-text">{{route.phone}}</p>
+            <p class="list-group-item-text">{{route.phone}}</p>-->
+
+            <table style="font-size:10pt">
+                <tbody>
+                    <tr>
+                        <td class="route-item-label">От</td>
+                        <td>{{route.startName}}</td>
+                    </tr>
+                    <tr>
+                        <td class="route-item-label">До</td>
+                        <td>{{route.endName}}</td>
+                    </tr>
+                    <tr>
+                        <td class="route-item-label">Расстояние</td>
+                        <td>{{route.distance}}</td>
+                    </tr>
+                    <tr>
+                        <td class="route-item-label">Время</td>
+                        <td>{{route.duration}}</td>
+                    </tr>
+                    <tr>
+                        <td class="route-item-label">Водитель</td>
+                        <td>{{route.driver}}</td>
+                    </tr>
+                    <tr>
+                        <td class="route-item-label">Телефон</td>
+                        <td>{{route.phone}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </a>
     </div>
 </div>
-
-<!--<div class="list-group" data-ng-repeat="route in routesInfo">
-    <a href="#" class="list-group-item">
-        <h4 class="list-group-item-heading">{{route.name}}</h4>
-        <p class="list-group-item-text">{{route.distance}}</p>
-        <p class="list-group-item-text">{{route.duration}}</p>
-        <p class="list-group-item-text">{{route.driver}}</p>
-        <p class="list-group-item-text">{{route.phone}}</p>
-    </a>
-</div>-->
-
-<!--<div class="list-group">
-    <a href="#" class="list-group-item active">
-        <h4 class="list-group-item-heading">List group item heading</h4>
-        <p class="list-group-item-text">Custom description</p>
-    </a>
-    <a href="#" class="list-group-item">
-        <h4 class="list-group-item-heading">List group item heading 2</h4>
-        <p class="list-group-item-text">Custom description</p>
-    </a>
-    <a href="#" class="list-group-item">
-        <h4 class="list-group-item-heading">List group item heading 3</h4>
-        <p class="list-group-item-text">Custom description</p>
-    </a>
-</div>-->
