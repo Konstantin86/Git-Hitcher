@@ -75,7 +75,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                     $scope.hideSearch();
                 }
 
-                mapService.showRoutes({ type: value }, true);
+                mapService.showRoutes({ type: 1 - value }, true);
                 type = value;
             }
         });
@@ -139,7 +139,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
     });
 
     $scope.search = function () {
-        $scope.searchModel.type = userService.user.type;
+        $scope.searchModel.type = 1 - userService.user.type;
         //var search = { type: userService.user.type, take: $scope.aside.resultsCount };
 
         mapService.showRoutes($scope.searchModel).then(function (result) {
