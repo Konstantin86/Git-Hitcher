@@ -86,3 +86,26 @@ body {
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
     display: none !important;
 }
+
+/*Bootstrap hitcher tweeks*/
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 650px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 845px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1020px;
+  }
+}

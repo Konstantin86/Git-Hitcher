@@ -47,9 +47,9 @@
                         <!-- Button to trigger a default dropdown from an array ($scope.dropdown) [{text:'foo', href:'', click:''}, ...] -->
                         <li ng-hide="!mapVisible" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
                         <li ng-hide="!authData.isAuth" ng-cloak>
-                            <button style="margin: 9px" type="button" class="btn btn-default" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
+                            <a style="cursor: context-menu" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;{{authData.userName && authData.firstName}}
-                            </button>
+                            </a>
                         </li>
                         <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
                         <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
