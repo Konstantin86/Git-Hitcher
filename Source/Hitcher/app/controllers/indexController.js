@@ -23,7 +23,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             initAside();
             mapService.removeSearchMarkers();
             searchAside.hide();
-            mapService.showRoutes({ type: 1 - type }, true);
+            //mapService.showRoutes({ type: 1 - type }, true);
         }
     };
 
