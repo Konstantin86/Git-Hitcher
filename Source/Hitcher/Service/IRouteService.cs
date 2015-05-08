@@ -7,6 +7,6 @@ namespace Hitcher.Service
   public interface IRouteService
   {
     int Save(PostRouteRequest route);
-    IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng, int resultsCount);
+    IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng, int resultsCount, int type);
   }
 }

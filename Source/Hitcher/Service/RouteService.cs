@@ -47,9 +47,9 @@ namespace Hitcher.Service
       return _unitOfWork.RouteRepository.Update(newRoute);
     }
 
-    public IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng, int resultsCount)
+    public IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng, int resultsCount, int type)
     {
-      var routes = _unitOfWork.RouteRepository.GetAll(m => m.Type == 0).Include(m => m.Coords).ToList();
+      var routes = _unitOfWork.RouteRepository.GetAll(m => m.Type == type).Include(m => m.Coords).ToList();
 
       var distances = routes.ToDictionary(route => route.Id, route => RouteDistanceSelector(startLat, startLng, endLat, endLng, route));
 

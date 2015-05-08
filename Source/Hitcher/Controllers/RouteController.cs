@@ -58,7 +58,7 @@ namespace Hitcher.Controllers
       else if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
       {
         int resultsCount = request.Take ?? DefaultResultsCount;
-        allRoutes = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount).ToList();
+        allRoutes = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount, request.Type).ToList();
 
         foreach (var route in allRoutes)
         {
