@@ -8,7 +8,7 @@
 
 "use strict";
 
-app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
+app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps;
     var geocoder;
     var control;
@@ -130,7 +130,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         }, function () { }, { enableHighAccuracy: true, timeout: 2000 });
     };
 
-    var setMarker = function (lat, lng, key) {
+    var setMarker = function (lat, lng, key, image, title) {
         // Use this doc to find info regarding icon image generation: https://developers.google.com/chart/image/docs/gallery/dynamic_icons?csw=1#pins
         var letter = key && key.indexOf("to") > -1 ? "B" : "A";
         var color = key && key.indexOf("Search") > -1 ? "EDED0C" : "2DE02D";
@@ -145,11 +145,11 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
 
         var marker = {
             //icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|FF0000|0030F2",
-            icon: pinIcon,
+            icon: image || pinIcon,
             latitude: lat,
             longitude: lng,
             title: "Test",
-            options: { draggable: true, animation: gmaps.Animation.DROP }
+            options: title ? { title: title } : { draggable: true, animation: gmaps.Animation.DROP }
         };
         marker["id"] = key;
 
@@ -234,6 +234,59 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         return deferred.promise;
     };
 
+    var removeMarkers = function () {
+        markers = [];
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
+    var removeRouteMarkers = function () {
+
+        var routeMarkers = [];
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]["id"] !== "fromMarker" && markers[i]["id"] !== "toMarker") {
+                routeMarkers.push(markers[i]);
+            }
+        }
+
+        markers = routeMarkers;
+
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
+    var removeSearchMarkers = function () {
+
+        var searchMarkers = [];
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]["id"] !== "fromSearchMarker" && markers[i]["id"] !== "toSearchMarker") {
+                searchMarkers.push(markers[i]);
+            }
+        }
+
+        markers = searchMarkers;
+
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
+    var removeTempMarkers = function () {
+
+        var searchMarkers = [];
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]["id"].indexOf("_temp") === -1) {
+                searchMarkers.push(markers[i]);
+            }
+        }
+
+        markers = searchMarkers;
+
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
+    var removeTempRoute = function () {
+        if (tempRouteDirection) {
+            tempRouteDirection.set('directions', null);
+        }
+    };
+
     var clearAll = function () {
         directions.forEach(function (dir) {
             dir.set('directions', null);
@@ -242,6 +295,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         polylines.forEach(function (pol) {
             pol.polyline.setMap(null);
         });
+
+        removeMarkers();
 
         directions = [];
         polylines = [];
@@ -252,6 +307,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
             highlightRouteDirection.set('directions', null);
             highlightRouteDirection = null;
         }
+
+        removeTempMarkers();
 
         if (highlightRoutePolyline) {
             highlightRoutePolyline.polyline.setMap(null);
@@ -383,16 +440,27 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
             }]
         };
 
-        var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
-        directionsDisplay.setMap(mapControl);
+        var endMarkerKey = routePoints.startLatLng + "_end";
+        var startMarkerKey = routePoints.endLatLng + "_start";
 
         if (temp) {
-            highlightRouteDirection = directionsDisplay;
-        } else {
-            directions.push(directionsDisplay);
+            endMarkerKey += "_temp";
+            startMarkerKey += "_temp";
         }
 
-        directionsDisplay.setDirections(test);
+        setMarker(routePoints.coords[routePoints.coords.length - 1].lat, routePoints.coords[routePoints.coords.length - 1].lng, endMarkerKey, appConst.cdnMediaBase + "static/glyphicons-6-car.png", routePoints.endName);
+        setMarker(routePoints.coords[0].lat, routePoints.coords[0].lng, startMarkerKey, appConst.cdnMediaBase + "static/glyphicons-6-car.png", routePoints.startName);
+
+        //var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
+        //directionsDisplay.setMap(mapControl);
+
+        //if (temp) {
+        //    highlightRouteDirection = directionsDisplay;
+        //} else {
+        //    directions.push(directionsDisplay);
+        //}
+
+        //directionsDisplay.setDirections(test);
     };
 
     var onMapMarkersChanged = function (callback) { onMapMarkersChangedCallback = callback; };
@@ -407,45 +475,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
 
     var onResetSelected = function (callback) {
         onResetSelectedCallbacks.push(callback);
-    };
-
-    var removeMarkers = function () {
-        markers = [];
-        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
-    };
-
-    var removeRouteMarkers = function () {
-
-        var routeMarkers = [];
-        for (var i = 0; i < markers.length; i++) {
-            if (markers[i]["id"] !== "fromMarker" && markers[i]["id"] !== "toMarker") {
-                routeMarkers.push(markers[i]);
-            }
-        }
-
-        markers = routeMarkers;
-
-        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
-    };
-
-    var removeSearchMarkers = function () {
-
-        var searchMarkers = [];
-        for (var i = 0; i < markers.length; i++) {
-            if (markers[i]["id"] !== "fromSearchMarker" && markers[i]["id"] !== "toSearchMarker") {
-                searchMarkers.push(markers[i]);
-            }
-        }
-
-        markers = searchMarkers;
-
-        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
-    };
-
-    var removeTempRoute = function () {
-        if (tempRouteDirection) {
-            tempRouteDirection.set('directions', null);
-        }
     };
 
     // mode: 0 - hitcher, 1 driver
