@@ -147,7 +147,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
             driveAside.hide();
             routeCreating = false;
 
-            mapService.showRoutes({ type: 1 - type });
+            mapService.showRoutes({ type: 1 - type }, true);
         });
     };
 
