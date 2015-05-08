@@ -41,19 +41,18 @@
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0">Попутчик</label>
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1">Водитель</label>
                         </div>
-                        <button ng-hide="!authData.isAuth" type="button" class="btn btn-default" ng-model="button.toggle">Мои маршруты</button>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Button to trigger a default dropdown from an array ($scope.dropdown) [{text:'foo', href:'', click:''}, ...] -->
                         <li ng-hide="!mapVisible" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
                         <li ng-hide="!authData.isAuth" ng-cloak>
-                            <button style="margin: 9px" type="button" class="btn btn-default" data-animation="am-flip-x" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
+                            <button style="margin: 9px" type="button" class="btn btn-default" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;{{authData.userName && authData.firstName}}
                             </button>
                         </li>
-                        <li ng-hide="authData.isAuth"> <a href="#/login">Login</a></li>
-                        <li ng-hide="authData.isAuth"> <a href="#/signup">Sign Up</a></li>
+                        <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
+                        <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
                     </ul>
                 </div>
             </div>

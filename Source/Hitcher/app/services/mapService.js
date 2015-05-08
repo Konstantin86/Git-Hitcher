@@ -442,6 +442,12 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
         if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
     };
 
+    var removeTempRoute = function () {
+        if (tempRouteDirection) {
+            tempRouteDirection.set('directions', null);
+        }
+    };
+
     // mode: 0 - hitcher, 1 driver
     var showRoutes = function (request, showOnMap) {
         var deferred = $q.defer();
@@ -569,12 +575,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, u
 
     var onRouteChanged = function (callback) {
         onRouteChangedCallbacks.push(callback);
-    };
-
-    var removeTempRoute = function () {
-        if (tempRouteDirection) {
-            tempRouteDirection.set('directions', null);
-        }
     };
 
     var onAddRoute = function (callback) {

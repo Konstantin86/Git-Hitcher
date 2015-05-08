@@ -35,10 +35,11 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     });
 
-    var showMyRoutes = function() {
-        showAside();
+    var showMyRoutes = function () {
+        initAside();
         $scope.searchModel.hideFilter = true;
         $scope.searchModel.currentUserOnly = true;
+        showAside();
         $scope.search();
     };
 
@@ -241,7 +242,13 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             showAside();
         }
         else {
-            $scope.hideSearch();
+            if ($scope.searchModel.hideFilter) {
+                initAside();
+                mapService.removeSearchMarkers();
+                mapService.clearAll();
+            } else {
+                $scope.hideSearch();
+            }
         }
     };
 });
