@@ -196,6 +196,7 @@
     <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />
     <Content Include="app\views\modal\search.html" />
+    <Content Include="app\views\modal\settings.html" />
     <Content Include="app\views\modal\yes-no-dialog.html" />
     <Content Include="app\views\signup.html" />
     <Content Include="authComplete.html" />

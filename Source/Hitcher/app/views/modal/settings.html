@@ -1,0 +1,5 @@
+﻿<div class="btn-group" ng-model="user.type" bs-radio-group ng-show="mapVisible">
+    <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0">Попутчик</label>
+    <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1">Водитель</label>
+</div>
+<button ng-hide="!authData.isAuth" type="button" class="btn btn-default" ng-model="button.toggle" bs-checkbox>Показывать мои маршруты</button>

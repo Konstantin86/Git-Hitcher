@@ -41,6 +41,7 @@
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0">Попутчик</label>
                             <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1">Водитель</label>
                         </div>
+                        <button ng-hide="!authData.isAuth" type="button" class="btn btn-default" ng-model="button.toggle">Мои маршруты</button>
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
