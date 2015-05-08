@@ -16,11 +16,14 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     };
 
+    var type;
+
     var hideSearch = function () {
         if (searchAside) {
             initAside();
             mapService.removeSearchMarkers();
             searchAside.hide();
+            mapService.showRoutes({ type: 1 - type }, true);
         }
     };
 
@@ -31,6 +34,15 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             hideSearch();
         }
     });
+
+    var showMyRoutes = function() {
+        showAside();
+        $scope.searchModel.hideFilter = true;
+        $scope.searchModel.currentUserOnly = true;
+        $scope.search();
+    };
+
+    $scope.userMenu = [{ "text": "Профайл", "href": "#/account", "target": "_self" }, { "text": "Мои маршруты", click: showMyRoutes }, { "divider": true }, { "text": "Выйти", "click": "logout()" }];
 
     $scope.state = statusService.state;
     $scope.user = userService.user;
@@ -56,8 +68,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             }
         });
     });
-
-    var type;
 
     $scope.closeAlert = function () { statusService.clear(); };
 
@@ -101,7 +111,10 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         $scope.searchModel = {
             from: null,
             to: null,
-            take: 2
+            take: 2,
+            disableFilter: false,
+            hideFilter: false,
+            currentUserOnly: false
             //routes: [
             //    { name: 'test1', description: 'descr1' }
             //],
@@ -157,7 +170,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                     }(routeViewModel.model);
 
                     routeViewModel.events.mouseout = function () {
-                            mapService.clearTemp();
+                        mapService.clearTemp();
                     };
 
                     routeViewModel.events.click = function (routeModel) {
@@ -172,6 +185,8 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             } else {
                 statusService.warning("Подходящих результатов не найдено");
             }
+
+            $scope.searchModel.disableFilter = true;
 
             //initAside();
             //resultRoutes[0].isActive = true;

@@ -42,9 +42,20 @@ namespace Hitcher.Controllers
     [AllowAnonymous]
     public async Task<IHttpActionResult> Get([FromUri]QueryRouteRequest request)
     {
-      List<Route> allRoutes = null;
+      List<Route> allRoutes;
 
-      if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
+      if (request != null && request.CurrentUserOnly)
+      {
+        var user = await AppUserManager.FindByNameAsync(User.Identity.Name);
+
+        if (user == null)
+        {
+          return NotFound();
+        }
+
+        allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.UserId == user.Id).Include(m => m.Coords).ToList();
+      }
+      else if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
       {
         int resultsCount = request.Take ?? DefaultResultsCount;
         allRoutes = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount).ToList();
@@ -53,8 +64,6 @@ namespace Hitcher.Controllers
         {
           route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
         }
-
-        //return Ok(enumerable);
       }
       else
       {
@@ -77,7 +86,7 @@ namespace Hitcher.Controllers
         route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
       }
 
-      if (!request.Take.HasValue && !request.Skip.HasValue)
+      if ((!request.Take.HasValue && !request.Skip.HasValue) || request.CurrentUserOnly)
       {
         return Ok(responseRows);
       }

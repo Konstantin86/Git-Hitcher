@@ -10,6 +10,10 @@
 app.controller("accountController", function ($scope, $location, authService, errorService, appConst, msgConst, statusService) {
     statusService.clear();
 
+    if (!authService.userData.isAuth) {
+        $location.path("/login");
+    }
+
     var maxdate = new Date();
     maxdate.setDate(maxdate.getDate() - 12 * 365);
     $scope.maxDate = maxdate;

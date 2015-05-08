@@ -10,6 +10,8 @@
 
     public float? EndLat { get; set; }
 
-    public float? EndLng { get; set; } 
+    public float? EndLng { get; set; }
+
+    public bool CurrentUserOnly { get; set; }
   }
 }
