@@ -16,8 +16,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     };
 
-    var type;
-
     var hideSearch = function () {
         if (searchAside) {
             initAside();
@@ -81,14 +79,11 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     mapService.ready.then(function (gmaps) {
         $scope.$watch('user.type', function (value) {
-            if (value !== type) {
-                if (searchAside && searchAside.$isShown) {
-                    $scope.hideSearch();
-                }
-
-                mapService.showRoutes({ type: 1 - value }, true);
-                type = value;
+            if (searchAside && searchAside.$isShown) {
+                $scope.hideSearch();
             }
+
+            mapService.showRoutes({ type: 1 - value }, true);
         });
     });
 

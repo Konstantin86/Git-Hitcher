@@ -8,13 +8,15 @@
 
 "use strict";
 
-app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
+app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps, geocoder, mapControl;                                                            // google maps api objects
     var selectedRouteOptions, tempDirection, highlightRoutePolyline;                            // temp route objects
     var infoWindow, infoWindowCreating, infoWindowDelayTimer, underMouseLatLng;                 // infoWindow objects
 
     var polylines = [];
     var markers = [];
+
+    var currentType;
 
     var routeOptions = [{ colors: ["#047D28", "#0FAB3E", "#06C941"], markerImage: "content/images/glyphicons-563-person-walking.png" },
                         { colors: ["#00CFFD", "#00B1FD", "#006EFD"], markerImage: "content/images/glyphicons-6-car.png" }];
@@ -365,27 +367,31 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
     // mode: 0 - hitcher, 1 driver
     var showRoutes = function (request, showOnMap) {
-        var deferred = $q.defer();
+        if (request.type != currentType) {
+            currentType = request.type;
 
-        clearTempDirection();
-        clearTemp();
-        clearAll();
+            var deferred = $q.defer();
 
-        routeService.resource.query(request, function (result) {
-            if (result && result.length) {
-                for (var i = 0; i < result.length; i++) {
-                    if (showOnMap) {
-                        setRoute(result[i]);
+            clearTempDirection();
+            clearTemp();
+            clearAll();
+
+            routeService.resource.query(request, function(result) {
+                if (result && result.length) {
+                    for (var i = 0; i < result.length; i++) {
+                        if (showOnMap) {
+                            setRoute(result[i]);
+                        }
                     }
+
+                    deferred.resolve(result);
                 }
 
-                deferred.resolve(result);
-            }
+                deferred.resolve(0);
+            });
 
-            deferred.resolve(0);
-        });
-
-        return deferred.promise;
+            return deferred.promise;
+        }
     };
 
     var showMostRecentRoute = function () {

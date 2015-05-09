@@ -10,7 +10,6 @@
 app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService) {
     var driveAside;
     var routeCreating = false;
-    var type;
 
     $scope.map = mapService.map;
     $scope.markers = mapService.markers;
@@ -241,17 +240,11 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
         }
     });
 
-    mapService.ready.then(function (gmaps) {
+    mapService.ready.then(function () {
         mapService.centerOnMe();
 
-        $scope.$watch('user.type', function (value) {
-            if (value !== type) {
-                if (driveAside && driveAside.$isShown) {
-                    $scope.hideDriveAside();
-                }
-
-                type = value;
-            }
+        $scope.$watch('user.type', function () {
+            if (driveAside && driveAside.$isShown) $scope.hideDriveAside();
         });
     });
 
