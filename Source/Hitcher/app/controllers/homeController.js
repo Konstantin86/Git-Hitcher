@@ -147,6 +147,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
             driveAside.hide();
             routeCreating = false;
 
+            // TODO get last created user route and show it on the map instead of updating whole map route like it's done in the line below...
+            // TODO All current user routes should be marked with orange color
             mapService.showRoutes({ type: 1 - type }, true);
         });
     };
@@ -174,8 +176,6 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     });
 
     mapService.onResetSelected(function () {
-        //mapService.removeMarkers();
-        //initAside();
         if (driveAside && driveAside.$isShown) {
             $scope.hideDriveAside();
         }
@@ -198,12 +198,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
                 return;
             };
 
-            //var maxPoints = Math.floor((routeData.totalDistance / 1000) * 3);
-            //alert(routeData.path.length + ' - ' + maxPoints);
-
-            //$scope.route.path = routeData.path.filter(function (element) { return routeData.path.indexOf(element) % 10 === 0; });
             $scope.route.path = routeData.path;
-
             $scope.route.totalDistanceToSave = routeData.totalDistance;
             $scope.route.totalDistance = Math.floor(routeData.totalDistance / 1000) + ' км, ' + routeData.totalDistance % 1000 + ' м';
             $scope.route.totalDurationToSave = routeData.totalDuration;

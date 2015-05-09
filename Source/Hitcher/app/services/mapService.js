@@ -9,28 +9,23 @@
 "use strict";
 
 app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
-    var gmaps, geocoder, mapControl;                                        // google maps api objects
-    var selectedRouteOptions, tempDirection, highlightRoutePolyline;        // temp route objects
-    var infoWindow, infoWindowCreating, infoWindowDelayTimer;               // infoWindow objects
+    var gmaps, geocoder, mapControl;                                                            // google maps api objects
+    var selectedRouteOptions, tempDirection, highlightRoutePolyline;                            // temp route objects
+    var infoWindow, infoWindowCreating, infoWindowDelayTimer, underMouseLatLng;                 // infoWindow objects
 
     var polylines = [];
+    var markers = [];
 
     var routeOptions = [{ colors: ["#047D28", "#0FAB3E", "#06C941"], markerImage: appConst.cdnMediaBase + "static/glyphicons-563-person-walking.png" },
                         { colors: ["#00CFFD", "#00B1FD", "#006EFD"], markerImage: appConst.cdnMediaBase + "static/glyphicons-6-car.png" }];
 
     var currentLocation;
 
-    var onMapMarkersChangedCallback;
-    var onFromMarkerSelectedCallback;
-    var onToMarkerSelectedCallback;
+    var onMapMarkersChangedCallback, onFromMarkerSelectedCallback, onToMarkerSelectedCallback;
 
-    var underMouseLatLng = null;
+    var onSearchFromMarkerSelectedCallback, onSearchToMarkerSelectedCallback;
 
     var onResetSelectedCallbacks = [];
-
-    var onSearchFromMarkerSelectedCallback;
-    var onSearchToMarkerSelectedCallback;
-
     var onAddRouteCallbacks = [];
     var onMarkerDragCallbacks = [];
     var onRouteChangedCallbacks = [];
@@ -39,23 +34,17 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     var contextMenuReady = $q.defer();
 
     var map = { center: { latitude: 49.1451, longitude: 35.6680 }, zoom: 4, control: {}, bounds: {} };
-    var markers = [];
 
     var getShortAddress = function (address) {
-        var route = '';
-        var streetNum = '';
+        var route = "";
+        var streetNum = "";
 
         for (var j = 0; j < address.address_components.length; j++) {
-            if ($.inArray("route", address.address_components[j].types) >= 0) {
-                route = address.address_components[j].short_name;
-            }
-
-            if ($.inArray("street_number", address.address_components[j].types) >= 0) {
-                streetNum = address.address_components[j].short_name;
-            }
+            if ($.inArray("route", address.address_components[j].types) >= 0) route = address.address_components[j].short_name;
+            if ($.inArray("street_number", address.address_components[j].types) >= 0) streetNum = address.address_components[j].short_name;
         }
 
-        return route + ' ' + streetNum;
+        return route + " " + streetNum;
     };
 
     var geocode = function (request, local, plain) {
@@ -63,9 +52,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             request.address = currentLocation.city + ", " + request.address;
         }
 
-        if (plain) {
-            return $http.get('https://maps.googleapis.com/maps/api/geocode/json', { params: request });
-        }
+        if (plain) return $http.get('https://maps.googleapis.com/maps/api/geocode/json', { params: request });
 
         var deferred = $q.defer();
 
@@ -90,11 +77,11 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             geocode({ 'latLng': latlng }).then(function (result) {
                 
                 currentLocation = {};
-                var address = result[0].address_components;
+                var addressComponents = result[0].address_components;
 
-                for (var j = 0; j < address.length; j++) {
-                    if ($.inArray("country", address[j].types) >= 0) currentLocation.country = address[j].short_name;
-                    if ($.inArray("locality", address[j].types) >= 0) currentLocation.city = address[j].short_name;
+                for (var j = 0; j < addressComponents.length; j++) {
+                    if ($.inArray("country", addressComponents[j].types) >= 0) currentLocation.country = addressComponents[j].short_name;
+                    if ($.inArray("locality", addressComponents[j].types) >= 0) currentLocation.city = addressComponents[j].short_name;
                 }
             });
         }, function () { }, { enableHighAccuracy: true, timeout: 2000 });
@@ -296,8 +283,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             });
 
             selectedRouteOptions = { strokeColor: this.strokeColor, strokeOpacity: this.strokeOpacity, zIndex: 1, strokeWeight: 5 };
-            //currentColor = this.strokeColor;
-            //currentOpacity = this.strokeOpacity;
 
             this.setOptions({ strokeColor: "#ffffff", strokeOpacity: 1, zIndex: 999, strokeWeight: 10 });
 
@@ -324,10 +309,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
                         if (!infoWindow.isOpen()) {
                             infoWindow.open(mapControl);
-
-                            gmaps.event.addListener(infoWindow, "click", function (e) {
-                                alert('test');
-                            });
                         }
                     }
 
@@ -476,7 +457,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
     var markerEvents = {
         dragend: function (marker, eventName, args) {
-
             if (onMarkerDragCallbacks.length) {
                 onMarkerDragCallbacks.forEach(function (callback) {
                     if (typeof (callback) == "function") { callback(marker, eventName, args); }
@@ -497,19 +477,11 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         });
     };
 
-    var onMarkerDrag = function (callback) {
-        onMarkerDragCallbacks.push(callback);
-    };
+    function onMarkerDrag(callback) { onMarkerDragCallbacks.push(callback); };
+    function onRouteChanged(callback) { onRouteChangedCallbacks.push(callback); };
+    function onAddRoute(callback) { onAddRouteCallbacks.push(callback); };
 
-    var onRouteChanged = function (callback) {
-        onRouteChangedCallbacks.push(callback);
-    };
-
-    var onAddRoute = function (callback) {
-        onAddRouteCallbacks.push(callback);
-    };
-
-    var addRoute = function () {
+    function addRoute () {
         if (onAddRouteCallbacks.length) {
             onAddRouteCallbacks.forEach(function (callback) {
                 if (typeof (callback) == "function") { callback(); }
@@ -517,10 +489,10 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         }
     };
 
-    var refresh = function () {
+    function refresh() {
         if (mapControl) {
             $timeout(function () {
-                gmaps.event.trigger(mapControl, 'resize');
+                gmaps.event.trigger(mapControl, "resize");
                 centerOnMe();
             }, 100);
         }
