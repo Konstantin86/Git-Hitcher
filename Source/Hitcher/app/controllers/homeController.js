@@ -87,7 +87,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
         if (driveAside) {
             initAside();
             mapService.removeRouteMarkers();
-            mapService.removeTempRoute();
+            mapService.clearTempDirection();
             routeCreating = false;
             driveAside.hide();
             mapService.unmaskRoutes();
@@ -226,7 +226,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
                 if (routeCreating) {
                     //routeCreating = false;
                     // TODO redraw route
-                    mapService.removeTempRoute();
+                    mapService.clearTempDirection();
                     createRoute();
                 }
             });
@@ -240,7 +240,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
                 if (routeCreating) {
                     //routeCreating = false;
                     // TODO redraw route
-                    mapService.removeTempRoute();
+                    mapService.clearTempDirection();
                     createRoute();
                 }
             });

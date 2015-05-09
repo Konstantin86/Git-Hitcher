@@ -3,48 +3,20 @@
 /// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
-/// <reference path="~/app/service/statusService.js"/>
-/// <reference path="~/app/service/routeService.js"/>
+/// <reference path="~/app/services/statusService.js"/>
+/// <reference path="~/app/services/routeService.js"/>
 
 "use strict";
 
 app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, userService, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
-    var gmaps;
-    var geocoder;
-    var control;
-    var mapControl;
-
-
-    //var colors = ["#7F38EC", "#4B0082", "#F433FF", "#E42217", "#FFA62F", "#4CC417", "#008080", "#4EE2EC", "#3BB9FF", "#2B65EC", "#000000"];
-    var colors = ["#DB0042", "#DB00B3", "#A100DB", "#3700DB", "#0066DB", "#00B7DB", "#00D17D", "#42D100", "#80B300", "#B37A00", "#B32100"];
-
-    var currentColor = null;
-    var currentOpacity = null;
-
-    var tempRouteDirection = null;
-    var highlightRouteDirection = null;
-    var highlightRoutePolyline = null;
-    var tempRouteDirection = null;
-    var infowindow = null;
-    var infoCreating = null;
-    var timer = null;
-
-    var directions = [];
+    var gmaps, geocoder, mapControl;                                        // google maps api objects
+    var selectedRouteOptions, tempDirection, highlightRoutePolyline;        // temp route objects
+    var infoWindow, infoWindowCreating, infoWindowDelayTimer;               // infoWindow objects
 
     var polylines = [];
 
-    String.prototype.toHHMMSS = function () {
-        var sec_num = parseInt(this, 10); // don't forget the second param
-        var hours = Math.floor(sec_num / 3600);
-        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-        var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-        if (hours < 10) { hours = "0" + hours; }
-        if (minutes < 10) { minutes = "0" + minutes; }
-        if (seconds < 10) { seconds = "0" + seconds; }
-        var time = hours + ':' + minutes + ':' + seconds;
-        return time;
-    }
+    var routeOptions = [{ colors: ["#047D28", "#0FAB3E", "#06C941"], markerImage: appConst.cdnMediaBase + "static/glyphicons-563-person-walking.png" },
+                        { colors: ["#00CFFD", "#00B1FD", "#006EFD"], markerImage: appConst.cdnMediaBase + "static/glyphicons-6-car.png" }];
 
     var currentLocation;
 
@@ -116,15 +88,13 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             centerMap(pos.coords.latitude, pos.coords.longitude, 12);
             var latlng = new gmaps.LatLng(pos.coords.latitude, pos.coords.longitude);
             geocode({ 'latLng': latlng }).then(function (result) {
+                
                 currentLocation = {};
-                for (var j = 0; j < result[0].address_components.length; j++) {
-                    if ($.inArray("country", result[0].address_components[j].types) >= 0) {
-                        currentLocation.country = result[0].address_components[j].short_name;
-                    }
+                var address = result[0].address_components;
 
-                    if ($.inArray("locality", result[0].address_components[j].types) >= 0) {
-                        currentLocation.city = result[0].address_components[j].short_name;
-                    }
+                for (var j = 0; j < address.length; j++) {
+                    if ($.inArray("country", address[j].types) >= 0) currentLocation.country = address[j].short_name;
+                    if ($.inArray("locality", address[j].types) >= 0) currentLocation.city = address[j].short_name;
                 }
             });
         }, function () { }, { enableHighAccuracy: true, timeout: 2000 });
@@ -201,8 +171,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
         directionsDisplay.setMap(mapControl);
 
-        tempRouteDirection = directionsDisplay;
-        //directions.push(directionsDisplay);
+        tempDirection = directionsDisplay;
 
         var request = { origin: route.startLatLng, destination: route.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
 
@@ -224,11 +193,9 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
                 routeInfo.totalDistance = response.routes[0].legs[0].distance.value;
                 routeInfo.totalDuration = response.routes[0].legs[0].duration.value;
                 deferred.resolve(routeInfo);
-            } else if (status === gmaps.GeocoderStatus.ZERO_RESULTS) { } else if (status === gmaps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                deferred.reject();
             }
 
-            deferred.resolve();
+            deferred.reject();
         });
 
         return deferred.promise;
@@ -281,33 +248,21 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
     };
 
-    var removeTempRoute = function () {
-        if (tempRouteDirection) {
-            tempRouteDirection.set('directions', null);
-        }
+    function clearTempDirection() {
+        if (tempDirection) { tempDirection.set('directions', null); }
     };
 
     var clearAll = function () {
-        directions.forEach(function (dir) {
-            dir.set('directions', null);
-        });
-
         polylines.forEach(function (pol) {
             pol.polyline.setMap(null);
         });
 
         removeMarkers();
 
-        directions = [];
         polylines = [];
     };
 
     var clearTemp = function () {
-        if (highlightRouteDirection) {
-            highlightRouteDirection.set('directions', null);
-            highlightRouteDirection = null;
-        }
-
         removeTempMarkers();
 
         if (highlightRoutePolyline) {
@@ -316,28 +271,13 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         }
     };
 
-    var setRoute = function (routePoints, temp) {
-        var rendererOptions = {
-            preserveViewport: true
-        };
-
+    var setRoute = function (routeInfo, temp) {
         var polyline = new gmaps.Polyline({
-            path: routePoints.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
-
-            strokeColor: temp ? 'red' : colors[Math.floor((Math.random() * colors.length) + 0)],
+            path: routeInfo.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
+            strokeColor: temp ? 'red' : routeOptions[routeInfo.type].colors[Math.floor((Math.random() * routeOptions[routeInfo.type].colors.length) + 0)],
             strokeOpacity: temp ? 0.3 : 0.6,
-            strokeWeight: 5
+            strokeWeight: 6
         });
-
-        var info = {
-            name: routePoints.name,
-            phone: routePoints.phone,
-            photoPath: routePoints.photoPath,
-            startName: routePoints.startName,
-            endName: routePoints.endName,
-            totalDistance: routePoints.totalDistance,
-            totalDuration: routePoints.totalDuration
-        };
 
         polyline.setMap(mapControl);
 
@@ -355,8 +295,9 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
                 }
             });
 
-            currentColor = this.strokeColor;
-            currentOpacity = this.strokeOpacity;
+            selectedRouteOptions = { strokeColor: this.strokeColor, strokeOpacity: this.strokeOpacity, zIndex: 1, strokeWeight: 5 };
+            //currentColor = this.strokeColor;
+            //currentOpacity = this.strokeOpacity;
 
             this.setOptions({ strokeColor: "#ffffff", strokeOpacity: 1, zIndex: 999, strokeWeight: 10 });
 
@@ -365,62 +306,51 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             
             var compiled = $compile(content)($rootScope);
 
-            if (infowindow && infowindow.isOpen()) {
-                infowindow.close();
-                infowindow = null;
+            if (infoWindow && infoWindow.isOpen()) {
+                infoWindow.close();
+                infoWindow = null;
             }
 
-            if (!infoCreating) {
-                timer = $timeout(function () {
-                    if (infoCreating) {
-                        infowindow = new gmaps.InfoWindow({ disableAutoPan: false });
+            if (!infoWindowCreating) {
+                infoWindowDelayTimer = $timeout(function () {
+                    if (infoWindowCreating) {
+                        infoWindow = new gmaps.InfoWindow({ disableAutoPan: false });
                         if (underMouseLatLng) {
-                            infowindow.setPosition(new gmaps.LatLng(underMouseLatLng.lat() + 0.003, underMouseLatLng.lng()));
+                            infoWindow.setPosition(new gmaps.LatLng(underMouseLatLng.lat() + 0.003, underMouseLatLng.lng()));
                         } else {
-                            infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
+                            infoWindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
                         }
-                        infowindow.setContent(compiled[0]);
+                        infoWindow.setContent(compiled[0]);
 
-                        if (!infowindow.isOpen()) {
-                            infowindow.open(mapControl);
+                        if (!infoWindow.isOpen()) {
+                            infoWindow.open(mapControl);
 
-                            gmaps.event.addListener(infowindow, "click", function (e) {
+                            gmaps.event.addListener(infoWindow, "click", function (e) {
                                 alert('test');
                             });
                         }
                     }
 
-                    infoCreating = false;
+                    infoWindowCreating = false;
                 }, 1000);
 
-                infoCreating = true;
+                infoWindowCreating = true;
             }
-
-            //}
         });
 
         gmaps.event.addListener(polyline, "mousemove", function (e) {
-            if (infowindow && infowindow.isOpen()) {
-                infowindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
+            if (infoWindow && infoWindow.isOpen()) {
+                infoWindow.setPosition(new gmaps.LatLng(e.latLng.lat() + 0.003, e.latLng.lng()));
             }
         });
 
-        gmaps.event.addListener(polyline, "mouseout", function (e) {
-            if (currentColor) {
-                this.setOptions({ strokeColor: currentColor, strokeOpacity: currentOpacity, zIndex: 1, strokeWeight: 5 });
-            }
-
-            infoCreating = false;
-
-            if (timer) {
-                $timeout.cancel(timer);
-            };
+        gmaps.event.addListener(polyline, "mouseout", function () {
+            this.setOptions(selectedRouteOptions);
+            infoWindowCreating = false;
+            $timeout.cancel(infoWindowDelayTimer);
         });
 
-        var polylineInfo = {
-            polyline: polyline,
-            info: info
-        };
+        var polylineInfo = { polyline: polyline, info: routeInfo };
 
         if (temp) {
             highlightRoutePolyline = polylineInfo;
@@ -428,39 +358,14 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             polylines.push(polylineInfo);
         }
 
-        var test = {
-            "mc": { destination: routePoints.startLatLng, origin: routePoints.endLatLng, travelMode: "DRIVING" },
-            "routes": [{
-                "legs": [{
-                    "end_address": routePoints.endName,
-                    "end_location": { "lat": routePoints.coords[routePoints.coords.length - 1].lat, "lng": routePoints.coords[routePoints.coords.length - 1].lng },
-                    "start_address": routePoints.startName,
-                    "start_location": { "lat": routePoints.coords[0].lat, "lng": routePoints.coords[0].lng }
-                }]
-            }]
-        };
+        var endMarkerKey = temp ? routeInfo.startLatLng + "_end_temp" : routeInfo.startLatLng + "_end";
+        var startMarkerKey = temp ? routeInfo.endLatLng + "_start_temp" : routeInfo.endLatLng + "_start";
 
-        var endMarkerKey = routePoints.startLatLng + "_end";
-        var startMarkerKey = routePoints.endLatLng + "_start";
+        var endCoords = routeInfo.coords[routeInfo.coords.length - 1];
+        var startCoords = routeInfo.coords[0];
 
-        if (temp) {
-            endMarkerKey += "_temp";
-            startMarkerKey += "_temp";
-        }
-
-        setMarker(routePoints.coords[routePoints.coords.length - 1].lat, routePoints.coords[routePoints.coords.length - 1].lng, endMarkerKey, appConst.cdnMediaBase + "static/glyphicons-6-car.png", routePoints.endName);
-        setMarker(routePoints.coords[0].lat, routePoints.coords[0].lng, startMarkerKey, appConst.cdnMediaBase + "static/glyphicons-6-car.png", routePoints.startName);
-
-        //var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
-        //directionsDisplay.setMap(mapControl);
-
-        //if (temp) {
-        //    highlightRouteDirection = directionsDisplay;
-        //} else {
-        //    directions.push(directionsDisplay);
-        //}
-
-        //directionsDisplay.setDirections(test);
+        setMarker(endCoords.lat, endCoords.lng, endMarkerKey, routeOptions[routeInfo.type].markerImage, routeInfo.endName);
+        setMarker(startCoords.lat, startCoords.lng, startMarkerKey, routeOptions[routeInfo.type].markerImage, routeInfo.startName);
     };
 
     var onMapMarkersChanged = function (callback) { onMapMarkersChangedCallback = callback; };
@@ -481,12 +386,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     var showRoutes = function (request, showOnMap) {
         var deferred = $q.defer();
 
-        //if (tempRouteDirection) {
-        //    tempRouteDirection.set('directions', null);
-        //}
-        removeTempRoute();
+        clearTempDirection();
         clearTemp();
-
         clearAll();
 
         routeService.resource.query(request, function (result) {
@@ -512,8 +413,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     });
 
     uiGmapIsReady.promise().then(function (googlemap) {
-        control = map.control;
-        mapControl = control.getGMap();
+        mapControl = map.control.getGMap();
 
         gmaps.event.addListener(mapControl, 'mousemove', function (event) {
             underMouseLatLng = event.latLng;
@@ -545,7 +445,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
             geocode({ 'latlng': coords.lat() + ',' + coords.lng(), 'language': 'ru' }, false, true).then(function (result) {
                 if (result.data.results && result.data.results.length && typeof (callback) == "function") {
-                    //callback(result.data.results[0].formatted_address, coords);
                     callback(getShortAddress(result.data.results[0]), coords);
                 }
             });
@@ -619,7 +518,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     };
 
     var refresh = function () {
-        if (control) {
+        if (mapControl) {
             $timeout(function () {
                 gmaps.event.trigger(mapControl, 'resize');
                 centerOnMe();
@@ -650,7 +549,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     this.onResetSelected = onResetSelected;
     this.onMarkerDrag = onMarkerDrag;
     this.onRouteChanged = onRouteChanged;
-    this.removeTempRoute = removeTempRoute;
+    this.clearTempDirection = clearTempDirection;
     this.removeMarkers = removeMarkers;
     this.removeRouteMarkers = removeRouteMarkers;
     this.removeSearchMarkers = removeSearchMarkers;
