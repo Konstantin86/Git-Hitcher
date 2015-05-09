@@ -367,7 +367,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
     // mode: 0 - hitcher, 1 driver
     var showRoutes = function (request, showOnMap) {
-        if (request.type != currentType) {
+        if ((request.type != currentType) || !showOnMap) {
             currentType = request.type;
 
             var deferred = $q.defer();

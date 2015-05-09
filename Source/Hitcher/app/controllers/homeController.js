@@ -147,7 +147,6 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
             // TODO get last created user route and show it on the map instead of updating whole map route like it's done in the line below...
             mapService.showMostRecentRoute();
             // TODO All current user routes should be marked with orange color
-            //mapService.showRoutes({ type: 1 - type }, true);
         });
     };
 
