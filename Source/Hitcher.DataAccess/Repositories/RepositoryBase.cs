@@ -32,7 +32,7 @@ namespace Hitcher.DataAccess.Repositories
       return _context.Set<T>().Where(func);
     }
 
-    public IEnumerable<T> GetAll()
+    public IQueryable<T> GetAll()
     {
       return _context.Set<T>();
     }

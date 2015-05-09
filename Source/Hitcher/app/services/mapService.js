@@ -388,6 +388,16 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         return deferred.promise;
     };
 
+    var showMostRecentRoute = function () {
+        clearTempDirection();
+
+        routeService.resource.mostRecent({}, function(result) {
+            if (result) {
+                setRoute(result);
+            }
+        });
+    };
+
     uiGmapGoogleMapApi.then(function (maps) {
         gmaps = maps;
         geocoder = new maps.Geocoder();
@@ -526,6 +536,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     this.removeRouteMarkers = removeRouteMarkers;
     this.removeSearchMarkers = removeSearchMarkers;
     this.showRoutes = showRoutes;
+    this.showMostRecentRoute = showMostRecentRoute;
     this.markerEvents = markerEvents;
     this.getShortAddress = getShortAddress;
     this.maskRoutes = maskRoutes;

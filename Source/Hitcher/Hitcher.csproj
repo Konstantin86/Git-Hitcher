@@ -194,6 +194,7 @@
     <Content Include="app\utils\system\system-string.js" />
     <Content Include="app\utils\system\system-time.js" />
     <Content Include="app\views\account.html" />
+    <Content Include="app\views\gmaps\gmaps-top-center-control.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />
     <Content Include="app\views\modal\search.html" />
@@ -213,6 +214,7 @@
     <Content Include="content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="content\images\glyphicons-563-person-walking.png" />
     <Content Include="favicon.ico" />
     <Content Include="scripts\angular-google-maps.js" />
     <Content Include="scripts\angular-google-maps.min.js" />
@@ -235,7 +237,6 @@
     <Content Include="app\app.js" />
     <Content Include="app\config.js" />
     <Content Include="app\controllers\homeController.js" />
-    <Content Include="app\views\home.html" />
     <Content Include="content\css\angular-motion.css" />
     <Content Include="content\css\angular-motion.min.css" />
     <Content Include="content\css\animations.css" />

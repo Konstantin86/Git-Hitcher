@@ -9,6 +9,7 @@ app.service("routeService", function ($resource, appConst) {
 
     var resource = $resource(appConst.serviceBase + "/:action", { action: "api/route" },
     {
+        mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
     });
 
     var get = function () {

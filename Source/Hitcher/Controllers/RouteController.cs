@@ -37,6 +37,15 @@ namespace Hitcher.Controllers
       return route != null ? Ok(route) : (IHttpActionResult)NotFound();
     }
 
+    [Route("mostRecent")]
+    [HttpGet]
+    [AllowAnonymous]
+    public IHttpActionResult Get()
+    {
+      var route = _unitOfWork.RouteRepository.GetAll().Include(m => m.Coords).OrderByDescending(m => m.Id).FirstOrDefault();
+      return route != null ? Ok(route) : (IHttpActionResult)NotFound();
+    }
+
     [Route("")]
     [HttpGet]
     [AllowAnonymous]
