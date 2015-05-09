@@ -33,16 +33,9 @@
                         <span class="glyphicon glyphicon-chevron-down"></span>
                     </button>
                     <span class="glyphicon glyphicon glyphicon-plane" aria-hidden="true" style="font-size: 20pt; margin-top: 17px; color: white"></span>
-                    <a class="navbar-brand" href="#/home">The Hitcher</a>
+                    <a class="navbar-brand" href="#/home">Попутчик</a>
                 </div>
                 <div class="collapse navbar-collapse" data-collapse="!navbarExpanded">
-                    <ul class="nav navbar-nav" style="margin: 9px 0px 0px 15px" ng-cloak>
-                        <div class="btn-group" ng-model="user.type" bs-radio-group ng-show="mapVisible">
-                            <label class="btn btn-default"><input type="radio" class="btn btn-default" value="0">Попутчик</label>
-                            <label class="btn btn-default"><input type="radio" class="btn btn-default" value="1">Водитель</label>
-                        </div>
-                    </ul>
-
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Button to trigger a default dropdown from an array ($scope.dropdown) [{text:'foo', href:'', click:''}, ...] -->
                         <li ng-hide="!mapVisible" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
@@ -66,7 +59,7 @@
         <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
             <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
             </ui-gmap-markers>
-            <ui-gmap-map-control template="app/views/gmaps/gmaps-top-center-control.html" controller="controlCtrl" position="top-center" index="-1"></ui-gmap-map-control>
+            <ui-gmap-map-control template="app/views/gmaps/gmaps-top-center-control.html" controller="indexController" position="top-center" index="-1"></ui-gmap-map-control>
             <ui-gmap-map-control template="app/views/modal/custom.map.top-right-control.html" controller="controlCtrl" position="top-right" index="-1"></ui-gmap-map-control>
             <ui-gmap-map-control template="app/views/modal/custom.map.bottom-center-control.html" controller="controlCtrl" position="bottom-center" index="-1"></ui-gmap-map-control>
         </ui-gmap-google-map>

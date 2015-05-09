@@ -16,8 +16,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     var polylines = [];
     var markers = [];
 
-    var routeOptions = [{ colors: ["#047D28", "#0FAB3E", "#06C941"], markerImage: appConst.cdnMediaBase + "static/glyphicons-563-person-walking.png" },
-                        { colors: ["#00CFFD", "#00B1FD", "#006EFD"], markerImage: appConst.cdnMediaBase + "static/glyphicons-6-car.png" }];
+    var routeOptions = [{ colors: ["#047D28", "#0FAB3E", "#06C941"], markerImage: "content/images/glyphicons-563-person-walking.png" },
+                        { colors: ["#00CFFD", "#00B1FD", "#006EFD"], markerImage: "content/images/glyphicons-6-car.png" }];
 
     var currentLocation;
 
