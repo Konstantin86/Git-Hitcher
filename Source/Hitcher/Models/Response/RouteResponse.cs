@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.AccessControl;
 using Hitcher.DataAccess.Entities;
 
 namespace Hitcher.Models.Response
@@ -36,10 +37,12 @@ namespace Hitcher.Models.Response
 
     public int Type { get; set; }   // 0 - Hitcher, 1 - Driver
 
-    public virtual ICollection<Coord> Coords { get; set; }
+    public ICollection<Coord> Coords { get; set; }
 
     public string UserId { get; set; }
 
     public string PhotoPath { get; set; }
+
+    public bool IsCurrentUserRoute { get; set; }
   }
 }

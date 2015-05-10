@@ -3,6 +3,7 @@
 /// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
+/// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
 /// <reference path="~/app/services/routeService.js"/>
 
@@ -10,16 +11,22 @@
 
 app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps, geocoder, mapControl;                                                            // google maps api objects
-    var selectedRouteOptions, tempDirection, highlightRoutePolyline;                            // temp route objects
+    var selectedRouteOptions, tempDirection, tempSearchDirection, highlightRoutePolyline;                            // temp route objects
     var infoWindow, infoWindowCreating, infoWindowDelayTimer, underMouseLatLng;                 // infoWindow objects
 
     var polylines = [];
     var markers = [];
 
-    var currentType;
+    var displayOptions = {
+        highlightMyRoutes: true
+    };
+
+    var currentType;      // Stubs due to angular data-binding issue, which trigger onchange event two times!
 
     var routeOptions = [{ colors: ["#047D28", "#0FAB3E", "#06C941"], markerImage: "content/images/glyphicons-563-person-walking.png" },
                         { colors: ["#00CFFD", "#00B1FD", "#006EFD"], markerImage: "content/images/glyphicons-6-car.png" }];
+
+    var highlightRouteColor = "#FC5400";
 
     var currentLocation;
 
@@ -148,19 +155,24 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         return { path: path };
     };
 
-    var declareRoute = function (route) {
+    var declareRoute = function (route, search) {
         var deferred = $q.defer();
 
         var rendererOptions = {
-            draggable: true,
+            draggable: !search,
             preserveViewport: false,
-            polylineOptions: { strokeColor: "#FF5900", strokeOpacity: 1, strokeWeight: 7, zIndex: 1000 }
+            polylineOptions: { strokeColor: search ? "#E300D4" : "#FF5900", strokeOpacity: search ? 0.5 : 1, strokeWeight: 7, zIndex: 1000 }
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
         directionsDisplay.setMap(mapControl);
 
-        tempDirection = directionsDisplay;
+        if (search) {
+            tempSearchDirection = directionsDisplay;
+        } else {
+            tempDirection = directionsDisplay;
+        }
+
 
         var request = { origin: route.startLatLng, destination: route.endLatLng, travelMode: gmaps.TravelMode.DRIVING };
 
@@ -239,6 +251,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
     function clearTempDirection() {
         if (tempDirection) { tempDirection.set('directions', null); }
+        if (tempSearchDirection) { tempSearchDirection.set('directions', null); }
     };
 
     var clearAll = function () {
@@ -260,10 +273,20 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         }
     };
 
+    var getPolylineColor = function(routeInfo) {
+        return (routeInfo.isCurrentUserRoute && displayOptions.highlightMyRoutes) ? highlightRouteColor : routeOptions[routeInfo.type].colors[Math.floor((Math.random() * routeOptions[routeInfo.type].colors.length) + 0)];
+    };
+
+    var updateHighlight = function() {
+        polylines.forEach(function(polyline) {
+            polyline.polyline.setOptions({ strokeColor: getPolylineColor(polyline.info) });
+        });
+    };
+
     var setRoute = function (routeInfo, temp) {
         var polyline = new gmaps.Polyline({
             path: routeInfo.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
-            strokeColor: temp ? 'red' : routeOptions[routeInfo.type].colors[Math.floor((Math.random() * routeOptions[routeInfo.type].colors.length) + 0)],
+            strokeColor: temp ? highlightRouteColor : getPolylineColor(routeInfo),
             strokeOpacity: temp ? 0.3 : 0.6,
             strokeWeight: 6
         });
@@ -547,4 +570,6 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     this.getShortAddress = getShortAddress;
     this.maskRoutes = maskRoutes;
     this.unmaskRoutes = unmaskRoutes;
+    this.displayOptions = displayOptions;
+    this.updateHighlight = updateHighlight;
 });

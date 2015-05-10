@@ -52,11 +52,10 @@ namespace Hitcher.Controllers
     public async Task<IHttpActionResult> Get([FromUri]QueryRouteRequest request)
     {
       List<Route> allRoutes;
+      AppUser user = await AppUserManager.FindByNameAsync(User.Identity.Name);
 
       if (request != null && request.CurrentUserOnly)
       {
-        var user = await AppUserManager.FindByNameAsync(User.Identity.Name);
-
         if (user == null)
         {
           return NotFound();
@@ -83,13 +82,14 @@ namespace Hitcher.Controllers
 
       foreach (var route in responseRows)
       {
-        var user = await AppUserManager.FindByIdAsync(route.UserId);
+        var routeUser = await AppUserManager.FindByIdAsync(route.UserId);
 
-        if (user != null)
+        if (routeUser != null)
         {
-          route.Phone = user.PhoneNumber;
-          route.Name = user.UserName;
-          route.PhotoPath = ConfigurationManager.AppSettings["cdnMediaBase"] + user.PhotoPath;
+          route.Phone = routeUser.PhoneNumber;
+          route.Name = routeUser.UserName;
+          route.PhotoPath = ConfigurationManager.AppSettings["cdnMediaBase"] + routeUser.PhotoPath;
+          route.IsCurrentUserRoute = user != null && user.Id == route.UserId;
         }
 
         route.Coords = route.Coords.OrderBy(m => m.Id).ToList();

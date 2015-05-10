@@ -194,6 +194,7 @@
     <Content Include="app\utils\system\system-string.js" />
     <Content Include="app\utils\system\system-time.js" />
     <Content Include="app\views\account.html" />
+    <Content Include="app\views\gmaps\gmaps-left-center-control.html" />
     <Content Include="app\views\gmaps\gmaps-top-center-control.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />

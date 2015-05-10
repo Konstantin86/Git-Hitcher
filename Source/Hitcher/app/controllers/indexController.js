@@ -20,10 +20,13 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         if (searchAside) {
             initAside();
             mapService.removeSearchMarkers();
+            mapService.clearTempDirection();
             searchAside.hide();
             //mapService.showRoutes({ type: 1 - type }, true);
         }
     };
+
+    $scope.displayOptions = mapService.displayOptions;
 
     $scope.$on('$routeChangeSuccess', function () {
         $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
@@ -85,6 +88,9 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
             mapService.showRoutes({ type: 1 - value }, true);
         });
+
+        $scope.$watch('displayOptions.highlightMyRoutes', function () { mapService.updateHighlight(); });
+
     });
 
     mapService.contextMenuReady.then(function (gmaps) {
@@ -131,6 +137,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         $scope.searchModel.from = address;
         $scope.searchModel.startLat = coords.lat();
         $scope.searchModel.startLng = coords.lng();
+        $scope.searchModel.startLatLng = coords;
         showAside();
     });
 
@@ -138,6 +145,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         $scope.searchModel.to = address;
         $scope.searchModel.endLat = coords.lat();
         $scope.searchModel.endLng = coords.lng();
+        $scope.searchModel.endLatLng = coords;
         showAside();
     });
 
@@ -155,6 +163,8 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
             var resultRoutes = [];
 
+            var lastSelected = null;
+
             if (result && result.length) {
                 for (var i = 0; i < result.length; i++) {
                     var routeViewModel = routeService.getRouteViewModel(result[i]);
@@ -169,45 +179,36 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                         mapService.clearTemp();
                     };
 
-                    routeViewModel.events.click = function (routeModel) {
+                    routeViewModel.events.click = function (routeViewModel) {
                         return function () {
+                            if (lastSelected) {
+                                lastSelected.isActive = false;
+                            }
+
                             mapService.clearAll();
-                            mapService.setRoute(routeModel);
+
+                            routeViewModel.isActive = true;
+                            mapService.setRoute(routeViewModel.model);
+                            lastSelected = routeViewModel;
                         }
-                    }(routeViewModel.model);
+                    }(routeViewModel);
 
                     resultRoutes.push(routeViewModel);
                 }
+
+                resultRoutes[0].isActive = true;
+                mapService.setRoute(resultRoutes[0].model);
+                lastSelected = resultRoutes[0];
             } else {
                 statusService.warning("Подходящих результатов не найдено");
             }
 
             $scope.searchModel.disableFilter = true;
-
-            //initAside();
-            //resultRoutes[0].isActive = true;
-
-            //resultRoutes[0].events.mouseenter = function () {
-            //    mapService.setRoute(resultRoutes[0].model);
-            //};
-
-            //resultRoutes[0].events.mouseout = function () {
-            //    mapService.clearAll();
-            //};
-
-            //resultRoutes[0].events.mousemove = function () {
-            //    alert('mousemove');
-            //};
-
-
-            //resultRoutes[0].events.click = function () {
-            //    alert('clicked');
-            //};
             $scope.searchModel.routes = resultRoutes;
         });
 
-        mapService.removeSearchMarkers();
-        //searchAside.hide();
+        //mapService.removeSearchMarkers();
+        mapService.declareRoute($scope.searchModel, true);
     };
 
     $scope.$on('$typeahead.select', function (value, index) {
