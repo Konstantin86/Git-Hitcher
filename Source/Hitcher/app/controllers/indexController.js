@@ -193,6 +193,10 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                         }
                     }(routeViewModel);
 
+                    routeViewModel.remove = function() {
+                        alert('test');
+                    };
+
                     resultRoutes.push(routeViewModel);
                 }
 
@@ -208,7 +212,9 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         });
 
         //mapService.removeSearchMarkers();
-        mapService.declareRoute($scope.searchModel, true);
+        if ($scope.searchModel && $scope.searchModel.startLatLng && $scope.searchModel.endLatLng) {
+            mapService.declareRoute($scope.searchModel, true);
+        }
     };
 
     $scope.$on('$typeahead.select', function (value, index) {

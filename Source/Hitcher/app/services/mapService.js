@@ -26,7 +26,11 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     var routeOptions = [{ colors: ["#047D28", "#0FAB3E", "#06C941"], markerImage: "content/images/glyphicons-563-person-walking.png" },
                         { colors: ["#00CFFD", "#00B1FD", "#006EFD"], markerImage: "content/images/glyphicons-6-car.png" }];
 
-    var highlightRouteColor = "#FC5400";
+    var constColors = {
+        highlight: "#FC5400",
+        search: "#E300D4",
+        temp: "#FF5900"
+    }
 
     var currentLocation;
 
@@ -161,7 +165,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         var rendererOptions = {
             draggable: !search,
             preserveViewport: false,
-            polylineOptions: { strokeColor: search ? "#E300D4" : "#FF5900", strokeOpacity: search ? 0.5 : 1, strokeWeight: 7, zIndex: 1000 }
+            polylineOptions: { strokeColor: search ? constColors.search : constColors.temp, strokeOpacity: search ? 0.5 : 1, strokeWeight: 7, zIndex: 1000 }
         };
 
         var directionsDisplay = new gmaps.DirectionsRenderer(rendererOptions);
@@ -274,7 +278,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     };
 
     var getPolylineColor = function(routeInfo) {
-        return (routeInfo.isCurrentUserRoute && displayOptions.highlightMyRoutes) ? highlightRouteColor : routeOptions[routeInfo.type].colors[Math.floor((Math.random() * routeOptions[routeInfo.type].colors.length) + 0)];
+        return (routeInfo.isCurrentUserRoute && displayOptions.highlightMyRoutes) ? constColors.highlight : routeOptions[routeInfo.type].colors[Math.floor((Math.random() * routeOptions[routeInfo.type].colors.length) + 0)];
     };
 
     var updateHighlight = function() {
@@ -286,7 +290,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     var setRoute = function (routeInfo, temp) {
         var polyline = new gmaps.Polyline({
             path: routeInfo.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
-            strokeColor: temp ? highlightRouteColor : getPolylineColor(routeInfo),
+            strokeColor: temp ? constColors.highlight : getPolylineColor(routeInfo),
             strokeOpacity: temp ? 0.3 : 0.6,
             strokeWeight: 6
         });

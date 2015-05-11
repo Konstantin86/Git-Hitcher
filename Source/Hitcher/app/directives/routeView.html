@@ -1,6 +1,6 @@
 ﻿<img width='72' src='{{routeInfo.photoPath}}' ng-show="routeInfo.config.showUserPhoto" />
 <br ng-show="routeInfo.config.showUserPhoto" />
-<table style="font-size:10pt">
+<table style="font-size: 10pt">
     <tbody>
         <tr>
             <td class="route-item-label">От</td>
@@ -25,6 +25,11 @@
         <tr>
             <td class="route-item-label">Телефон</td>
             <td>{{routeInfo.phone}}</td>
+        </tr>
+        <tr ng-show="routeInfo.model.isCurrentUserRoute">
+            <td class="route-item-label">
+                <a href="#" style="text-decoration: none; color: lightcoral" ng-click="routeInfo.remove()"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Удалить</a>
+            </td>
         </tr>
     </tbody>
 </table>
