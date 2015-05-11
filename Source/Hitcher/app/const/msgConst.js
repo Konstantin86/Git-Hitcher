@@ -7,6 +7,7 @@
 app.constant("msgConst", {
     "HOME_WELCOME": "Yet another fitness results tracker...",
     "HOME_WELCOME_HEADER": "KeepFit",
+    "ROUTE_DELETE": "Вы в своём уме???",    // Just for fun :)
     "ACCOUNT_DELETE": "Are you sure you want to delete your account from system?",
     "ACCOUNT_UPDATE_SUCCESS": "User profile is updated successfully",
     "ACCOUNT_PWD_CHANGE_SUCCESS": "User password has been changed successfully",

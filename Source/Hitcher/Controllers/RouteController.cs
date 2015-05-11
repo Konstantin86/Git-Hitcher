@@ -47,6 +47,22 @@ namespace Hitcher.Controllers
     }
 
     [Route("")]
+    [HttpDelete]
+    public async Task<IHttpActionResult> Delete(int id)
+    {
+      var route = _unitOfWork.RouteRepository.Get(m => m.Id == id);
+
+      if (route == null)
+      {
+        return NotFound();
+      }
+
+      _unitOfWork.RouteRepository.Delete(m => m.Id == id);
+
+      return Ok(id);
+    }
+
+    [Route("")]
     [HttpGet]
     [AllowAnonymous]
     public async Task<IHttpActionResult> Get([FromUri]QueryRouteRequest request)

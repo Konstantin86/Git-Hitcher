@@ -8,6 +8,7 @@ namespace Hitcher.Models.Response
   {
     public RouteResponse(Route route)
     {
+      Id = route.Id;
       StartName = route.StartName;
       StartLatLng = route.StartLatLng;
       EndName = route.EndName;
@@ -18,6 +19,8 @@ namespace Hitcher.Models.Response
       Coords = route.Coords;
       UserId = route.UserId;
     }
+
+    public int Id { get; set; }
 
     public string Name { get; set; }
 

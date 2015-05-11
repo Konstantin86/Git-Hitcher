@@ -253,6 +253,19 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
     };
 
+    var removeMarkersById = function(id) {
+        var searchMarkers = [];
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i]["id"].indexOf("id_" + id) === -1) {
+                searchMarkers.push(markers[i]);
+            }
+        }
+
+        markers = searchMarkers;
+
+        if (typeof (onMapMarkersChangedCallback) == "function") { onMapMarkersChangedCallback(markers); }
+    };
+
     function clearTempDirection() {
         if (tempDirection) { tempDirection.set('directions', null); }
         if (tempSearchDirection) { tempSearchDirection.set('directions', null); }
@@ -287,6 +300,21 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         });
     };
 
+    var removeRoute = function(id) {
+        polylines.forEach(function (p) {
+            if (p.info.id === id) {
+                p.polyline.setMap(null);
+                p.polyline = null;
+            }
+        });
+
+        polylines = polylines.filter(function (item) {
+            return item.polyline !== null;
+        });
+
+        removeMarkersById(id);
+    };
+
     var setRoute = function (routeInfo, temp) {
         var polyline = new gmaps.Polyline({
             path: routeInfo.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
@@ -316,6 +344,15 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             this.setOptions({ strokeColor: "#ffffff", strokeOpacity: 1, zIndex: 999, strokeWeight: 10 });
 
             $rootScope.highlightedRouteInfo = routeService.getRouteViewModel(info, true);
+
+            $rootScope.highlightedRouteInfo.events.onRemove = function (routeViewModel) {
+                return function () {
+                    routeViewModel.remove().then(function (id) {
+                        removeRoute(id);
+                    });
+                }
+            }($rootScope.highlightedRouteInfo);
+
             var content = "<div><route-view route='highlightedRouteInfo'></route-view></div>";
             
             var compiled = $compile(content)($rootScope);
@@ -368,8 +405,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             polylines.push(polylineInfo);
         }
 
-        var endMarkerKey = temp ? routeInfo.startLatLng + "_end_temp" : routeInfo.startLatLng + "_end";
-        var startMarkerKey = temp ? routeInfo.endLatLng + "_start_temp" : routeInfo.endLatLng + "_start";
+        var endMarkerKey = temp ? "id_" + routeInfo.id + "_" + routeInfo.startLatLng + "_end_temp" : "id_" + routeInfo.id + "_" + routeInfo.startLatLng + "_end";
+        var startMarkerKey = temp ? "id_" + routeInfo.id + "_" + routeInfo.endLatLng + "_start_temp" : "id_" + routeInfo.id + "_" + routeInfo.endLatLng + "_start";
 
         var endCoords = routeInfo.coords[routeInfo.coords.length - 1];
         var startCoords = routeInfo.coords[0];
@@ -576,4 +613,5 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     this.unmaskRoutes = unmaskRoutes;
     this.displayOptions = displayOptions;
     this.updateHighlight = updateHighlight;
+    this.removeRoute = removeRoute;
 });

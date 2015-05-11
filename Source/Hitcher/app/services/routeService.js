@@ -2,10 +2,11 @@
 /// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
+/// <reference path="~/app/models/routeViewModel.js"/>
 
 "use strict";
 
-app.service("routeService", function ($resource, appConst) {
+app.service("routeService", function ($resource, $q, $modal, appConst) {
 
     var resource = $resource(appConst.serviceBase + "/:action", { action: "api/route" },
     {
@@ -49,21 +50,37 @@ app.service("routeService", function ($resource, appConst) {
     };
 
     var getRouteViewModel = function (route, showUserPhoto) {
-        route.canDelete = route.isCurrentUserRoute;
-        return {
-            model: route,
-            startName: route.startName,
-            endName: route.endName,
-            driver: route.name,
-            phone: route.phone,
-            distance: Math.floor(route.totalDistance / 1000) + " км, " + route.totalDistance % 1000 + " м",
-            duration: route.totalDuration.toString().toHHMMSS(),
-            photoPath: route.photoPath,
-            config: {
-                showUserPhoto: showUserPhoto
-            },
-            events: { }
+
+        var routeViewModel = new hitcher.viewModels.routeViewModel(route);
+        routeViewModel.config = {
+            showUserPhoto: showUserPhoto
         };
+        routeViewModel.events = {};
+        routeViewModel.remove = function () {
+            var deferred = $q.defer();
+
+            var viewModel = this;
+
+            var modal = $modal({ template: 'app/views/modal/yes-no-dialog.html', show: false });
+            modal.$scope.title = 'Удаление маршрута';
+            modal.$scope.content = 'Вы в своём уме?';
+            modal.$scope.yes = function () {
+                var modal = this;
+                resource.delete({ id: viewModel.model.id }, function (response) {
+                    modal.$hide();
+                    deferred.resolve(viewModel.model.id);
+                }, function (response) {
+                    this.$hide();
+                    deferred.reject();
+                    //statusService.error(errorService.parseDataError(response));
+                });
+            }
+            modal.$promise.then(modal.show);
+            return deferred.promise;
+        };
+
+
+        return routeViewModel;
     };
 
     this.getRouteViewModel = getRouteViewModel;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Hitcher.Auth;
 using Hitcher.Controllers.Base;
+using Hitcher.DataAccess;
 using Hitcher.DataAccess.Entities;
 using Hitcher.Models.External;
 using Hitcher.Models.Request;
@@ -23,6 +24,13 @@ namespace Hitcher.Controllers
   [RoutePrefix("api/auth")]
   public class AuthController : ControllerBase
   {
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AuthController(IUnitOfWork unitOfWork)
+    {
+      _unitOfWork = unitOfWork;
+    }
+
     private IAuthenticationManager Authentication
     {
       get { return Request.GetOwinContext().Authentication; }
@@ -199,6 +207,8 @@ namespace Hitcher.Controllers
       {
         return NotFound();
       }
+
+      _unitOfWork.RouteRepository.Delete(m => m.UserId == user.Id);
 
       IdentityResult result = await AppUserManager.DeleteAsync(user);
 

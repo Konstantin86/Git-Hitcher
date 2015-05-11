@@ -4,13 +4,18 @@
             <div class="modal-header" ng-show="title">
                 <button type="button" class="close" ng-click="$hide()">&times;</button><h4 class="modal-title" ng-bind="title"></h4>
             </div>
-
             <div class="modal-body" ng-bind="content">
+
             </div>
+            <form class="form-signin" name="form" ng-hide="success">
+                <div class="form-group" ng-class="{ 'has-error': form.email.$invalid && (form.email.$dirty) }">
+                    <input type="email" class="form-control" name="email" placeholder="Email" ng-model="input" required>
+                </div>
+            </form>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" ng-click="$hide()">No</button>
-                <button type="button" class="btn btn-primary" ng-click="yes()">Yes</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!input" ng-click="yes()">Yes</button>
             </div>
         </div>
     </div>

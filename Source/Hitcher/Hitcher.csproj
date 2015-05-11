@@ -181,6 +181,8 @@
     <Content Include="app\directives\routeListDirective.js" />
     <Content Include="app\directives\routeListView.html" />
     <Content Include="app\directives\routeView.html" />
+    <Content Include="app\models\hitcher-ns.js" />
+    <Content Include="app\models\routeViewModel.js" />
     <Content Include="app\services\authService.js" />
     <Content Include="app\services\errorService.js" />
     <Content Include="app\services\interceptors\authInterceptorService.js" />
@@ -198,6 +200,7 @@
     <Content Include="app\views\gmaps\gmaps-top-center-control.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />
+    <Content Include="app\views\modal\recover-pwd-dialog.html" />
     <Content Include="app\views\modal\search.html" />
     <Content Include="app\views\modal\settings.html" />
     <Content Include="app\views\modal\yes-no-dialog.html" />

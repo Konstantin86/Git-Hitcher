@@ -157,7 +157,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     $scope.search = function () {
         $scope.searchModel.type = 1 - userService.user.type;
-        //var search = { type: userService.user.type, take: $scope.aside.resultsCount };
 
         mapService.showRoutes($scope.searchModel).then(function (result) {
 
@@ -168,17 +167,18 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             if (result && result.length) {
                 for (var i = 0; i < result.length; i++) {
                     var routeViewModel = routeService.getRouteViewModel(result[i]);
+                    routeViewModel.canDelete = false;
 
                     routeViewModel.events.mouseenter = function (routeViewModel) {
                         return function () {
-                            routeViewModel.model.canDelete = routeViewModel.model.isCurrentUserRoute;
+                            routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute;
                             mapService.setRoute(routeViewModel.model, true);
                         }
                     }(routeViewModel);
 
                     routeViewModel.events.mouseout = function (routeViewModel) {
                         return function () {
-                            routeViewModel.model.canDelete = routeViewModel.model.isCurrentUserRoute && routeViewModel.isActive;
+                            routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute && routeViewModel.isActive;
                             mapService.clearTemp();
                         }
                     }(routeViewModel);
@@ -187,27 +187,36 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                         return function () {
                             if (lastSelected) {
                                 lastSelected.isActive = false;
-                                lastSelected.model.canDelete = false;
+                                lastSelected.canDelete = false;
                             }
 
                             mapService.clearAll();
 
                             routeViewModel.isActive = true;
-                            routeViewModel.model.canDelete = routeViewModel.model.isCurrentUserRoute;
+                            routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute;
                             mapService.setRoute(routeViewModel.model);
                             lastSelected = routeViewModel;
                         }
                     }(routeViewModel);
 
-                    routeViewModel.remove = function() {
-                        alert('test');
-                    };
+                    routeViewModel.events.onRemove = function (routeViewModel) {
+                        return function () {
+                            routeViewModel.remove().then(function (id) {
+
+                                $scope.searchModel.routes = $scope.searchModel.routes.filter(function (item) {
+                                    return item.model.id !== id;
+                                });
+
+                                mapService.removeRoute(id);
+                            });
+                        }
+                    }(routeViewModel);
 
                     resultRoutes.push(routeViewModel);
                 }
 
                 resultRoutes[0].isActive = true;
-                resultRoutes[0].model.canDelete = resultRoutes[0].model.isCurrentUserRoute;
+                resultRoutes[0].canDelete = resultRoutes[0].model.isCurrentUserRoute;
                 mapService.setRoute(resultRoutes[0].model);
                 lastSelected = resultRoutes[0];
             } else {
