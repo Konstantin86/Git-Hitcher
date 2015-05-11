@@ -26,7 +26,7 @@
             <td class="route-item-label">Телефон</td>
             <td>{{routeInfo.phone}}</td>
         </tr>
-        <tr ng-show="routeInfo.model.isCurrentUserRoute">
+        <tr ng-show="routeInfo.model.canDelete">
             <td class="route-item-label">
                 <a href="#" style="text-decoration: none; color: lightcoral" ng-click="routeInfo.remove()"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Удалить</a>
             </td>

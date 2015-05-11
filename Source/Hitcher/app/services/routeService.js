@@ -49,6 +49,7 @@ app.service("routeService", function ($resource, appConst) {
     };
 
     var getRouteViewModel = function (route, showUserPhoto) {
+        route.canDelete = route.isCurrentUserRoute;
         return {
             model: route,
             startName: route.startName,

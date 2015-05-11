@@ -169,25 +169,31 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                 for (var i = 0; i < result.length; i++) {
                     var routeViewModel = routeService.getRouteViewModel(result[i]);
 
-                    routeViewModel.events.mouseenter = function (routeModel) {
+                    routeViewModel.events.mouseenter = function (routeViewModel) {
                         return function () {
-                            mapService.setRoute(routeModel, true);
+                            routeViewModel.model.canDelete = routeViewModel.model.isCurrentUserRoute;
+                            mapService.setRoute(routeViewModel.model, true);
                         }
-                    }(routeViewModel.model);
+                    }(routeViewModel);
 
-                    routeViewModel.events.mouseout = function () {
-                        mapService.clearTemp();
-                    };
+                    routeViewModel.events.mouseout = function (routeViewModel) {
+                        return function () {
+                            routeViewModel.model.canDelete = routeViewModel.model.isCurrentUserRoute && routeViewModel.isActive;
+                            mapService.clearTemp();
+                        }
+                    }(routeViewModel);
 
                     routeViewModel.events.click = function (routeViewModel) {
                         return function () {
                             if (lastSelected) {
                                 lastSelected.isActive = false;
+                                lastSelected.model.canDelete = false;
                             }
 
                             mapService.clearAll();
 
                             routeViewModel.isActive = true;
+                            routeViewModel.model.canDelete = routeViewModel.model.isCurrentUserRoute;
                             mapService.setRoute(routeViewModel.model);
                             lastSelected = routeViewModel;
                         }
@@ -201,6 +207,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                 }
 
                 resultRoutes[0].isActive = true;
+                resultRoutes[0].model.canDelete = resultRoutes[0].model.isCurrentUserRoute;
                 mapService.setRoute(resultRoutes[0].model);
                 lastSelected = resultRoutes[0];
             } else {
