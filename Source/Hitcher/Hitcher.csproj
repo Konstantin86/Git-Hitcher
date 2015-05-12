@@ -176,6 +176,7 @@
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
     <Content Include="app\controllers\signupController.js" />
+    <Content Include="app\directives\formatPhone.js" />
     <Content Include="app\directives\numberOnlyInputDirective.js" />
     <Content Include="app\directives\routeDirective.js" />
     <Content Include="app\directives\routeListDirective.js" />
