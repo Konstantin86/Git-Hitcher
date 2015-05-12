@@ -31,6 +31,7 @@ namespace Hitcher.Service
         TotalDistance = route.TotalDistance,
         TotalDuration = route.TotalDuration,
         Type = route.Type,
+        StartTime = route.StartTime.ToLocalTime(),
         Coords = new List<Coord>()
       };
 

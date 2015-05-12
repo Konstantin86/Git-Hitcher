@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Hitcher.DataAccess.Entities.Base;
 
@@ -19,6 +20,8 @@ namespace Hitcher.DataAccess.Entities
     public int TotalDuration { get; set; }
 
     public int Type { get; set; }   // 0 - Hitcher, 1 - Driver
+
+    public DateTime StartTime { get; set; }
 
     public virtual ICollection<Coord> Coords { get; set; }
 

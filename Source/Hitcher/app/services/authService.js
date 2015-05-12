@@ -19,10 +19,24 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     var userData = {};
     var externalAuthData = { provider: "", userName: "", email: "", externalAccessToken: "", password: "", confirmPassword: "" };
 
+    var onLogoutCallbacks = [];
+
+    var onLogout = function (callback) { onLogoutCallbacks.push(callback); };
+
+    var raiseEvent = function (callbacks) {
+        if (callbacks.length) {
+            callbacks.forEach(function (callback) {
+                if (typeof (callback) == "function") { callback(); }
+            });
+        }
+    };
+
     var logout = function () {
         localStorageService.remove("authorizationData");
         userData.isAuth = false;
         userData.userName = "";
+
+        raiseEvent(onLogoutCallbacks);
     };
 
     var saveAuthData = function (accessToken, userName) {
@@ -101,4 +115,5 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     this.getAuthHeader = getAuthHeader;
     this.obtainAccessToken = obtainAccessToken;
     this.auth = resource;
+    this.onLogout = onLogout;
 });

@@ -186,6 +186,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
         }
     });
 
+    authService.onLogout($scope.hideDriveAside);
+
     var createRoute = function () {
         mapService.declareRoute($scope.route).then(function (routeData) {
 
@@ -322,6 +324,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     initAside();
 
     function initAside() {
-        $scope.route = { startName: null, endName: null, name: $scope.userData.userName, phone: $scope.userData.phoneNumber };
+        var dateTimeNow = new Date();
+        dateTimeNow.setHours(dateTimeNow.getHours() + 1);
+        $scope.route = { startName: null, endName: null, name: $scope.userData.userName, phone: $scope.userData.phoneNumber, startTime: dateTimeNow };
     };
 });

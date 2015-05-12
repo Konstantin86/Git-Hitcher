@@ -6,6 +6,7 @@ hitcher.viewModels = (function () {
         this.model = route;
         this.canDelete = route.isCurrentUserRoute;
         this.startName = route.startName;
+        this.startTime = new Date(Date.parse(route.startTime)).toLocaleString();
         this.endName = route.endName;
         this.driver = route.name;
         this.phone = route.phone;

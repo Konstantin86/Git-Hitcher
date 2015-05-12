@@ -139,6 +139,10 @@
     <Compile Include="Migrations\201505020801201_removed_redundant_route_fields.Designer.cs">
       <DependentUpon>201505020801201_removed_redundant_route_fields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505122019124_added_route_start_time.cs" />
+    <Compile Include="Migrations\201505122019124_added_route_start_time.Designer.cs">
+      <DependentUpon>201505122019124_added_route_start_time.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
@@ -181,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505020801201_removed_redundant_route_fields.resx">
       <DependentUpon>201505020801201_removed_redundant_route_fields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505122019124_added_route_start_time.resx">
+      <DependentUpon>201505122019124_added_route_start_time.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

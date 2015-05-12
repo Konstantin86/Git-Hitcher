@@ -315,7 +315,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         removeMarkersById(id);
     };
 
-    var setRoute = function (routeInfo, temp) {
+    var setRoute = function (routeInfo, temp, center) {
         var polyline = new gmaps.Polyline({
             path: routeInfo.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
             strokeColor: temp ? constColors.highlight : getPolylineColor(routeInfo),
@@ -413,6 +413,10 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
         setMarker(endCoords.lat, endCoords.lng, endMarkerKey, routeOptions[routeInfo.type].markerImage, routeInfo.endName);
         setMarker(startCoords.lat, startCoords.lng, startMarkerKey, routeOptions[routeInfo.type].markerImage, routeInfo.startName);
+
+        if (center) {
+            centerMap(startCoords.lat, startCoords.lng, 12);
+        }
     };
 
     var onMapMarkersChanged = function (callback) { onMapMarkersChangedCallback = callback; };

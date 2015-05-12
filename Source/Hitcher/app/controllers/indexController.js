@@ -26,6 +26,8 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     };
 
+    authService.onLogout(hideSearch);
+
     $scope.displayOptions = mapService.displayOptions;
 
     $scope.$on('$routeChangeSuccess', function () {
@@ -37,6 +39,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
     });
 
     var showMyRoutes = function () {
+        $location.path("/home");
         initAside();
         $scope.searchModel.hideFilter = true;
         $scope.searchModel.currentUserOnly = true;
@@ -172,7 +175,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                     routeViewModel.events.mouseenter = function (routeViewModel) {
                         return function () {
                             routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute;
-                            mapService.setRoute(routeViewModel.model, true);
+                            mapService.setRoute(routeViewModel.model, true, true);
                         }
                     }(routeViewModel);
 
@@ -194,7 +197,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
                             routeViewModel.isActive = true;
                             routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute;
-                            mapService.setRoute(routeViewModel.model);
+                            mapService.setRoute(routeViewModel.model, false, true);
                             lastSelected = routeViewModel;
                         }
                     }(routeViewModel);
@@ -217,7 +220,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
                 resultRoutes[0].isActive = true;
                 resultRoutes[0].canDelete = resultRoutes[0].model.isCurrentUserRoute;
-                mapService.setRoute(resultRoutes[0].model);
+                mapService.setRoute(resultRoutes[0].model, false, true);
                 lastSelected = resultRoutes[0];
             } else {
                 statusService.warning("Подходящих результатов не найдено");

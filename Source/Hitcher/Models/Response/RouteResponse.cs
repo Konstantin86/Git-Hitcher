@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Security.AccessControl;
+﻿using System;
+using System.Collections.Generic;
 using Hitcher.DataAccess.Entities;
 
 namespace Hitcher.Models.Response
@@ -10,6 +10,7 @@ namespace Hitcher.Models.Response
     {
       Id = route.Id;
       StartName = route.StartName;
+      StartTime = route.StartTime;
       StartLatLng = route.StartLatLng;
       EndName = route.EndName;
       EndLatLng = route.EndLatLng;
@@ -19,6 +20,8 @@ namespace Hitcher.Models.Response
       Coords = route.Coords;
       UserId = route.UserId;
     }
+
+    public DateTime StartTime { get; set; }
 
     public int Id { get; set; }
 

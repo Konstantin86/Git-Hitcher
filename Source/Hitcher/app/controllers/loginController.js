@@ -51,7 +51,7 @@ app.controller("loginController", function ($scope, $location, authService, erro
     $scope.authCompletedCB = function (fragment) {
         $scope.$apply(function () {
             authService.obtainAccessToken({ provider: fragment.provider, externalAccessToken: fragment.external_access_token, userId: fragment.user_id }).then(function () {
-                $location.path("/account");
+                $location.path("/home");
             }, function (response) {
                 statusService.error(errorService.parseDataResponse(response));
             });

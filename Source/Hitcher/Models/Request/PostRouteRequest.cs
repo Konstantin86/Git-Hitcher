@@ -1,4 +1,5 @@
-﻿using Hitcher.DataAccess.Entities;
+﻿using System;
+using Hitcher.DataAccess.Entities;
 
 namespace Hitcher.Models.Request
 {
@@ -9,6 +10,7 @@ namespace Hitcher.Models.Request
     public string Name { get; set; }
     public string Phone { get; set; }
     public string StartName { get; set; }
+    public DateTime StartTime { get; set; }
     public string EndName { get; set; }
     public string StartLatLng { get; set; }
     public string EndLatLng { get; set; }

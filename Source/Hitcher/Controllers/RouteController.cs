@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
@@ -84,6 +85,13 @@ namespace Hitcher.Controllers
         int resultsCount = request.Take ?? DefaultResultsCount;
         allRoutes = _routeService.Get(request.StartLat.Value, request.StartLng.Value, request.EndLat.Value, request.EndLng.Value, resultsCount, request.Type).ToList();
 
+        // Begin https://github.com/Konstantin86/Git-Hitcher/issues/33 Do not show own routes
+        if (user != null)
+        {
+          allRoutes = allRoutes.Where(m => m.UserId != user.Id).ToList();
+        }
+        // End 
+
         foreach (var route in allRoutes)
         {
           route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
@@ -94,7 +102,7 @@ namespace Hitcher.Controllers
         allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords).ToList();
       }
 
-      List<RouteResponse> responseRows = allRoutes.Select(m => new RouteResponse(m)).ToList();
+      List<RouteResponse> responseRows = allRoutes.Where(m => m.StartTime >= DateTime.Now).Select(m => new RouteResponse(m)).ToList();
 
       foreach (var route in responseRows)
       {
@@ -132,7 +140,7 @@ namespace Hitcher.Controllers
       }
 
       route.UserId = user.Id;
-      
+
       int id = _routeService.Save(route);
       return Ok(new { id });
     }
