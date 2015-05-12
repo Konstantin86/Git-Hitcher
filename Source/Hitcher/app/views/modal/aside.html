@@ -19,8 +19,17 @@
                 <input type="text" class="form-control input-sm" ng-model="route.phone" readonly="readonly">
                 <br />
                 <p style="margin-left: 3px"><span class="glyphicon glyphicon-road"></span><b style="margin-left: 8px;  margin-right: 25px">Расстояние: </b>{{route.totalDistance}}</p>
-                <p style="margin-left: 3px"><span class="glyphicon glyphicon-time"></span><b style="margin-left: 8px;  margin-right: 14px">Время в пути: </b>{{route.totalDuration}}</p>
-            </div>
+                <p style="margin-left: 3px"><span class="glyphicon glyphicon-time"></span><b style="margin-left: 8px; margin-right: 14px">Время в пути: </b>{{route.totalDuration}}
+                </p>
+                <div class="col-md-4">
+
+                    <input type="text" size="10" class="form-control" ng-model="sharedDate" data-autoclose="1" placeholder="Date" bs-datepicker>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" size="8" class="form-control" ng-model="sharedDate" data-autoclose="1" placeholder="Time" bs-timepicker>
+                </div>
+
+                </div>
 
             <div class="aside-footer">
                 <button type="button" class="btn btn-danger" ng-click="$parent.hideDriveAside()">Отмена</button>

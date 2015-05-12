@@ -425,9 +425,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
     var onSearchToMarkerSelected = function (callback) { onSearchToMarkerSelectedCallback = callback; };
 
-    var onResetSelected = function (callback) {
-        onResetSelectedCallbacks.push(callback);
-    };
+    var onResetSelected = function (callback) { onResetSelectedCallbacks.push(callback); };
 
     // mode: 0 - hitcher, 1 driver
     var showRoutes = function (request, showOnMap) {
