@@ -432,8 +432,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     var onResetSelected = function (callback) { onResetSelectedCallbacks.push(callback); };
 
     // mode: 0 - hitcher, 1 driver
-    var showRoutes = function (request, showOnMap) {
-        if ((request.type != currentType) || !showOnMap) {
+    var showRoutes = function (request, showOnMap, refresh) {
+        if ((request.type != currentType) || !showOnMap || refresh) {
             currentType = request.type;
 
             var deferred = $q.defer();

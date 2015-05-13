@@ -16,13 +16,15 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         }
     };
 
+    $scope.user = userService.user;
+
     var hideSearch = function () {
         if (searchAside) {
             initAside();
             mapService.removeSearchMarkers();
             mapService.clearTempDirection();
             searchAside.hide();
-            //mapService.showRoutes({ type: 1 - type }, true);
+            mapService.showRoutes({ type: 1 - $scope.user.type }, true, true);
         }
     };
 
@@ -50,7 +52,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
     $scope.userMenu = [{ "text": "Профайл", "href": "#/account", "target": "_self" }, { "text": "Мои маршруты", click: showMyRoutes }, { "divider": true }, { "text": "Выйти", "click": "logout()" }];
 
     $scope.state = statusService.state;
-    $scope.user = userService.user;
     $scope.markerEvents = mapService.markerEvents;
 
     mapService.onMarkerDrag(function (marker, eventName, args) {
