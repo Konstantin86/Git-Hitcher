@@ -6,6 +6,11 @@
                 link: function (scope, elem, attrs, ctrl, ngModel) {
 
                     scope.$watch('formData.phoneNumber', function (newValue, oldValue) {
+
+                        if (!newValue) {
+                            return;
+                        }
+
                         newValue = newValue.replace(new RegExp('-', 'g'), '');
                         var arr = String(newValue).split("");
                         if (arr.length === 0) return;
@@ -15,14 +20,12 @@
                             scope.formData.phoneNumber = oldValue;
                         }
 
-                        if (newValue) {
                             var origVal = newValue.replace(/[^\w\s]/gi, '');
                             if (origVal.length === 10) {
                                 var str = origVal.replace(/(.{3})/g, "$1-");
                                 var phone = str.slice(0, -2) + str.slice(-1);
                                 scope.formData.phoneNumber = phone;
                             }
-                        }
                     });
 
                     //elem.add(phonenumber).on('keyup', function () {

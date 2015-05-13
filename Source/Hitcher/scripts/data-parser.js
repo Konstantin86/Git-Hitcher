@@ -1,5 +1,5 @@
 ﻿'use strict';
-
+ 
 angular.module('mgcrea.ngStrap.helpers.dateParser', [])
 
 .provider('$dateParser', function ($localeProvider) {
