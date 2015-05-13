@@ -324,6 +324,20 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     function initAside() {
         var dateTimeNow = new Date();
         dateTimeNow.setHours(dateTimeNow.getHours() + 1);
-        $scope.route = { startName: null, endName: null, name: $scope.userData.userName, phone: $scope.userData.phoneNumber, startTime: dateTimeNow };
+        var defaultDueDate = new Date();
+        defaultDueDate.setMonth(defaultDueDate.getMonth() + 1);
+
+        $scope.route = {
+            startName: null, endName: null,
+            name: $scope.userData.userName,
+            phone: $scope.userData.phoneNumber,
+            startTime: dateTimeNow,
+            recurrency: true,
+            recurrencyMode: 1,
+            recurrenceInterval: 1,
+            dueDate: defaultDueDate,
+            //icons: [{ "value": "Gear", "label": "<i class=\"fa fa-gear\"></i> Gear" }, { "value": "Globe", "label": "<i class=\"fa fa-globe\"></i> Globe" }, { "value": "Heart", "label": "<i class=\"fa fa-heart\"></i> Heart" }, { "value": "Camera", "label": "<i class=\"fa fa-camera\"></i> Camera" }]
+            recurrencyModes: [{ value: 0, label: "Каждый день" }, { value: 1, label: "Каждую неделю" }, { value: 2, label: "Каждый месяц" }]
+        };
     };
 });

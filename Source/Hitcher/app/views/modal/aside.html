@@ -6,27 +6,76 @@
             </div>
 
             <div class="aside-body">
-                <label><i class="fa fa-home" style="margin-right: 2px;"></i> Откуда<p style="color: red; display: inline"> *</p></label>
+                <label><i class="fa fa-home" style="margin-right: 2px;"></i> Откуда
+                    <p style="color: red; display: inline"> *</p></label>
                 <input type="text" class="form-control input-sm" ng-model="route.startName" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Введите адрес" bs-typeahead>
-                
-                <br />
-                <label><i class="fa fa-home" style="margin-right: 2px;"></i> Куда<p style="color: red; display: inline"> *</p></label>
+
+                <br/>
+                <label><i class="fa fa-home" style="margin-right: 2px;"></i> Куда
+                    <p style="color: red; display: inline"> *</p></label>
                 <input type="text" class="form-control input-sm" ng-model="route.endName" data-animation="am-flip-x" bs-options="address.formatted_address as address.formatted_address for address in getAddress($viewValue)" placeholder="Введите адрес" bs-typeahead>
                 <br/>
-                <span style="margin:0 0 10px 4px;" class="glyphicon glyphicon-time"></span><b style="margin-left: 8px; margin-right: 8px">Отправление<p style="color: red; display: inline"> *</p></b>
+                <span style="margin: 0 0 10px 4px;" class="glyphicon glyphicon-time"></span><b style="margin-left: 8px; margin-right: 8px">Отправление
+                    <p style="color: red; display: inline"> *</p></b>
                 <form class="form-inline" name="startTimeForm">
                     <div class="form-group">
                         <input type="text" size="10" class="form-control input-sm .form-group.required" ng-model="route.startTime" min-date="today" data-autoclose="1" placeholder="Date" bs-datepicker>
                         <input type="text" size="8" class="form-control input-sm" ng-model="route.startTime" data-autoclose="1" placeholder="Time" name="startTime" bs-timepicker>
                     </div>
+                    <br/>
+                    <div class="checkbox" style="margin: 10px 4px">
+                        <label>
+                            <span class="glyphicon glyphicon-repeat" style="margin-right: 4px"></span><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> <b>Повторение</b>
+                        </label>
+                    </div>
+
+                    <br/>
+                    <div ng-show="route.recurrency">
+                        <label style="margin-left: 4px">Частота:&nbsp;</label>
+                        <button type="button" style="margin-bottom: 6px" class="btn btn-default" ng-model="route.recurrencyMode" data-html="1" bs-options="mode.value as mode.label for mode in route.recurrencyModes" bs-select></button>
+                        <br/>
+                        <div ng-show="route.recurrencyMode === 0 || route.recurrencyMode === 2">
+                            <label style="margin-left: 4px; font-weight: normal">Повторять с интервалом&nbsp;</label>
+                            <number-only-input input-value="route.recurrenceInterval"></number-only-input>
+                            <label style="margin-left: 4px; font-weight: normal">&nbsp;{{route.recurrencyMode === 0 ? "дн." : "мес."}}</label>
+                        </div>
+
+                        <div ng-show="route.recurrencyMode === 1">
+                            <div class="checkbox" style="margin: 10px 2px">
+                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Пн</label>
+                            </div>
+                            <div class="checkbox" style="margin: 10px 2px">
+                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Вт</label>
+                            </div>
+                            <div class="checkbox" style="margin: 10px 2px">
+                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Ср</label>
+                            </div>
+                            <div class="checkbox" style="margin: 10px 2px">
+                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Чт</label>
+                            </div>
+                            <div class="checkbox" style="margin: 10px 2px">
+                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Пт</label>
+                            </div>
+                            <br/>
+                            <div class="checkbox" style="margin: 10px 2px">
+                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Сб</label>
+                            </div>
+                            <div class="checkbox" style="margin: 10px 2px">
+                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Вс</label>
+                            </div>
+                        </div>
+                        <b style="margin: 10px 4px;">До
+                            <p style="color: red; display: inline"> *</p></b>
+                        <input type="text" size="10" class="form-control input-sm" style="margin: 10px 2px" ng-model="route.dueDate" min-date="today" data-autoclose="1" placeholder="Date" bs-datepicker>
+                    </div>
                 </form>
                 <br/>
                 <span class="glyphicon glyphicon-user"></span><b style="margin-left: 4px;">Пользователь</b>
                 <input type="text" class="form-control input-sm" ng-model="route.name" readonly="readonly" placeholder="Введите имя">
-                <br />
+                <br/>
                 <span class="glyphicon glyphicon-phone"></span><b style="margin-left: 4px;">Контакт</b>
                 <input type="text" class="form-control input-sm" ng-model="route.phone" readonly="readonly">
-                <br />
+                <br/>
                 <p style="margin-left: 3px">
                     <span class="glyphicon glyphicon-road"></span><b style="margin-left: 8px; margin-right: 25px">Расстояние: </b>{{route.totalDistance}}
                 </p>
@@ -42,3 +91,4 @@
         </div>
     </div>
 </div>
+

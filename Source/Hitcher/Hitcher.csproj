@@ -337,6 +337,7 @@
     <Compile Include="Models\Request\QueryRequestBase.cs" />
     <Compile Include="Models\Request\QueryRouteRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Models\WeeklyRecurrencyDays.cs" />
     <Compile Include="Service\RouteService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\DistanceAlgorithm.cs" />
