@@ -11,7 +11,7 @@
 
 app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps, geocoder, mapControl;                                                            // google maps api objects
-    var selectedRouteOptions, tempDirection, tempSearchDirection, highlightRoutePolyline;                            // temp route objects
+    var selectedRouteOptions, tempDirection, tempSearchDirection, highlightRoutePolyline;       // temp route objects
     var infoWindow, infoWindowCreating, infoWindowDelayTimer, underMouseLatLng;                 // infoWindow objects
 
     var polylines = [];

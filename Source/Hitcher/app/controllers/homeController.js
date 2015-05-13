@@ -137,16 +137,14 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
 
         routeService.resource.save($scope.route, function (result) {
             if (result) {
-                statusService.success("Route is successfully created.");
+                $alert({ content: 'Route is successfully created.', placement: 'top-right', type: 'success', duration: 3, show: true });
+                //statusService.success("Route is successfully created.");
             }
 
             initAside();
             driveAside.hide();
             routeCreating = false;
-
-            // TODO get last created user route and show it on the map instead of updating whole map route like it's done in the line below...
             mapService.showMostRecentRoute();
-            // TODO All current user routes should be marked with orange color
         });
     };
 

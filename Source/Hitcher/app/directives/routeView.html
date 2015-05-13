@@ -1,7 +1,9 @@
 ﻿<!--<div style="height: 224px"> Uncomment to fix issue with cutting off a tooltip-->
 <div>
-    <img width='72' src='{{routeInfo.photoPath}}' ng-show="routeInfo.config.showUserPhoto" />
-    <br ng-show="routeInfo.config.showUserPhoto" />
+    <div ng-show="routeInfo.config.showUserPhoto">
+        <img width='72' src={{routeInfo.photoPath}} />
+        <br />
+    </div>
     <table style="font-size: 10pt">
         <tbody>
             <tr>
