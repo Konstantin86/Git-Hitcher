@@ -8,6 +8,7 @@ namespace Hitcher.DataAccess
   public interface IUnitOfWork : IDisposable
   {
     RouteRepository RouteRepository { get; }
+    AppDbContext DbContext { get; }
 
     void SaveChanges();
   }
@@ -18,11 +19,9 @@ namespace Hitcher.DataAccess
 
     private readonly List<IDisposable> _disposableObjects;
 
-    private readonly AppDbContext _context;
-
     public UnitOfWork(AppDbContext context)
     {
-      _context = context;
+      DbContext = context;
 
       RouteRepository = new RouteRepository(context);
 
@@ -32,9 +31,11 @@ namespace Hitcher.DataAccess
 
     public RouteRepository RouteRepository { get; private set; }
 
+    public AppDbContext DbContext { get; private set; }
+
     public void SaveChanges()
     {
-      _context.SaveChanges();
+      DbContext.SaveChanges();
     }
 
     public void Dispose()

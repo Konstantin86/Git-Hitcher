@@ -1,5 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 
 using Hitcher.DataAccess.Entities;
 
@@ -9,6 +11,11 @@ namespace Hitcher.DataAccess.Repositories
   {
     public RouteRepository(AppDbContext context) : base(context)
     {
+    }
+
+    public override Route Get(Expression<Func<Route, bool>> func)
+    {
+      return _context.Set<Route>().Include(m => m.Recurrency).FirstOrDefault(func);
     }
 
     protected override void OnUpdate(Route newEntity, AppDbContext context)

@@ -10,7 +10,7 @@ namespace Hitcher.DataAccess.Repositories
   public abstract class RepositoryBase<T> : IDisposable where T : EntityBase
   {
     private bool _disposed;
-    private AppDbContext _context;
+    protected AppDbContext _context;
 
     protected RepositoryBase(AppDbContext context)
     {
@@ -22,7 +22,7 @@ namespace Hitcher.DataAccess.Repositories
       return _context.Set<T>().FirstOrDefault(e => e.Id == id);
     }
 
-    public T Get(Expression<Func<T, bool>> func)
+    public virtual T Get(Expression<Func<T, bool>> func)
     {
       return _context.Set<T>().FirstOrDefault(func);
     }

@@ -9,6 +9,8 @@ namespace Hitcher.DataAccess
   {
     public DbSet<Route> Routes { get; set; }
 
+    public DbSet<RouteRecurrency> RouteRecurrencies { get; set; }
+
     public DbSet<Coord> Coords { get; set; }
 
     public AppDbContext()

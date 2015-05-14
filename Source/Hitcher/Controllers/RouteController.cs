@@ -58,6 +58,12 @@ namespace Hitcher.Controllers
         return NotFound();
       }
 
+      if (route.Recurrency != null)
+      {
+        var recurrency = _unitOfWork.DbContext.RouteRecurrencies.SingleOrDefault(m => m.RouteId == id);
+        _unitOfWork.DbContext.RouteRecurrencies.Remove(recurrency);
+      }
+
       _unitOfWork.RouteRepository.Delete(m => m.Id == id);
 
       return Ok(id);
