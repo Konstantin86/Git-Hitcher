@@ -344,6 +344,7 @@
     <Compile Include="Service\Recurrency\RouteRecurrencyResolver.cs" />
     <Compile Include="Service\RouteService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\DateTimeHelper.cs" />
     <Compile Include="Utils\DistanceAlgorithm.cs" />
   </ItemGroup>
   <ItemGroup>

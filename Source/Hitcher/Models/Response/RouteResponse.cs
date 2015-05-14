@@ -56,6 +56,6 @@ namespace Hitcher.Models.Response
 
   public class RouteRecurrencyResponse
   {
-    public DateTime NextTime { get; set; }
+    public DateTime? NextTime { get; set; }
   }
 }

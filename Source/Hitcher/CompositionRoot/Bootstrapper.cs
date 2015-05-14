@@ -78,7 +78,7 @@ namespace Hitcher.CompositionRoot
     {
       RegisterDependency<RouteService, IRouteService>(webapi);
 
-      RegisterDependency<RouteRecurrencyResolver>(webapi);
+      //RegisterDependency<RouteRecurrencyResolver>(webapi);
       RegisterDependency<RouteFactory>(webapi);
     }
 

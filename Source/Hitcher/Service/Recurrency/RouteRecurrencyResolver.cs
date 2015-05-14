@@ -1,76 +1,91 @@
 ﻿using System;
+using System.Linq;
 
 using Hitcher.DataAccess.Entities;
 using Hitcher.Service.Models;
 using Hitcher.Service.Models.Extensions;
+using Hitcher.Utils;
 
 namespace Hitcher.Service.Recurrency
 {
   public class RouteRecurrencyResolver
   {
-    public DateTime GetNextOccurrenceTime(RouteRecurrency recurrency)
-    {
-      DateTime result;
+    private readonly Route _route;
 
-      if (recurrency.Mode == 0)
+    public RouteRecurrencyResolver(Route route)
+    {
+      _route = route;
+    }
+
+    public DateTime? GetNextOccurrenceTime()
+    {
+      DateTime? result;
+
+      if (_route.Recurrency.Mode == 0)
       {
-        result = this.ResolveNextOccurenceDaily(recurrency);
+        result = this.ResolveNextOccurenceDaily();
       }
-      else if (recurrency.Mode == 1)
+      else if (_route.Recurrency.Mode == 1)
       {
-        result = this.ResolveNextOccurenceWeekly(recurrency);
+        result = this.ResolveNextOccurenceWeekly();
       }
       else
       {
-        result = this.ResolveNextOccurenceMonthly(recurrency);
+        result = this.ResolveNextOccurenceMonthly();
       }
-      //throw new NotImplementedException();
 
-      return DateTime.Now.AddMonths(2);
+      return result;
     }
 
-    public bool OccurOn(RouteRecurrency recurrency, DateTime dateTime)
+    public bool OccurOn(DateTime date)
     {
-      if (recurrency.Mode == 0)
+      if (_route.Recurrency.Mode == 0)
       {
-        return this.ResolveDaily(recurrency, dateTime);
+        return this.ResolveDaily(date);
       }
-      if (recurrency.Mode == 1)
+
+      return _route.Recurrency.Mode == 1 ? this.ResolveWeekly(date) : this.ResolveMonthly(date);
+    }
+
+    private bool ResolveMonthly(DateTime dateTime)
+    {
+      if ((DateTimeHelper.GetMonthCountBetweenDates(dateTime, _route.StartTime.Date) % _route.Recurrency.Interval != 0) || (dateTime.Date > _route.DueDate.Date))
       {
-        return this.ResolveWeekly(recurrency, dateTime);
+        return false;
       }
 
-      return this.ResolveMonthly(recurrency, dateTime);
+      int daysInMonth = DateTime.DaysInMonth(dateTime.Year, dateTime.Month);
+
+      int day = _route.StartTime.Day > daysInMonth ? daysInMonth : _route.StartTime.Day;
+
+      return day == _route.StartTime.Day;
     }
 
-    private bool ResolveMonthly(RouteRecurrency recurrency, DateTime dateTime)
+    private bool ResolveWeekly(DateTime date)
     {
-      throw new NotImplementedException();
+      return ((WeekDays)_route.Recurrency.Weekdays).Fits(date.DayOfWeek);
     }
 
-    private bool ResolveWeekly(RouteRecurrency recurrency, DateTime dateTime)
+    private bool ResolveDaily(DateTime date)
     {
-      throw new NotImplementedException();
+      return ((date - _route.StartTime.Date).Days % _route.Recurrency.Interval == 0) && date <= _route.DueDate;
     }
 
-    private bool ResolveDaily(RouteRecurrency recurrency, DateTime dateTime)
+    // Algorythm is not definitely optimal, though simplicity is cool enough :)
+    private DateTime? ResolveNextOccurenceDaily()
     {
-      throw new NotImplementedException();
+      return DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(this.ResolveDaily);
     }
 
-    private DateTime ResolveNextOccurenceMonthly(RouteRecurrency recurrency)
+    private DateTime? ResolveNextOccurenceWeekly()
     {
-      throw new NotImplementedException();
+      return DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(this.ResolveWeekly);
     }
 
-    private DateTime ResolveNextOccurenceWeekly(RouteRecurrency recurrency)
+    // Algorythm is not definitely optimal, though simplicity is cool enough :)
+    private DateTime? ResolveNextOccurenceMonthly()
     {
-      //if (((WeekDays)recurrency.Weekdays).Fits(DayOfWeek.Friday))
-    }
-
-    private DateTime ResolveNextOccurenceDaily(RouteRecurrency recurrency)
-    {
-      throw new NotImplementedException();
+      return DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(this.ResolveMonthly);
     }
   }
 }
