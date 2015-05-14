@@ -43,10 +43,16 @@ namespace Hitcher.Service
         TotalDistance = route.TotalDistance,
         TotalDuration = route.TotalDuration,
         Type = route.Type,
-        StartTime = route.StartTime.ToLocalTime(),
+        StartTime = route.StartTime.ToLocalTime(),    // TODO Probably wrong way of doing so on the server, we need to bind to local time of individual client and do nothing with it on server side. 
+        DueDate = route.DueDate.ToLocalTime(),
         Coords = new List<Coord>(),
         Recurrency = routeRecurrency
       };
+
+      if (!route.Recurrency)
+      {
+        newRoute.DueDate = route.StartTime;
+      }
 
       //int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);
 

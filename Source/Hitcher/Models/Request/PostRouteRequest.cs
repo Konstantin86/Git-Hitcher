@@ -11,6 +11,7 @@ namespace Hitcher.Models.Request
     public string Phone { get; set; }
     public string StartName { get; set; }
     public DateTime StartTime { get; set; }
+    public DateTime DueDate { get; set; }
     public string EndName { get; set; }
     public string StartLatLng { get; set; }
     public string EndLatLng { get; set; }

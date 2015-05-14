@@ -13,7 +13,7 @@ namespace Hitcher.WebJob
     {
       // Go over all existing route and remove outdated ones:
       UnitOfWork _unitOfWork = new UnitOfWork(AppDbContext.Create());
-      _unitOfWork.RouteRepository.Delete(m => m.StartTime <= DateTime.Now);
+      _unitOfWork.RouteRepository.Delete(m => m.DueDate <= DateTime.Now);
     }
   }
 }

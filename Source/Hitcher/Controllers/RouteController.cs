@@ -108,7 +108,7 @@ namespace Hitcher.Controllers
         allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords).ToList();
       }
 
-      List<RouteResponse> responseRows = allRoutes.Where(m => m.StartTime >= DateTime.Now).Select(m => new RouteResponse(m)).ToList();
+      List<RouteResponse> responseRows = allRoutes.Where(m => m.DueDate >= DateTime.Now).Select(m => new RouteResponse(m)).ToList();
 
       foreach (var route in responseRows)
       {

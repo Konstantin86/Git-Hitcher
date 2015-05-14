@@ -19,7 +19,7 @@
                     <p style="color: red; display: inline"> *</p></b>
                 <form class="form-inline" name="startTimeForm">
                     <div class="form-group">
-                        <input type="text" size="10" class="form-control input-sm .form-group.required" ng-model="route.startTime" min-date="today" data-autoclose="1" placeholder="Date" bs-datepicker>
+                        <input type="text" size="10" class="form-control input-sm .form-group.required" ng-model="route.startTime" min-date="today" data-autoclose="1" placeholder="Date" ng-show="!route.recurrency" bs-datepicker>
                         <input type="text" size="8" class="form-control input-sm" ng-model="route.startTime" data-autoclose="1" placeholder="Time" name="startTime" bs-timepicker>
                     </div>
                     <br/>

@@ -23,6 +23,8 @@ namespace Hitcher.DataAccess.Entities
 
     public DateTime StartTime { get; set; }
 
+    public DateTime DueDate { get; set; }
+
     public virtual ICollection<Coord> Coords { get; set; }
 
     public string UserId { get; set; }
