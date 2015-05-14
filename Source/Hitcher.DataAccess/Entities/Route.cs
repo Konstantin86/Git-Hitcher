@@ -26,5 +26,7 @@ namespace Hitcher.DataAccess.Entities
     public virtual ICollection<Coord> Coords { get; set; }
 
     public string UserId { get; set; }
+
+    public virtual RouteRecurrency Recurrency { get; set; }
   }
 }

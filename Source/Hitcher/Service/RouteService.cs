@@ -33,7 +33,8 @@ namespace Hitcher.Service
         TotalDuration = route.TotalDuration,
         Type = route.Type,
         StartTime = route.StartTime.ToLocalTime(),
-        Coords = new List<Coord>()
+        Coords = new List<Coord>(),
+        Recurrency = new RouteRecurrency { Interval = 4, Mode = 5 }
       };
 
       //int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);
