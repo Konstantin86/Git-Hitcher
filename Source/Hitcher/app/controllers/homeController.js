@@ -334,7 +334,14 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
             startTime: dateTimeNow,
             recurrency: true,
             recurrencyMode: 1,
-            recurrenceInterval: 1,
+            recurrencyWeeklyMon: true,
+            recurrencyWeeklyTue: true,
+            recurrencyWeeklyWed: true,
+            recurrencyWeeklyThr: true,
+            recurrencyWeeklyFri: true,
+            recurrencyWeeklySat: true,
+            recurrencyWeeklySun: true,
+            recurrencyInterval: 1,
             dueDate: defaultDueDate,
             //icons: [{ "value": "Gear", "label": "<i class=\"fa fa-gear\"></i> Gear" }, { "value": "Globe", "label": "<i class=\"fa fa-globe\"></i> Globe" }, { "value": "Heart", "label": "<i class=\"fa fa-heart\"></i> Heart" }, { "value": "Camera", "label": "<i class=\"fa fa-camera\"></i> Camera" }]
             recurrencyModes: [{ value: 0, label: "Каждый день" }, { value: 1, label: "Каждую неделю" }, { value: 2, label: "Каждый месяц" }]

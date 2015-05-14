@@ -36,32 +36,32 @@
                         <br/>
                         <div ng-show="route.recurrencyMode === 0 || route.recurrencyMode === 2">
                             <label style="margin-left: 4px; font-weight: normal">Повторять с интервалом&nbsp;</label>
-                            <number-only-input input-value="route.recurrenceInterval"></number-only-input>
+                            <number-only-input input-value="route.recurrencyInterval"></number-only-input>
                             <label style="margin-left: 4px; font-weight: normal">&nbsp;{{route.recurrencyMode === 0 ? "дн." : "мес."}}</label>
                         </div>
 
                         <div ng-show="route.recurrencyMode === 1">
                             <div class="checkbox" style="margin: 10px 2px">
-                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Пн</label>
+                                <label><input type="checkbox" ng-model="route.recurrencyWeeklyMon" style="margin-left: 4px;"> Пн</label>
                             </div>
                             <div class="checkbox" style="margin: 10px 2px">
-                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Вт</label>
+                                <label><input type="checkbox" ng-model="route.recurrencyWeeklyTue" style="margin-left: 4px;"> Вт</label>
                             </div>
                             <div class="checkbox" style="margin: 10px 2px">
-                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Ср</label>
+                                <label><input type="checkbox" ng-model="route.recurrencyWeeklyWed" style="margin-left: 4px;"> Ср</label>
                             </div>
                             <div class="checkbox" style="margin: 10px 2px">
-                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Чт</label>
+                                <label><input type="checkbox" ng-model="route.recurrencyWeeklyThr" style="margin-left: 4px;"> Чт</label>
                             </div>
                             <div class="checkbox" style="margin: 10px 2px">
-                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Пт</label>
+                                <label><input type="checkbox" ng-model="route.recurrencyWeeklyFri" style="margin-left: 4px;"> Пт</label>
                             </div>
                             <br/>
                             <div class="checkbox" style="margin: 10px 2px">
-                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Сб</label>
+                                <label style="color: #25A189"><input type="checkbox" ng-model="route.recurrencyWeeklySat" style="margin-left: 4px;"> Сб</label>
                             </div>
                             <div class="checkbox" style="margin: 10px 2px">
-                                <label><input type="checkbox" ng-model="route.recurrency" style="margin-left: 4px;"> Вс</label>
+                                <label style="color: #25A189"><input type="checkbox" ng-model="route.recurrencyWeeklySun" style="margin-left: 4px;"> Вс</label>
                             </div>
                         </div>
                         <b style="margin: 10px 4px;">До

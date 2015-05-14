@@ -18,5 +18,17 @@ namespace Hitcher.Models.Request
     public int TotalDistance { get; set; }
     public int TotalDuration { get; set; }
     public Coord[] Path { get; set; }
+
+    public bool Recurrency { get; set; }
+    public int RecurrencyMode { get; set; }
+    public int RecurrencyInterval { get; set; }
+
+    public bool RecurrencyWeeklyMon { get; set; }
+    public bool RecurrencyWeeklyTue { get; set; }
+    public bool RecurrencyWeeklyWed { get; set; }
+    public bool RecurrencyWeeklyThr { get; set; }
+    public bool RecurrencyWeeklyFri { get; set; }
+    public bool RecurrencyWeeklySat { get; set; }
+    public bool RecurrencyWeeklySun { get; set; }
   }
 }
