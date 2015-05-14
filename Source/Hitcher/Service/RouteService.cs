@@ -6,6 +6,8 @@ using Hitcher.DataAccess;
 using Hitcher.DataAccess.Entities;
 using Hitcher.DataAccess.Extensions;
 using Hitcher.Models.Request;
+using Hitcher.Service.Models;
+using Hitcher.Service.Recurrency;
 using Hitcher.Utils;
 
 namespace Hitcher.Service
@@ -21,6 +23,15 @@ namespace Hitcher.Service
 
     public int Save(PostRouteRequest route)
     {
+      RouteRecurrency routeRecurrency = null;
+      if (route.Recurrency)
+      {
+        routeRecurrency = new RouteRecurrency();
+        routeRecurrency.Mode = route.RecurrencyMode;
+        routeRecurrency.Interval = route.RecurrencyInterval;
+        routeRecurrency.Weekdays = RecurrencyHelper.GetWeekdays(route.RecurrencyWeeklyMon, route.RecurrencyWeeklyTue, route.RecurrencyWeeklyWed, route.RecurrencyWeeklyThr, route.RecurrencyWeeklyFri, route.RecurrencyWeeklySat, route.RecurrencyWeeklySun);
+      }
+
       Route newRoute = new Route
       {
         Id = route.Id,
@@ -34,7 +45,7 @@ namespace Hitcher.Service
         Type = route.Type,
         StartTime = route.StartTime.ToLocalTime(),
         Coords = new List<Coord>(),
-        Recurrency = new RouteRecurrency { Interval = 4, Mode = 5 }
+        Recurrency = routeRecurrency
       };
 
       //int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);

@@ -5,6 +5,9 @@ using Hitcher.DataAccess.Entities.Base;
 
 namespace Hitcher.DataAccess.Entities
 {
+  // It's Value object with no identity. 
+  // Since route recurrency doesn't have any sense without route itself, it's essentially one-to-zero relation between route and route recurrency
+  // Some stubs are temporary used to access route recurrency since normal repo is bound to identities (those entities which have "Id").
   public class RouteRecurrency
   {
     public int Mode { get; set; }
