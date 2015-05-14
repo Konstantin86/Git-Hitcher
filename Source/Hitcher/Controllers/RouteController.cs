@@ -8,6 +8,7 @@ using System.Web.Http;
 using Hitcher.Controllers.Base;
 using Hitcher.DataAccess;
 using Hitcher.DataAccess.Entities;
+using Hitcher.Models.Factory;
 using Hitcher.Models.Request;
 using Hitcher.Models.Response;
 using Hitcher.Service;
@@ -21,12 +22,15 @@ namespace Hitcher.Controllers
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRouteService _routeService;
 
+    private readonly RouteFactory _routeFactory;
+
     private const int DefaultResultsCount = 2;
 
-    public RouteController(IUnitOfWork unitOfWork, IRouteService routeService)
+    public RouteController(IUnitOfWork unitOfWork, IRouteService routeService, RouteFactory routeFactory)
     {
       _unitOfWork = unitOfWork;
       _routeService = routeService;
+      _routeFactory = routeFactory;
     }
 
     [Route("")]
@@ -77,6 +81,7 @@ namespace Hitcher.Controllers
       List<Route> allRoutes;
       AppUser user = await AppUserManager.FindByNameAsync(User.Identity.Name);
 
+      // "My Routes" command is called
       if (request != null && request.CurrentUserOnly)
       {
         if (user == null)
@@ -86,6 +91,7 @@ namespace Hitcher.Controllers
 
         allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.UserId == user.Id).Include(m => m.Coords).ToList();
       }
+      // "Search" command is called
       else if (request != null && request.StartLat.HasValue && request.StartLng.HasValue && request.EndLat.HasValue && request.EndLng.HasValue)
       {
         int resultsCount = request.Take ?? DefaultResultsCount;
@@ -103,12 +109,13 @@ namespace Hitcher.Controllers
           route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
         }
       }
+      // Usual "GetAll", called when user changes mode to see available routes
       else
       {
         allRoutes = _unitOfWork.RouteRepository.GetAll(m => m.Type == request.Type).Include(m => m.Coords).ToList();
       }
 
-      List<RouteResponse> responseRows = allRoutes.Where(m => m.DueDate >= DateTime.Now).Select(m => new RouteResponse(m)).ToList();
+      List<RouteResponse> responseRows = allRoutes.Where(m => m.DueDate >= DateTime.Now).Select(m => _routeFactory.CreateRouteResponse(m)).ToList();
 
       foreach (var route in responseRows)
       {

@@ -18,6 +18,11 @@ namespace Hitcher.DataAccess.Repositories
       return _context.Set<Route>().Include(m => m.Recurrency).FirstOrDefault(func);
     }
 
+    public override IQueryable<Route> GetAll(Expression<Func<Route, bool>> func)
+    {
+      return _context.Set<Route>().Where(func).Include(m => m.Recurrency);
+    }
+
     protected override void OnUpdate(Route newEntity, AppDbContext context)
     {
       var entity = GetAll(m => m.Id == newEntity.Id).Include(m => m.Coords).Single();

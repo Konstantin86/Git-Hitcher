@@ -21,6 +21,8 @@ namespace Hitcher.Models.Response
       UserId = route.UserId;
     }
 
+    public RouteRecurrencyResponse Recurrency { get; set; }
+
     public DateTime StartTime { get; set; }
 
     public int Id { get; set; }
@@ -50,5 +52,10 @@ namespace Hitcher.Models.Response
     public string PhotoPath { get; set; }
 
     public bool IsCurrentUserRoute { get; set; }
+  }
+
+  public class RouteRecurrencyResponse
+  {
+    public DateTime NextTime { get; set; }
   }
 }

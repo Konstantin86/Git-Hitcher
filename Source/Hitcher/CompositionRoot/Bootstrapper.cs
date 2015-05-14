@@ -4,7 +4,9 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Hitcher.Blob;
 using Hitcher.DataAccess;
+using Hitcher.Models.Factory;
 using Hitcher.Service;
+using Hitcher.Service.Recurrency;
 
 namespace Hitcher.CompositionRoot
 {
@@ -75,6 +77,9 @@ namespace Hitcher.CompositionRoot
     private void RegisterServices(bool webapi)
     {
       RegisterDependency<RouteService, IRouteService>(webapi);
+
+      RegisterDependency<RouteRecurrencyResolver>(webapi);
+      RegisterDependency<RouteFactory>(webapi);
     }
 
     private void RegisterJiraClientComponents(bool webapi)

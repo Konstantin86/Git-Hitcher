@@ -27,7 +27,7 @@ namespace Hitcher.DataAccess.Repositories
       return _context.Set<T>().FirstOrDefault(func);
     }
 
-    public IQueryable<T> GetAll(Expression<Func<T, bool>> func)
+    public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> func)
     {
       return _context.Set<T>().Where(func);
     }
