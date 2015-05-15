@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hitcher.Core.Recurrency.Models;
 
-namespace Hitcher.Service.Models.Extensions
+namespace Hitcher.Core.Recurrency.Extensions
 {
   public static class WeekDaysExtensions
   {
-    private static readonly Dictionary<DayOfWeek, WeekDays> _weekDay = new Dictionary<DayOfWeek, WeekDays>
+    private static readonly Dictionary<DayOfWeek, WeekDays> WeekDay = new Dictionary<DayOfWeek, WeekDays>
                                                                          {
                                                                            { DayOfWeek.Monday, WeekDays.Monday },
                                                                            { DayOfWeek.Tuesday, WeekDays.Tuesday },
@@ -18,7 +19,7 @@ namespace Hitcher.Service.Models.Extensions
 
     public static bool Fits(this WeekDays weekDays, DayOfWeek dayOfWeek)
     {
-      return (weekDays & _weekDay[dayOfWeek]) == _weekDay[dayOfWeek];
+      return (weekDays & WeekDay[dayOfWeek]) == WeekDay[dayOfWeek];
     }
   }
 }

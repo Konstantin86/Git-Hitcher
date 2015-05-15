@@ -6,7 +6,6 @@ using Hitcher.Blob;
 using Hitcher.DataAccess;
 using Hitcher.Models.Factory;
 using Hitcher.Service;
-using Hitcher.Service.Recurrency;
 
 namespace Hitcher.CompositionRoot
 {

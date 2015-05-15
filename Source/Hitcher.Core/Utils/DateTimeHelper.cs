@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hitcher.Utils
+namespace Hitcher.Core.Utils
 {
   public class DateTimeHelper
   {

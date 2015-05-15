@@ -338,16 +338,15 @@
     <Compile Include="Models\Request\QueryRequestBase.cs" />
     <Compile Include="Models\Request\QueryRouteRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\Models\Extensions\WeekDaysExtensions.cs" />
-    <Compile Include="Service\Models\WeekDays.cs" />
-    <Compile Include="Service\Recurrency\RecurrencyHelper.cs" />
-    <Compile Include="Service\Recurrency\RouteRecurrencyResolver.cs" />
     <Compile Include="Service\RouteService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\DateTimeHelper.cs" />
     <Compile Include="Utils\DistanceAlgorithm.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hitcher.Core\Hitcher.Core.csproj">
+      <Project>{65C59CF7-4497-4648-A7E8-9ED0A4CBA3B1}</Project>
+      <Name>Hitcher.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hitcher.DataAccess\Hitcher.DataAccess.csproj">
       <Project>{B31A45F7-F965-4088-8138-64244A6F455C}</Project>
       <Name>Hitcher.DataAccess</Name>

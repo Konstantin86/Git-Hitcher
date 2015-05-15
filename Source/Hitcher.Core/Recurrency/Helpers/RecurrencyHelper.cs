@@ -1,8 +1,7 @@
 ﻿using System;
+using Hitcher.Core.Recurrency.Models;
 
-using Hitcher.Service.Models;
-
-namespace Hitcher.Service.Recurrency
+namespace Hitcher.Core.Recurrency.Helpers
 {
   public class RecurrencyHelper
   {

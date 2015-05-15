@@ -1,6 +1,6 @@
-﻿using Hitcher.DataAccess.Entities;
+﻿using Hitcher.Core.Recurrency.Services;
+using Hitcher.DataAccess.Entities;
 using Hitcher.Models.Response;
-using Hitcher.Service.Recurrency;
 
 namespace Hitcher.Models.Factory
 {

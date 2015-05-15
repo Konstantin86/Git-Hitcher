@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-
+using Hitcher.Core.Recurrency.Extensions;
+using Hitcher.Core.Recurrency.Models;
+using Hitcher.Core.Utils;
 using Hitcher.DataAccess.Entities;
-using Hitcher.Service.Models;
-using Hitcher.Service.Models.Extensions;
-using Hitcher.Utils;
 
-namespace Hitcher.Service.Recurrency
+namespace Hitcher.Core.Recurrency.Services
 {
   public class RouteRecurrencyResolver
   {

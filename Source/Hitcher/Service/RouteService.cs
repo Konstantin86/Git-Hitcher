@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Hitcher.Core.Recurrency.Helpers;
 using Hitcher.DataAccess;
 using Hitcher.DataAccess.Entities;
 using Hitcher.DataAccess.Extensions;
 using Hitcher.Models.Request;
-using Hitcher.Service.Models;
-using Hitcher.Service.Recurrency;
 using Hitcher.Utils;
 
 namespace Hitcher.Service

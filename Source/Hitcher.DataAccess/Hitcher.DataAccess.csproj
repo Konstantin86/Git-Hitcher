@@ -148,17 +148,9 @@
     <Compile Include="Migrations\201505130547291_UpdatedEF.Designer.cs">
       <DependentUpon>201505130547291_UpdatedEF.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201505140755037_Route_Recurrency_added.cs" />
-    <Compile Include="Migrations\201505140755037_Route_Recurrency_added.Designer.cs">
-      <DependentUpon>201505140755037_Route_Recurrency_added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505140758047_Route_Recurrency_modified.cs" />
-    <Compile Include="Migrations\201505140758047_Route_Recurrency_modified.Designer.cs">
-      <DependentUpon>201505140758047_Route_Recurrency_modified.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505141135376_RouteDueDate_added.cs" />
-    <Compile Include="Migrations\201505141135376_RouteDueDate_added.Designer.cs">
-      <DependentUpon>201505141135376_RouteDueDate_added.cs</DependentUpon>
+    <Compile Include="Migrations\201505151931244_RouteRecurrency_Added_Right.cs" />
+    <Compile Include="Migrations\201505151931244_RouteRecurrency_Added_Right.Designer.cs">
+      <DependentUpon>201505151931244_RouteRecurrency_Added_Right.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -209,14 +201,8 @@
     <EmbeddedResource Include="Migrations\201505130547291_UpdatedEF.resx">
       <DependentUpon>201505130547291_UpdatedEF.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505140755037_Route_Recurrency_added.resx">
-      <DependentUpon>201505140755037_Route_Recurrency_added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505140758047_Route_Recurrency_modified.resx">
-      <DependentUpon>201505140758047_Route_Recurrency_modified.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505141135376_RouteDueDate_added.resx">
-      <DependentUpon>201505141135376_RouteDueDate_added.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201505151931244_RouteRecurrency_Added_Right.resx">
+      <DependentUpon>201505151931244_RouteRecurrency_Added_Right.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -7,13 +7,13 @@ namespace Hitcher.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Route_Recurrency_added : IMigrationMetadata
+    public sealed partial class RouteRecurrency_Added_Right : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Route_Recurrency_added));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(RouteRecurrency_Added_Right));
         
         string IMigrationMetadata.Id
         {
-            get { return "201505140755037_Route_Recurrency_added"; }
+            get { return "201505151931244_RouteRecurrency_Added_Right"; }
         }
         
         string IMigrationMetadata.Source

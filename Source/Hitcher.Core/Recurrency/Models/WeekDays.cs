@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hitcher.Service.Models
+namespace Hitcher.Core.Recurrency.Models
 {
   // This is should be convertible to int enum (int value should be stored in db)
   // See also http://stackoverflow.com/questions/1285986/flags-enum-bitwise-operations-vs-string-of-bits
