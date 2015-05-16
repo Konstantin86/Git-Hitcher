@@ -8,8 +8,8 @@ hitcher.viewModels = (function () {
         this.startName = route.startName;
 
         var dt = new Date(Date.parse(route.startTime));
-        this.startTime = new Date(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate(), dt.getUTCHours(), dt.getUTCMinutes(), dt.getUTCSeconds()).toLocaleString('ru-RU');
-        //this.startTime = new Date(Date.parse(route.startTime)).toLocaleString();
+        //this.startTime = new Date(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate(), dt.getUTCHours(), dt.getUTCMinutes(), dt.getUTCSeconds()).toLocaleString('ru-RU');
+        this.startTime = new Date(Date.parse(route.startTime)).toLocaleString();
         this.endName = route.endName;
         this.driver = route.name;
         this.phone = route.phone;
