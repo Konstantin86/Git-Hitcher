@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hitcher.Utils
+namespace Hitcher.Core.Routing
 {
   public class DistanceAlgorithm
   {

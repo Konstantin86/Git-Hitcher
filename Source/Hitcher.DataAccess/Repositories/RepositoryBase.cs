@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using Hitcher.DataAccess.Entities.Base;
@@ -27,14 +26,10 @@ namespace Hitcher.DataAccess.Repositories
       return _context.Set<T>().FirstOrDefault(func);
     }
 
-    public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> func)
+    public virtual IQueryable<T> GetAll(Expression<Func<T, bool>> func = null)
     {
-      return _context.Set<T>().Where(func);
-    }
-
-    public IQueryable<T> GetAll()
-    {
-      return _context.Set<T>();
+      var dbSet = _context.Set<T>();
+      return func == null ? dbSet : dbSet.Where(func);
     }
 
     public int Add(T t, bool saveChanges = true)
@@ -83,9 +78,8 @@ namespace Hitcher.DataAccess.Repositories
       }
     }
 
-    public void Delete(int id, bool saveChanges = true)
+    public virtual void Delete(T entity, bool saveChanges = true)
     {
-      T entity = Get(id);
       _context.Set<T>().Remove(entity);
 
       if (saveChanges)
@@ -94,7 +88,20 @@ namespace Hitcher.DataAccess.Repositories
       }
     }
 
-    public void Delete(IEnumerable<int> ids, bool saveChanges = true)
+    public virtual bool Delete(int id, bool saveChanges = true)
+    {
+      T entity = Get(id);
+      _context.Set<T>().Remove(entity);
+
+      if (saveChanges)
+      {
+        _context.SaveChanges();
+      }
+
+      return true;
+    }
+
+    public virtual void Delete(IEnumerable<int> ids, bool saveChanges = true)
     {
       foreach (int id in ids)
       {
@@ -102,7 +109,7 @@ namespace Hitcher.DataAccess.Repositories
       }
     }
 
-    public void Delete(Expression<Func<T, bool>> filter, bool saveChanges = true)
+    public virtual void Delete(Expression<Func<T, bool>> filter, bool saveChanges = true)
     {
       foreach (T entity in GetAll(filter).ToList())
       {

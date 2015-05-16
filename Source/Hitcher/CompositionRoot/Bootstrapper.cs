@@ -3,9 +3,9 @@ using System.Reflection;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Hitcher.Blob;
+using Hitcher.Core.Services;
 using Hitcher.DataAccess;
 using Hitcher.Models.Factory;
-using Hitcher.Service;
 
 namespace Hitcher.CompositionRoot
 {

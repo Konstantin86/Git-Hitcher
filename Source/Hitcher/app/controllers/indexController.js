@@ -7,23 +7,24 @@
 "use strict";
 
 app.controller("indexController", function ($scope, $location, $aside, authService, userService, routeService, mapService, statusService) {
-    var searchAside;
+    $scope.searchAside = null;
 
     var showAside = function () {
-        if (!searchAside || !searchAside.$isShown) {
-            searchAside = $aside({ scope: $scope, backdrop: false, dismissable: false, placement: 'right', template: 'app/views/modal/search.html' });
-            searchAside.$promise.then(function () { searchAside.show(); });
+        if (!$scope.searchAside) {
+            $scope.searchAside = $aside({ scope: $scope, backdrop: false, dismissable: false, placement: 'right', template: 'app/views/modal/search.html' });
+            $scope.searchAside.$promise.then(function () { $scope.searchAside.show(); });
         }
     };
 
     $scope.user = userService.user;
 
     var hideSearch = function () {
-        if (searchAside) {
+        if ($scope.searchAside) {
             initAside();
             mapService.removeSearchMarkers();
             mapService.clearTempDirection();
-            searchAside.hide();
+            $scope.searchAside.hide();
+            $scope.searchAside = null;
             mapService.showRoutes({ type: 1 - $scope.user.type }, true, true);
         }
     };
@@ -86,7 +87,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     mapService.ready.then(function (gmaps) {
         $scope.$watch('user.type', function (value) {
-            if (searchAside && searchAside.$isShown) {
+            if ($scope.searchAside) {
                 $scope.hideSearch();
             }
 
@@ -110,6 +111,28 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
         $scope.$watch('searchModel.endLat', function (value) {
             if ($('#menu_search_to').length) $('#menu_search_to')[0].style.display = ($scope.searchModel.startLat && $scope.searchModel.endLat) || (!$scope.searchModel.startLat) ? 'none' : 'block';
+        });
+
+        mapService.onSearchFromMarkerSelected(function (address, coords) {
+            $scope.searchModel.from = address;
+            $scope.searchModel.startLat = coords.lat();
+            $scope.searchModel.startLng = coords.lng();
+            $scope.searchModel.startLatLng = coords;
+            showAside();
+        });
+
+        mapService.onSearchToMarkerSelected(function (address, coords) {
+            $scope.searchModel.to = address;
+            $scope.searchModel.endLat = coords.lat();
+            $scope.searchModel.endLng = coords.lng();
+            $scope.searchModel.endLatLng = coords;
+            showAside();
+        });
+
+        mapService.onResetSelected(function () {
+            if ($scope.searchAside) {
+                $scope.hideSearch();
+            }
         });
     });
 
@@ -136,28 +159,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             return res.data.results;
         });
     };
-
-    mapService.onSearchFromMarkerSelected(function (address, coords) {
-        $scope.searchModel.from = address;
-        $scope.searchModel.startLat = coords.lat();
-        $scope.searchModel.startLng = coords.lng();
-        $scope.searchModel.startLatLng = coords;
-        showAside();
-    });
-
-    mapService.onSearchToMarkerSelected(function (address, coords) {
-        $scope.searchModel.to = address;
-        $scope.searchModel.endLat = coords.lat();
-        $scope.searchModel.endLng = coords.lng();
-        $scope.searchModel.endLatLng = coords;
-        showAside();
-    });
-
-    mapService.onResetSelected(function () {
-        if (searchAside && searchAside.$isShown) {
-            $scope.hideSearch();
-        }
-    });
 
     $scope.search = function () {
         $scope.searchModel.type = 1 - userService.user.type;
@@ -260,7 +261,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
     $scope.hideSearch = hideSearch;
 
     $scope.onSearchClick = function () {
-        if (!searchAside || !searchAside.$isShown) {
+        if (!$scope.searchAside) {
             showAside();
         }
         else {

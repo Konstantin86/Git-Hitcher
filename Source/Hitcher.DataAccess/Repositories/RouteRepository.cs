@@ -18,9 +18,9 @@ namespace Hitcher.DataAccess.Repositories
       return _context.Set<Route>().Include(m => m.Recurrency).FirstOrDefault(func);
     }
 
-    public override IQueryable<Route> GetAll(Expression<Func<Route, bool>> func)
+    public override IQueryable<Route> GetAll(Expression<Func<Route, bool>> func = null)
     {
-      return _context.Set<Route>().Where(func).Include(m => m.Recurrency);
+      return base.GetAll(func).Include(m => m.Coords).Include(m => m.Recurrency);
     }
 
     protected override void OnUpdate(Route newEntity, AppDbContext context)
@@ -38,6 +38,24 @@ namespace Hitcher.DataAccess.Repositories
       entity.EndLatLng = newEntity.EndLatLng;
       entity.Type = newEntity.Type;
       entity.Coords = newEntity.Coords;
+    }
+
+    public override bool Delete(int id, bool saveChanges = true)
+    {
+      var route = Get(id);
+
+      if (route == null)
+      {
+        return false;
+      }
+
+      if (route.Recurrency != null)
+      {
+        var recurrency = _context.RouteRecurrencies.SingleOrDefault(r => r.RouteId == route.Id);
+        _context.RouteRecurrencies.Remove(recurrency);
+      }
+
+      return base.Delete(id, saveChanges);
     }
   }
 }

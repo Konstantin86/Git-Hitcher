@@ -1,9 +1,9 @@
 ﻿using System;
 using Hitcher.DataAccess.Entities;
 
-namespace Hitcher.Models.Request
+namespace Hitcher.Core.Models
 {
-  public class PostRouteRequest
+  public class SaveRouteRequest
   {
     public int Id { get; set; }
     public string UserId { get; set; }

@@ -13,42 +13,6 @@ app.service("routeService", function ($resource, $q, $modal, appConst) {
         mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
     });
 
-    var get = function () {
-
-        return [
-            {
-                start: {
-                    latlng: "49.941001,36.301818000000026",
-                    name: "Харьков, Новгородская 3б"
-                },
-                end: {
-                    latlng: "50.0210186,36.2179946",
-                    name: "Харьков, героев сталинграда 136б"
-                }
-            },
-            {
-                start: {
-                    latlng: "49.922001,36.321818000000026",
-                    name: "Харьков, Новгородская 3б"
-                },
-                end: {
-                    latlng: "50.0410186,36.2079946",
-                    name: "Харьков, героев сталинграда 136б"
-                }
-            },
-            {
-                start: {
-                    latlng: "49.522001,36.021818000000026",
-                    name: "Харьков, Новгородская 3б"
-                },
-                end: {
-                    latlng: "51.0410186,35.9079946",
-                    name: "Харьков, героев сталинграда 136б"
-                }
-            }
-        ];
-    };
-
     var getRouteViewModel = function (route, showUserPhoto) {
 
         var routeViewModel = new hitcher.viewModels.routeViewModel(route);
@@ -84,6 +48,5 @@ app.service("routeService", function ($resource, $q, $modal, appConst) {
     };
 
     this.getRouteViewModel = getRouteViewModel;
-    this.get = get;
     this.resource = resource;
 });

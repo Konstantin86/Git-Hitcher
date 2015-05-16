@@ -7,7 +7,7 @@ using Hitcher.DataAccess.Entities;
 
 namespace Hitcher.Core.Recurrency.Services
 {
-  public class RouteRecurrencyResolver : IRouteRecurrencyResolver
+  public class RouteRecurrencyResolver
   {
     private readonly Route _route;
 

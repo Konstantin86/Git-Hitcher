@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Hitcher.Core.Models;
 using Hitcher.Core.Recurrency.Helpers;
+using Hitcher.Core.Routing;
 using Hitcher.DataAccess;
 using Hitcher.DataAccess.Entities;
 using Hitcher.DataAccess.Extensions;
-using Hitcher.Models.Request;
-using Hitcher.Utils;
 
-namespace Hitcher.Service
+namespace Hitcher.Core.Services
 {
   public class RouteService : IRouteService
   {
@@ -19,7 +19,7 @@ namespace Hitcher.Service
       _unitOfWork = unitOfWork;
     }
 
-    public int Save(PostRouteRequest route)
+    public int Save(SaveRouteRequest route)
     {
       RouteRecurrency routeRecurrency = null;
       if (route.Recurrency)
@@ -43,8 +43,6 @@ namespace Hitcher.Service
         Type = route.Type,
         StartTime = route.StartTime,
         DueDate = route.DueDate,
-        //StartTime = route.StartTime.ToLocalTime(),    // TODO Probably wrong way of doing so on the server, we need to bind to local time of individual client and do nothing with it on server side. 
-        //DueDate = route.DueDate.ToLocalTime(),
         Coords = new List<Coord>(),
         Recurrency = routeRecurrency
       };
@@ -53,8 +51,6 @@ namespace Hitcher.Service
       {
         newRoute.DueDate = newRoute.StartTime;
       }
-
-      //int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);
 
       for (int i = 0; i < route.Path.Length; i++)
       {
@@ -67,15 +63,31 @@ namespace Hitcher.Service
       return _unitOfWork.RouteRepository.Update(newRoute);
     }
 
+    public IEnumerable<Route> GetAll(bool upToDate = true)
+    {
+      var allRoutes = _unitOfWork.RouteRepository.GetAll();
+
+      foreach (var route in allRoutes)
+      {
+        route.Coords = route.Coords.OrderBy(m => m.Id).ToList();
+      }
+
+      DateTime utcNow = DateTime.Now.ToUniversalTime();
+
+      return upToDate ? allRoutes.Where(m => m.DueDate >= utcNow) : allRoutes;
+    }
+
     public IEnumerable<Route> Get(float startLat, float startLng, float endLat, float endLng, int resultsCount, int type)
     {
-      var routes = _unitOfWork.RouteRepository.GetAll(m => m.Type == type).Include(m => m.Coords).ToList();
-
+      var routes = GetAll().Where(m => m.Type == type).ToList();
       var distances = routes.ToDictionary(route => route.Id, route => RouteDistanceSelector(startLat, startLng, endLat, endLng, route));
+      var topDistance = distances.Where(m => m.Value > 0).OrderBy(m => m.Value).Select(m => m.Key).Take(resultsCount);
+      return routes.Where(r => topDistance.Contains(r.Id)).ToList();
+    }
 
-      var top2Dist = distances.Where(m => m.Value > 0).OrderBy(m => m.Value).Select(m => m.Key).Take(resultsCount);
-
-      return routes.Where(r => top2Dist.Contains(r.Id));
+    public bool Delete(int id)
+    {
+      return _unitOfWork.RouteRepository.Delete(id);
     }
 
     private static double RouteDistanceSelector(float startLat, float startLng, float endLat, float endLng, Route route)
