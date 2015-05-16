@@ -7,7 +7,7 @@ using Hitcher.DataAccess.Entities;
 
 namespace Hitcher.Core.Recurrency.Services
 {
-  public class RouteRecurrencyResolver
+  public class RouteRecurrencyResolver : IRouteRecurrencyResolver
   {
     private readonly Route _route;
 
@@ -16,7 +16,7 @@ namespace Hitcher.Core.Recurrency.Services
       _route = route;
     }
 
-    public DateTime? GetNextOccurrenceTime()
+    public DateTime? OccurNext()
     {
       DateTime? result;
 
@@ -48,7 +48,7 @@ namespace Hitcher.Core.Recurrency.Services
 
     private bool ResolveMonthly(DateTime dateTime)
     {
-      if ((DateTimeHelper.GetMonthCountBetweenDates(dateTime, _route.StartTime.Date) % _route.Recurrency.Interval != 0) || (dateTime.Date > _route.DueDate.Date))
+      if ((DateTimeHelper.GetMonthCountBetweenDates(dateTime, _route.StartTime.Date) % _route.Recurrency.Interval != 0) || (dateTime.Date > _route.DueDate.Date) || (dateTime.Date < _route.StartTime.Date))
       {
         return false;
       }
@@ -57,34 +57,46 @@ namespace Hitcher.Core.Recurrency.Services
 
       int day = _route.StartTime.Day > daysInMonth ? daysInMonth : _route.StartTime.Day;
 
-      return day == _route.StartTime.Day;
+      return day == dateTime.Day;
     }
 
     private bool ResolveWeekly(DateTime date)
     {
-      return ((WeekDays)_route.Recurrency.Weekdays).Fits(date.DayOfWeek);
+      return ((WeekDays)_route.Recurrency.Weekdays).Fits(date.DayOfWeek) && (date.Date >= _route.StartTime.Date && date <= _route.DueDate);
     }
 
     private bool ResolveDaily(DateTime date)
     {
-      return ((date - _route.StartTime.Date).Days % _route.Recurrency.Interval == 0) && date <= _route.DueDate;
+      return ((date - _route.StartTime.Date).Days % _route.Recurrency.Interval == 0) && (date.Date >= _route.StartTime.Date && date <= _route.DueDate);
     }
 
     // Algorythm is not definitely optimal, though simplicity is cool enough :)
     private DateTime? ResolveNextOccurenceDaily()
     {
-      return DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(this.ResolveDaily);
+      DateTime nextOccurence = DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(ResolveDaily);
+
+      return nextOccurence != DateTime.MinValue
+        ? (DateTime?)new DateTime(nextOccurence.Year, nextOccurence.Month, nextOccurence.Day, _route.StartTime.Hour, _route.StartTime.Minute, _route.StartTime.Second)
+        : null;
     }
 
     private DateTime? ResolveNextOccurenceWeekly()
     {
-      return DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(this.ResolveWeekly);
+      DateTime nextOccurence = DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(ResolveWeekly);
+
+      return nextOccurence != DateTime.MinValue
+        ? (DateTime?)new DateTime(nextOccurence.Year, nextOccurence.Month, nextOccurence.Day, _route.StartTime.Hour, _route.StartTime.Minute, _route.StartTime.Second)
+        : null;
     }
 
     // Algorythm is not definitely optimal, though simplicity is cool enough :)
     private DateTime? ResolveNextOccurenceMonthly()
     {
-      return DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(this.ResolveMonthly);
+      DateTime nextOccurence = DateTimeHelper.DaysBetween(DateTime.Today, _route.DueDate).FirstOrDefault(ResolveMonthly);
+
+      return nextOccurence != DateTime.MinValue
+        ? (DateTime?) new DateTime(nextOccurence.Year, nextOccurence.Month, nextOccurence.Day, _route.StartTime.Hour, _route.StartTime.Minute, _route.StartTime.Second)
+        : null;
     }
   }
 }

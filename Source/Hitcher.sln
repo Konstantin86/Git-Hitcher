@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hitcher.WebJob", "Hitcher.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hitcher.Core", "Hitcher.Core\Hitcher.Core.csproj", "{65C59CF7-4497-4648-A7E8-9ED0A4CBA3B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hitcher.Core.Tests", "Hitcher.Core.Tests\Hitcher.Core.Tests.csproj", "{9FA07026-FD28-4B28-BBF2-05E475201061}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{65C59CF7-4497-4648-A7E8-9ED0A4CBA3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65C59CF7-4497-4648-A7E8-9ED0A4CBA3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65C59CF7-4497-4648-A7E8-9ED0A4CBA3B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FA07026-FD28-4B28-BBF2-05E475201061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FA07026-FD28-4B28-BBF2-05E475201061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FA07026-FD28-4B28-BBF2-05E475201061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FA07026-FD28-4B28-BBF2-05E475201061}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

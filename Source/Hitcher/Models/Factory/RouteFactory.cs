@@ -14,7 +14,7 @@ namespace Hitcher.Models.Factory
       {
         var routeRecurrencyResponse = new RouteRecurrencyResponse();
         var routeRecurrencyResolver = new RouteRecurrencyResolver(route);
-        routeRecurrencyResponse.NextTime = routeRecurrencyResolver.GetNextOccurrenceTime();
+        routeRecurrencyResponse.NextTime = routeRecurrencyResolver.OccurNext();
         routeResponse.Recurrency = routeRecurrencyResponse;
       }
 

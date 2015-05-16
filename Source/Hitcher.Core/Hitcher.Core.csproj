@@ -39,11 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recurrency\Extensions\WeekDaysExtensions.cs" />
     <Compile Include="Recurrency\Helpers\RecurrencyHelper.cs" />
     <Compile Include="Recurrency\Models\WeekDays.cs" />
+    <Compile Include="Recurrency\Services\IRouteRecurrencyResolver.cs" />
     <Compile Include="Recurrency\Services\RouteRecurrencyResolver.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
   </ItemGroup>
