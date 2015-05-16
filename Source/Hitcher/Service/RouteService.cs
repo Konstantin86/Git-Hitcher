@@ -49,7 +49,7 @@ namespace Hitcher.Service
 
       if (!route.Recurrency)
       {
-        newRoute.DueDate = route.StartTime;
+        newRoute.DueDate = newRoute.StartTime;
       }
 
       //int incr = route.Path.Length / ((route.TotalDistance / 1000) * 3);
