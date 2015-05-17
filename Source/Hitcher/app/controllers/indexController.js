@@ -31,8 +31,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     authService.onLogout(hideSearch);
 
-    $scope.displayOptions = mapService.displayOptions;
-
     $scope.$on('$routeChangeSuccess', function () {
         $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
 
@@ -93,9 +91,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
             mapService.showRoutes({ type: 1 - value }, true);
         });
-
-        $scope.$watch('displayOptions.highlightMyRoutes', function () { mapService.updateHighlight(); });
-
     });
 
     mapService.contextMenuReady.then(function (gmaps) {
