@@ -6,10 +6,10 @@ hitcher.viewModels = (function () {
         this.model = route;
         this.canDelete = route.isCurrentUserRoute;
         this.startName = route.startName;
-
-        var dt = new Date(Date.parse(route.startTime));
-        //this.startTime = new Date(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate(), dt.getUTCHours(), dt.getUTCMinutes(), dt.getUTCSeconds()).toLocaleString('ru-RU');
         this.startTime = new Date(Date.parse(route.startTime)).toLocaleString();
+        this.dueDate = new Date(Date.parse(route.dueDate)).toLocaleString();
+        this.recurrencyInfo = route.recurrency ? route.recurrency.recurrencyInfo : null;
+        //this.recurrency = route.recurrency;
         this.endName = route.endName;
         this.driver = route.name;
         this.phone = route.phone;

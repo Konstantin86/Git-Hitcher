@@ -55,7 +55,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     mapService.onMarkerDrag(function (marker, eventName, args) {
         var coords = marker.position;
-        var markerKey = marker.key;
+        var markerKey = marker.key; 
 
         if (markerKey !== "fromSearchMarker" && markerKey !== "toSearchMarker") return;
 

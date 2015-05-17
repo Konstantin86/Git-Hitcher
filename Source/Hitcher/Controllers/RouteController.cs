@@ -46,7 +46,7 @@ namespace Hitcher.Controllers
     public IHttpActionResult GetMostRecent()
     {
       var route = _unitOfWork.RouteRepository.GetAll().OrderByDescending(m => m.Id).FirstOrDefault();
-      return route != null ? Ok(route) : (IHttpActionResult)NotFound();
+      return route != null ? Ok(_routeFactory.CreateRouteResponse(route)) : (IHttpActionResult)NotFound();
     }
 
     [Route("")]

@@ -332,7 +332,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
             name: $scope.userData.userName,
             phone: $scope.userData.phoneNumber,
             startTime: dateTimeNow,
-            recurrency: true,
+            recurrency: false,
             recurrencyMode: 1,
             recurrencyWeeklyMon: true,
             recurrencyWeeklyTue: true,

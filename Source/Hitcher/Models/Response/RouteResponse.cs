@@ -11,6 +11,7 @@ namespace Hitcher.Models.Response
       Id = route.Id;
       StartName = route.StartName;
       StartTime = route.StartTime;
+      DueDate = route.DueDate;
       StartLatLng = route.StartLatLng;
       EndName = route.EndName;
       EndLatLng = route.EndLatLng;
@@ -24,6 +25,8 @@ namespace Hitcher.Models.Response
     public RouteRecurrencyResponse Recurrency { get; set; }
 
     public DateTime StartTime { get; set; }
+
+    public DateTime DueDate { get; set; }
 
     public int Id { get; set; }
 
@@ -57,5 +60,6 @@ namespace Hitcher.Models.Response
   public class RouteRecurrencyResponse
   {
     public DateTime? NextTime { get; set; }
+    public string RecurrencyInfo { get; set; }
   }
 }

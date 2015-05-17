@@ -18,6 +18,17 @@
                 <td class="route-item-label">Отправление</td>
                 <td>{{routeInfo.startTime}}</td>
             </tr>
+        <tr>
+            <td class="route-item-label">Действителен до</td>
+            <td>{{routeInfo.dueDate}}</td>
+        </tr>
+            <tr ng-show="routeInfo.recurrencyInfo">
+                <td>
+                    <span class="glyphicon glyphicon-repeat" style="margin-right: 4px"></span> Повторять
+                </td>
+                <td>{{routeInfo.recurrencyInfo}}</td>
+                <!--<td>пн, вт, ср, чт, пт, сб, вс</td>-->
+            </tr>
             <tr>
                 <td class="route-item-label">Расстояние</td>
                 <td>{{routeInfo.distance}}</td>
