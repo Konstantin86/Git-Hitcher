@@ -22,9 +22,6 @@ namespace Hitcher.WebJob
       {
         routeService.Delete(route.Id);
       }
-
-      //UnitOfWork _unitOfWork = new UnitOfWork(AppDbContext.Create());
-      //_unitOfWork.RouteRepository.Delete(m => m.DueDate <= DateTime.Now);
     }
   }
 }
