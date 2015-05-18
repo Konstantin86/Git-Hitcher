@@ -75,6 +75,9 @@
     <Reference Include="Microsoft.AspNet.Identity.Owin">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -176,6 +179,7 @@
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
     <Content Include="app\controllers\signupController.js" />
+    <Content Include="app\controllers\testChatController.js" />
     <Content Include="app\directives\formatPhone.js" />
     <Content Include="app\directives\numberOnlyInputDirective.js" />
     <Content Include="app\directives\routeDirective.js" />
@@ -185,6 +189,7 @@
     <Content Include="app\models\hitcher-ns.js" />
     <Content Include="app\models\routeViewModel.js" />
     <Content Include="app\services\authService.js" />
+    <Content Include="app\services\chatService.js" />
     <Content Include="app\services\errorService.js" />
     <Content Include="app\services\interceptors\authInterceptorService.js" />
     <Content Include="app\services\mapService.js" />
@@ -206,6 +211,7 @@
     <Content Include="app\views\modal\settings.html" />
     <Content Include="app\views\modal\yes-no-dialog.html" />
     <Content Include="app\views\signup.html" />
+    <Content Include="app\views\testChatTemplate.html" />
     <Content Include="authComplete.html" />
     <Content Include="content\css\bootstrap-theme-custom.css" />
     <Content Include="content\css\bootstrap-theme.css" />
@@ -284,6 +290,8 @@
     <Content Include="scripts\angular-route.min.js" />
     <Content Include="scripts\angular-sanitize.js" />
     <Content Include="scripts\angular-sanitize.min.js" />
+    <Content Include="scripts\angular-signalr-hub.js" />
+    <Content Include="scripts\angular-signalr-hub.min.js" />
     <Content Include="scripts\angular-strap.js" />
     <Content Include="scripts\angular-strap.min.js" />
     <Content Include="scripts\angular-strap.tpl.js" />
@@ -295,8 +303,13 @@
     <Content Include="scripts\bootstrap.min.js" />
     <Content Include="scripts\data-parser.js" />
     <Content Include="scripts\gMapsContextMenu.js" />
+    <None Include="scripts\jquery-1.6.4-vsdoc.js" />
+    <Content Include="scripts\jquery-1.6.4.js" />
+    <Content Include="scripts\jquery-1.6.4.min.js" />
     <Content Include="scripts\jquery.js" />
     <Content Include="scripts\jquery.min.js" />
+    <Content Include="scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="scripts\loading-bar.js" />
     <Content Include="scripts\loading-bar.min.js" />
     <Content Include="scripts\lodash.js" />
@@ -324,6 +337,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Base\ControllerBase.cs" />
     <Compile Include="Controllers\BlobController.cs" />
+    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Models\External\ExternalAccessToken.cs" />
     <Compile Include="Models\External\ExternalLoginData.cs" />
     <Compile Include="Models\External\ExternalLoginViewModel.cs" />

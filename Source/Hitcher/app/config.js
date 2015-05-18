@@ -25,6 +25,11 @@ app.config(function ($routeProvider) {
         templateUrl: "/app/views/account.html"
     });
 
+    $routeProvider.when("/ngchat", {
+        controller: "testChatController",
+        templateUrl: "/app/views/testChatTemplate.html"
+    });
+
     $routeProvider.otherwise({ redirectTo: "/home" });
 });
 

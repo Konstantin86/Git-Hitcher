@@ -46,6 +46,7 @@
                         </li>
                         <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
                         <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
+                        <li> <a href="#/ngchat">Тестовый чат</a></li>
                     </ul>
                 </div>
             </div>
@@ -117,6 +118,7 @@
 <!--<script type="text/javascript" src="scripts/loading-bar.min.js"></script>-->
 <!--Development-->
 <script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/jquery.signalR-2.2.0.js"></script>
 <!--<script type="text/javascript" src="scripts/bootstrap.js"></script>-->
 
 <script type="text/javascript" src="scripts/angular.js"></script>
@@ -125,6 +127,7 @@
 <script type="text/javascript" src="scripts/angular-local-storage.js"></script>
 <script type="text/javascript" src="scripts/angular-sanitize.js"></script>
 <script type="text/javascript" src="scripts/angular-animate.js"></script>
+<script type="text/javascript" src="scripts/angular-signalr-hub.js"></script>
 <script type="text/javascript" src="scripts/ui-bootstrap-tpls-0.12.0.js"></script>
 
 <script type="text/javascript" src="scripts/angular-strap.js"></script>
@@ -141,6 +144,8 @@
 <script type="text/javascript" src="scripts/loading-bar.js"></script>
 
 <script type="text/javascript" src="scripts/ng-infinite-scroll.js"></script>
+
+<script type="text/javascript" src="signalr/hubs"></script>
 
 <!--APPLICATION-->
 <!--Utils-->
@@ -175,6 +180,7 @@
 <script type="text/javascript" src="app/services/userService.js"></script>
 <script type="text/javascript" src="app/services/mapService.js"></script>
 <script type="text/javascript" src="app/services/routeService.js"></script>
+<script type="text/javascript" src="app/services/chatService.js"></script>
 <!--Filters-->
 <!--Directives-->
 <script type="text/javascript" src="app/directives/routeDirective.js"></script>
@@ -188,3 +194,4 @@
 <script type="text/javascript" src="app/controllers/signupController.js"></script>
 <script type="text/javascript" src="app/controllers/accountController.js"></script>
 <script type="text/javascript" src="app/controllers/controlCtrl.js"></script>
+<script type="text/javascript" src="app/controllers/testChatController.js"></script>
