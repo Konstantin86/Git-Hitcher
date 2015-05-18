@@ -16,7 +16,7 @@ namespace Hitcher.DataAccess.Repositories
       _context = context;
     }
 
-    public T Get(int id)
+    public virtual T Get(int id)
     {
       return _context.Set<T>().FirstOrDefault(e => e.Id == id);
     }

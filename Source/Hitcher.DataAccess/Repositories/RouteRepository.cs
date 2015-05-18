@@ -13,6 +13,11 @@ namespace Hitcher.DataAccess.Repositories
     {
     }
 
+    public override Route Get(int id)
+    {
+      return _context.Set<Route>().Include(r => r.Recurrency).FirstOrDefault(e => e.Id == id);
+    }
+    
     public override Route Get(Expression<Func<Route, bool>> func)
     {
       return _context.Set<Route>().Include(m => m.Recurrency).FirstOrDefault(func);

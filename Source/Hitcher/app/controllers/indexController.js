@@ -93,6 +93,10 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         });
     });
 
+    mapService.onRouteRemoved(function(id) {
+        onRouteRemove(id);
+    });
+
     mapService.contextMenuReady.then(function (gmaps) {
         $scope.$watch('searchModel.startLat', function (value) {
             if ($('#menu_search_from').length) $('#menu_search_from')[0].style.display = value ? 'none' : 'block';
@@ -203,9 +207,8 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                         return function () {
                             routeViewModel.remove().then(function (id) {
 
-                                $scope.searchModel.routes = $scope.searchModel.routes.filter(function (item) {
-                                    return item.model.id !== id;
-                                });
+                                onRouteRemove(id);
+                                //$scope.searchModel.routes = $scope.searchModel.routes.filter(function (item) { return item.model.id !== id; });
 
                                 mapService.removeRoute(id);
                             });
@@ -254,6 +257,12 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
     });
 
     $scope.hideSearch = hideSearch;
+
+    function onRouteRemove(routeId) {
+        if ($scope.searchModel.routes && $scope.searchModel.routes.length) {
+            $scope.searchModel.routes = $scope.searchModel.routes.filter(function (item) { return item.model.id !== routeId; });
+        }
+    };
 
     $scope.onSearchClick = function () {
         if (!$scope.searchAside) {

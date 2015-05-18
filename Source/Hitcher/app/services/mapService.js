@@ -36,7 +36,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
 
     var onMapMarkersChangedCallback, onFromMarkerSelectedCallback, onToMarkerSelectedCallback;
 
-    var onSearchFromMarkerSelectedCallback, onSearchToMarkerSelectedCallback;
+    var onSearchFromMarkerSelectedCallback, onSearchToMarkerSelectedCallback, onRouteRemovedCallback;
 
     var onResetSelectedCallbacks = [];
     var onAddRouteCallbacks = [];
@@ -315,6 +315,13 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         removeMarkersById(id);
     };
 
+    var closeInfoWindow = function() {
+        if (infoWindow && infoWindow.isOpen()) {
+            infoWindow.close();
+            infoWindow = null;
+        }
+    };
+
     var setRoute = function (routeInfo, temp, center) {
         var polyline = new gmaps.Polyline({
             path: routeInfo.coords.map(function (r) { return new gmaps.LatLng(r.lat, r.lng); }),
@@ -349,6 +356,12 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
                 return function () {
                     routeViewModel.remove().then(function (id) {
                         removeRoute(id);
+
+                        if (onRouteRemovedCallback && typeof (onRouteRemovedCallback) == "function") {
+                            onRouteRemovedCallback(id);
+                        }
+
+                        closeInfoWindow();
                     });
                 }
             }($rootScope.highlightedRouteInfo);
@@ -357,10 +370,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
             
             var compiled = $compile(content)($rootScope);
 
-            if (infoWindow && infoWindow.isOpen()) {
-                infoWindow.close();
-                infoWindow = null;
-            }
+            closeInfoWindow();
 
             if (!infoWindowCreating) {
                 infoWindowDelayTimer = $timeout(function () {
@@ -426,6 +436,8 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     var onToMarkerSelected = function (callback) { onToMarkerSelectedCallback = callback; };
 
     var onSearchFromMarkerSelected = function (callback) { onSearchFromMarkerSelectedCallback = callback; };
+
+    var onRouteRemoved = function (callback) { onRouteRemovedCallback = callback; };
 
     var onSearchToMarkerSelected = function (callback) { onSearchToMarkerSelectedCallback = callback; };
 
@@ -600,6 +612,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     this.onToMarkerSelected = onToMarkerSelected;
     this.onSearchFromMarkerSelected = onSearchFromMarkerSelected;
     this.onSearchToMarkerSelected = onSearchToMarkerSelected;
+    this.onRouteRemoved = onRouteRemoved;
     this.onResetSelected = onResetSelected;
     this.onMarkerDrag = onMarkerDrag;
     this.onRouteChanged = onRouteChanged;
