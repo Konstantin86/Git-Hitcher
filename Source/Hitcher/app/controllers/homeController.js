@@ -7,7 +7,7 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService) {
+app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $modal, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService) {
     var driveAside;
     var routeCreating = false;
 
