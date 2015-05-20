@@ -18,7 +18,7 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     $scope.userData = authService.userData;
 
     $scope.chatOptions = chatService.options;
-    $scope.chatMessage = {};
+    $scope.chatMessage = "";
     $scope.chatMessages = [];
 
     var updateMenuCommandsAvailability = function (onMapVisChange) {
