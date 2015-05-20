@@ -13,94 +13,114 @@
                     </div>
                 </div>
                 <div class="panel-body msg_container_base">
+                    <div data-ng-repeat="msg in messages">
+                        <div class="row msg_container" ng-class="{base_sent: msg.sent, base_receive: !msg.sent}">
+                            <div class="col-md-2 col-xs-2 avatar" ng-show="!msg.sent">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class="img-responsive">
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <div class="messages" ng-class="{msg_sent: msg.sent, msg_receive: !msg.sent}">
+                                    <p>
+                                        {{msg.text}}
+                                    </p>
+                                    <time datetime="2009-11-13T20:00">{{msg.userName}} • {{msg.timeLeft}}</time>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-xs-2 avatar" ng-show="msg.sent">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class="img-responsive">
+                            </div>
+                        </div>
+                    </div>
+
+
                     <!--<div class="row msg_container base_sent">
-                        <div class="col-md-10 col-xs-10">
-                            <div class="messages msg_sent">
-                                <p>
-                                    that mongodb thing looks good, huh?
-                                    tiny master db, and huge document store
-                                </p>
-                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                            <div class="col-md-10 col-xs-10">
+                                <div class="messages msg_sent">
+                                    <p>
+                                        that mongodb thing looks good, huh?
+                                        tiny master db, and huge document store
+                                    </p>
+                                    <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-xs-2 avatar">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
                             </div>
                         </div>
-                        <div class="col-md-2 col-xs-2 avatar">
-                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
-                        </div>
-                    </div>
-                    <div class="row msg_container base_receive">
-                        <div class="col-md-2 col-xs-2 avatar">
-                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
-                        </div>
-                        <div class="col-md-10 col-xs-10">
-                            <div class="messages msg_receive">
-                                <p>
-                                    that mongodb thing looks good, huh?
-                                    tiny master db, and huge document store
-                                </p>
-                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                        <div class="row msg_container base_receive">
+                            <div class="col-md-2 col-xs-2 avatar">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <div class="messages msg_receive">
+                                    <p>
+                                        that mongodb thing looks good, huh?
+                                        tiny master db, and huge document store
+                                    </p>
+                                    <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row msg_container base_receive">
-                        <div class="col-md-2 col-xs-2 avatar">
-                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
-                        </div>
-                        <div class="col-xs-10 col-md-10">
-                            <div class="messages msg_receive">
-                                <p>
-                                    that mongodb thing looks good, huh?
-                                    tiny master db, and huge document store
-                                </p>
-                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                        <div class="row msg_container base_receive">
+                            <div class="col-md-2 col-xs-2 avatar">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                            </div>
+                            <div class="col-xs-10 col-md-10">
+                                <div class="messages msg_receive">
+                                    <p>
+                                        that mongodb thing looks good, huh?
+                                        tiny master db, and huge document store
+                                    </p>
+                                    <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row msg_container base_sent">
-                        <div class="col-xs-10 col-md-10">
-                            <div class="messages msg_sent">
-                                <p>
-                                    that mongodb thing looks good, huh?
-                                    tiny master db, and huge document store
-                                </p>
-                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                        <div class="row msg_container base_sent">
+                            <div class="col-xs-10 col-md-10">
+                                <div class="messages msg_sent">
+                                    <p>
+                                        that mongodb thing looks good, huh?
+                                        tiny master db, and huge document store
+                                    </p>
+                                    <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-xs-2 avatar">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
                             </div>
                         </div>
-                        <div class="col-md-2 col-xs-2 avatar">
-                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
-                        </div>
-                    </div>
-                    <div class="row msg_container base_receive">
-                        <div class="col-md-2 col-xs-2 avatar">
-                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
-                        </div>
-                        <div class="col-xs-10 col-md-10">
-                            <div class="messages msg_receive">
-                                <p>
-                                    that mongodb thing looks good, huh?
-                                    tiny master db, and huge document store
-                                </p>
-                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                        <div class="row msg_container base_receive">
+                            <div class="col-md-2 col-xs-2 avatar">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                            </div>
+                            <div class="col-xs-10 col-md-10">
+                                <div class="messages msg_receive">
+                                    <p>
+                                        that mongodb thing looks good, huh?
+                                        tiny master db, and huge document store
+                                    </p>
+                                    <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row msg_container base_sent">
-                        <div class="col-md-10 col-xs-10 ">
-                            <div class="messages msg_sent">
-                                <p>
-                                    that mongodb thing looks good, huh?
-                                    tiny master db, and huge document store
-                                </p>
-                                <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                        <div class="row msg_container base_sent">
+                            <div class="col-md-10 col-xs-10 ">
+                                <div class="messages msg_sent">
+                                    <p>
+                                        that mongodb thing looks good, huh?
+                                        tiny master db, and huge document store
+                                    </p>
+                                    <time datetime="2009-11-13T20:00">Timothy • 51 min</time>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-2 col-xs-2 avatar">
-                            <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
-                        </div>
-                    </div>-->
+                            <div class="col-md-2 col-xs-2 avatar">
+                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class=" img-responsive ">
+                            </div>
+                        </div>-->
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Введите сообщение..." />
+                        <input id="btn-input" type="text" ng-model="message" class="form-control input-sm chat_input" placeholder="Введите сообщение..." />
                         <span class="input-group-btn">
                             <button class="btn btn-primary btn-sm" id="btn-chat" ng-click="send()">Send</button>
                         </span>

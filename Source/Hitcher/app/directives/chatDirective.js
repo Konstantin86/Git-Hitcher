@@ -4,13 +4,19 @@ app.directive('chatView', function () {
     return {
         restrict: 'E',
         scope: {
-            options: '='
+            options: '=',
+            messages: '=',
+            message: '=',
         },
         templateUrl: "/app/directives/chatView.html",
         link: function (scope, elem, attrs, ctrl, ngModel) {
 
             if (!scope.options) {
                 scope.options = { visible: true };
+            }
+
+            if (!scope.messages) {
+                scope.messages = [];
             }
 
             //scope.$watch('inputValue', function (newValue, oldValue) {
@@ -34,6 +40,12 @@ app.directive('chatView', function () {
             };
 
             scope.send = function () {
+                scope.messages.push({
+                    text: scope.message,
+                    userName: 'testUser',
+                    timeLeft: '52 min',
+                    sent: true
+                });
                 // TODO implement add message logic...
             };
         }
