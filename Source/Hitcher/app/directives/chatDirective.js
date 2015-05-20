@@ -4,14 +4,14 @@ app.directive('chatView', function () {
     return {
         restrict: 'E',
         scope: {
-            options: '=opts'
+            options: '='
         },
         templateUrl: "/app/directives/chatView.html",
         link: function (scope, elem, attrs, ctrl, ngModel) {
 
-            //if (!scope.options) {
-            //    scope.options = { visible: true };
-            //}
+            if (!scope.options) {
+                scope.options = { visible: true };
+            }
 
             //scope.$watch('inputValue', function (newValue, oldValue) {
             //});
@@ -31,9 +31,10 @@ app.directive('chatView', function () {
 
             scope.close = function () {
                 scope.options.visible = false;
+            };
 
-                //$('.icon_close').parent().parent().parent().parent().remove();
-                //$("#chat_window_1").remove();
+            scope.send = function () {
+                // TODO implement add message logic...
             };
         }
     };

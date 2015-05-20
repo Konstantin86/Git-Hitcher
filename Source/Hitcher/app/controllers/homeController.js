@@ -7,7 +7,7 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $modal, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService) {
+app.controller("homeController", function ($scope, $route, $alert, $aside, $http, $modal, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService, chatService) {
     var driveAside;
     var routeCreating = false;
 
@@ -16,6 +16,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     $scope.markerEvents = mapService.markerEvents;
 
     $scope.userData = authService.userData;
+
+    $scope.chatOptions = chatService.options;
 
     var updateMenuCommandsAvailability = function (onMapVisChange) {
         if ($('#menu_go_from').length) {

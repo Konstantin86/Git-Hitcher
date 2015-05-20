@@ -6,7 +6,7 @@
 
 "use strict";
 
-app.controller("indexController", function ($scope, $location, $aside, authService, userService, routeService, mapService, statusService) {
+app.controller("indexController", function ($scope, $location, $aside, authService, userService, routeService, mapService, statusService, chatService) {
 
 
 
@@ -35,14 +35,15 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
 
 
-    $scope.chat = {
-        //visible: true,
-        title: 'test'
-    };
+    //$scope.chatOptions = {
+    //    visible: true,
+    //    title: 'test'
+    //};
 
+    var chatOptions = chatService.options;
 
     $scope.chatToggle = function () {
-        $scope.chat.visible = !$scope.chat.visible;
+        chatOptions.visible = !chatOptions.visible;
     };
 
 

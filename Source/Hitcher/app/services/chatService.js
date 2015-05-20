@@ -1,5 +1,4 @@
-﻿app.factory('chatService',
-    ["$http", "$rootScope", "$location", "Hub", "$timeout",
+﻿app.factory('chatService', ["$http", "$rootScope", "$location", "Hub", "$timeout",
     function ($http, $rootScope, $location, Hub, $timeout) {
         var Chats = this;
 
@@ -37,12 +36,19 @@
         });
 
         Chats.all = [];
+
         Chats.add = function (userName, chatMessage) {
             Chats.all.push(new Chat({ UserName: userName, ChatMessage: chatMessage }));
-        }
+        };
+
         Chats.send = function (userName, chatMessage) {
             hub.send(userName, chatMessage);
-        }
+        };
+
+        Chats.options = {
+            visible: true,
+            title: 'test'
+        };
 
         return Chats;
     }]);
