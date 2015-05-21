@@ -16,7 +16,7 @@
                     <div data-ng-repeat="msg in messages">
                         <div class="row msg_container" ng-class="{base_sent: msg.sent, base_receive: !msg.sent}">
                             <div class="col-md-2 col-xs-2 avatar" ng-show="!msg.sent">
-                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class="img-responsive">
+                                <img src="{{msg.photo}}" class="img-responsive">
                             </div>
                             <div class="col-md-10 col-xs-10">
                                 <div class="messages" ng-class="{msg_sent: msg.sent, msg_receive: !msg.sent}">
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="col-md-2 col-xs-2 avatar" ng-show="msg.sent">
-                                <img src="http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-1.jpg" class="img-responsive">
+                                <img src="{{msg.photo}}" class="img-responsive">
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 ﻿// JQuery usage is a bad style in angularJs app, but currently due to lack of knowledge in how to apply the same anumations with angular, jquery is temporarily used
 
-app.directive('chatView', function () {
+app.directive('chatView', function (appConst, authService) {
     return {
         restrict: 'E',
         scope: {
@@ -39,13 +39,20 @@ app.directive('chatView', function () {
                 scope.options.visible = false;
             };
 
+            // TODO timer that updates times when messages were sent
+            //var timeDiff = new system.time.timeSpan()
+
             scope.send = function () {
+
                 scope.messages.push({
                     text: scope.message,
-                    userName: 'testUser',
-                    timeLeft: '52 min',
+                    userName: authService.userData.userName || 'аноним',
+                    timeLeft: 'только что',
+                    photo: authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png",
                     sent: true
                 });
+
+                scope.message = '';
                 // TODO implement add message logic...
             };
         }

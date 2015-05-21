@@ -35,6 +35,9 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
         localStorageService.remove("authorizationData");
         userData.isAuth = false;
         userData.userName = "";
+        // TODO clear userData
+        userData.photoPath = null;
+        //userData = {};
 
         raiseEvent(onLogoutCallbacks);
     };
