@@ -1,6 +1,6 @@
 ﻿// JQuery usage is a bad style in angularJs app, but currently due to lack of knowledge in how to apply the same anumations with angular, jquery is temporarily used
 
-app.directive('chatView', function (appConst, authService) {
+app.directive('chatView', function (appConst, authService, chatService) {
     return {
         restrict: 'E',
         scope: {
@@ -44,13 +44,15 @@ app.directive('chatView', function (appConst, authService) {
 
             scope.send = function () {
 
-                scope.messages.push({
-                    text: scope.message,
-                    userName: authService.userData.userName || 'аноним',
-                    timeLeft: 'только что',
-                    photo: authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png",
-                    sent: true
-                });
+                //scope.messages.push({
+                //    text: scope.message,
+                //    userName: authService.userData.userName || 'аноним',
+                //    timeLeft: 'только что',
+                //    photo: authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png",
+                //    sent: true
+                //});
+
+                chatService.send(scope.message, authService.userData.userName || 'аноним', authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png");
 
                 scope.message = '';
                 // TODO implement add message logic...

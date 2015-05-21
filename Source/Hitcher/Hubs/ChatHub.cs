@@ -5,7 +5,7 @@ namespace Hitcher.Hubs
 {
   public class ChatHub : Hub
   {
-    public void Send(String name, String message)
+    public void Send(string guid, string name, string message, string photoPath)
     {
       String msg = String.Empty;
       if (message.StartsWith("#debug:"))
@@ -30,7 +30,7 @@ namespace Hitcher.Hubs
       }
 
       //Call the addNewMessageToPage method to update clients.
-      Clients.All.addNewMessageToPage(name, msg);
+      Clients.All.addNewMessageToPage(guid, name, msg, photoPath);
     }
   }
 }

@@ -19,7 +19,8 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
 
     $scope.chatOptions = chatService.options;
     $scope.chatMessage = "";
-    $scope.chatMessages = [];
+    //$scope.chatMessages = [];
+    $scope.chatMessages = chatService.all;
 
     var updateMenuCommandsAvailability = function (onMapVisChange) {
         if ($('#menu_go_from').length) {

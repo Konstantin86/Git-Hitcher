@@ -61,7 +61,8 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
             userData.city = user.city;
             userData.photoPath = appConst.cdnMediaBase + user.photoPath + "?width=" + appConst.userPhotoWidth;
         }, function (response) {
-            userData.isAuth = false;    // Supposely authentication header obtained from browser storage is outdated and we most likely receive an unauthorized error here.
+            //userData.isAuth = false;    // Supposely authentication header obtained from browser storage is outdated and we most likely receive an unauthorized error here.
+            logout();    // Supposely authentication header obtained from browser storage is outdated and we most likely receive an unauthorized error here.
         });
     };
 

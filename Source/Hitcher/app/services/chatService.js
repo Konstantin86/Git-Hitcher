@@ -1,5 +1,8 @@
 ﻿app.factory('chatService', ["$http", "$rootScope", "$location", "Hub", "$timeout",
     function ($http, $rootScope, $location, Hub, $timeout) {
+
+        var clientId = system.guid.newGuid();
+
         var Chats = this;
 
         //Chat ViewModel
@@ -17,8 +20,8 @@
         //Hub setup
         var hub = new Hub("chatHub", {
             listeners: {
-                'addNewMessageToPage': function (userName, chatMessage) {
-                    Chats.add(userName, chatMessage);
+                'addNewMessageToPage': function (guid, userName, msg, photoPath) {
+                    Chats.add(guid, userName, msg, photoPath);
                     $rootScope.$apply();
                 }
             },
@@ -37,12 +40,19 @@
 
         Chats.all = [];
 
-        Chats.add = function (userName, chatMessage) {
-            Chats.all.push(new Chat({ UserName: userName, ChatMessage: chatMessage }));
+        Chats.add = function (guid, userName, msg, photoPath) {
+            //Chats.all.push(new Chat({ UserName: userName, ChatMessage: chatMessage }));
+            Chats.all.push({
+                text: msg,
+                userName: userName,
+                timeLeft: 'только что',
+                photo: photoPath,
+                sent: guid == clientId
+        });
         };
 
-        Chats.send = function (userName, chatMessage) {
-            hub.send(userName, chatMessage);
+        Chats.send = function (msg, userName, photoPath) {
+            hub.send(clientId, userName, msg, photoPath);
         };
 
         Chats.options = {

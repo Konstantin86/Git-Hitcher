@@ -199,6 +199,7 @@
     <Content Include="app\services\statusService.js" />
     <Content Include="app\services\userService.js" />
     <Content Include="app\utils\system\system-format.js" />
+    <Content Include="app\utils\system\system-guid.js" />
     <Content Include="app\utils\system\system-json.js" />
     <Content Include="app\utils\system\system-ns.js" />
     <Content Include="app\utils\system\system-string.js" />
