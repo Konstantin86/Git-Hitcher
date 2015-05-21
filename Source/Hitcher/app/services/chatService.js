@@ -1,9 +1,27 @@
-﻿app.factory('chatService', ["$http", "$rootScope", "$location", "Hub", "$timeout",
-    function ($http, $rootScope, $location, Hub, $timeout) {
+﻿app.factory('chatService', ["$http", "$rootScope", "$location", "Hub", "$interval",
+    function ($http, $rootScope, $location, Hub, $interval) {
 
         var clientId = system.guid.newGuid();
 
         var Chats = this;
+
+        var updateTimer;
+
+        var updateMsgTime = function () {
+            if (Chats.all && Chats.all.length) {
+                Chats.all.forEach(function (msg) {
+                    var ts = new system.time.timeSpan(new Date(), msg.time);
+                    var mins = parseInt(ts.getMinutes());
+                    msg.timeLeft = mins > 0 ? mins + " мин." : "только что";
+                });
+            }
+        }
+
+        var init = function() {
+            updateTimer = $interval(updateMsgTime, 60 * 1000);
+        }
+
+        init();
 
         //Chat ViewModel
         var Chat = function (chat) {
@@ -47,8 +65,9 @@
                 userName: userName,
                 timeLeft: 'только что',
                 photo: photoPath,
+                time: new Date(),
                 sent: guid == clientId
-        });
+            });
         };
 
         Chats.send = function (msg, userName, photoPath) {
@@ -57,8 +76,16 @@
 
         Chats.options = {
             visible: true,
-            title: 'test'
+            title: 'Общий чат'
         };
+
+        Chats.reset = function() {
+            $timeout.cancel(updateTimer);
+            updateTimer = null;
+            //Chats.all = [];
+        }
+
+        Chats.init = init;
 
         return Chats;
     }]);

@@ -19,6 +19,13 @@ app.directive('chatView', function (appConst, authService, chatService) {
                 scope.messages = [];
             }
 
+            scope.$watchCollection(
+                    "messages",
+                    function (newValue, oldValue) {
+                        $('.msg_container_base').scrollTop($('.msg_container_base')[0].scrollHeight);
+                    }
+                );
+
             //scope.$watch('inputValue', function (newValue, oldValue) {
             //});
 
@@ -39,24 +46,27 @@ app.directive('chatView', function (appConst, authService, chatService) {
                 scope.options.visible = false;
             };
 
+            var send = function () {
+
+                var photoPath = authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png";
+                photoPath = photoPath.split("?width")[0] + "?width=" + appConst.chatPhotoWidth;
+                chatService.send(scope.message, authService.userData.userName || 'аноним', photoPath);
+
+                scope.message = "";
+
+                // TODO implement add message logic...
+            };
+
             // TODO timer that updates times when messages were sent
             //var timeDiff = new system.time.timeSpan()
 
-            scope.send = function () {
-
-                //scope.messages.push({
-                //    text: scope.message,
-                //    userName: authService.userData.userName || 'аноним',
-                //    timeLeft: 'только что',
-                //    photo: authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png",
-                //    sent: true
-                //});
-
-                chatService.send(scope.message, authService.userData.userName || 'аноним', authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png");
-
-                scope.message = '';
-                // TODO implement add message logic...
+            scope.keyPress = function (code) {
+                if (code == 13) {
+                    send();
+                }
             };
+
+            scope.send = send;
         }
     };
 });
