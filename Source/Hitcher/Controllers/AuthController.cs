@@ -283,17 +283,28 @@ namespace Hitcher.Controllers
         var existingUserWithSameName = await AppUserManager.FindByNameAsync(userName);
         if (existingUserWithSameName != null)
         {
-          user.UserName += "_1";
+          //user.UserName += "_1";
+
+          do
+          {
+            user.UserName += "_1";
+          } while ((await AppUserManager.FindByNameAsync(user.UserName)) != null);
         }
 
         var existingUserWithSameEmail = await AppUserManager.FindByEmailAsync(user.Email);
         if (existingUserWithSameEmail != null)
         {
-          user.Email += "_1";
+          //user.Email += "_1";
+          do
+          {
+            user.Email += "_1";
+          } while ((await AppUserManager.FindByEmailAsync(user.Email)) != null);
         }
 
-        IdentityResult result = await AppUserManager.CreateAsync(user);
+        
 
+        IdentityResult result = await AppUserManager.CreateAsync(user);
+        //return Ok(string.Join(", ", result.Errors));
         if (!result.Succeeded)
         {
           return GetErrorResult(result);

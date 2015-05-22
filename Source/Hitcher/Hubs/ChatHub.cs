@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 
 namespace Hitcher.Hubs
 {
   public class ChatHub : Hub
   {
+    // signalR doc: http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-server#asyncmethods
+    public async Task SendAsync(string guid, string name, string message, string photoPath)
+    {
+      //todo await database or documentdb non-blocking call...
+      Clients.All.addNewMessageToPage(guid, name, message, photoPath);
+    }
+
     public void Send(string guid, string name, string message, string photoPath)
     {
       String msg = String.Empty;
