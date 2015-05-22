@@ -179,7 +179,6 @@
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
     <Content Include="app\controllers\signupController.js" />
-    <Content Include="app\controllers\testChatController.js" />
     <Content Include="app\directives\chatDirective.js" />
     <Content Include="app\directives\chatView.html" />
     <Content Include="app\directives\formatPhone.js" />
@@ -214,7 +213,6 @@
     <Content Include="app\views\modal\settings.html" />
     <Content Include="app\views\modal\yes-no-dialog.html" />
     <Content Include="app\views\signup.html" />
-    <Content Include="app\views\testChatTemplate.html" />
     <Content Include="authComplete.html" />
     <Content Include="content\css\bootstrap-theme-custom.css" />
     <Content Include="content\css\bootstrap-theme.css" />
@@ -309,6 +307,7 @@
     <None Include="scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="scripts\jquery-1.6.4.js" />
     <Content Include="scripts\jquery-1.6.4.min.js" />
+    <Content Include="scripts\jquery-ui.js" />
     <Content Include="scripts\jquery.js" />
     <Content Include="scripts\jquery.min.js" />
     <Content Include="scripts\jquery.signalR-2.2.0.js" />

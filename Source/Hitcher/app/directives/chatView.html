@@ -1,10 +1,15 @@
-﻿<div class="container" ng-show="options.visible">
+﻿<!--<div id="myDiv" style="background-color: red; width: 500px; height: 400px; z-index: 9999"></div>-->
+
+
+<div class="container" ng-show="options.visible">
     <div class="row chat-window col-xs-5 col-md-3" id="chat_window_1" style="margin-left:10px;">
         <div class="col-xs-12 col-md-12">
-            <div class="panel panel-default">
+            <!--id="myDiv"-->
+            <div class="panel panel-default" id="myDiv">
                 <div class="panel-heading top-bar" style="color: #ecf0f1; background-color: #2c3e50">
                     <div class="col-md-8 col-xs-8">
-                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;{{options.title}}</h3>
+                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span>&nbsp;&nbsp;{{options.title}}
+                        </h3>
                     </div>
                     <div class="col-md-4 col-xs-4" style="text-align: right;">
                         <a href="#"><span id="minim_chat_window" class="glyphicon glyphicon-minus icon_minim" ng-click="minimize()"></span></a>
@@ -33,7 +38,7 @@
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
-                        <input id="btn-input" type="text" ng-model="message" class="form-control input-sm chat_input" placeholder="Введите сообщение..." ng-keyup="keyPress($event.keyCode)" />
+                        <input id="btn-input" type="text" ng-model="message" class="form-control input-sm chat_input" placeholder="Введите сообщение..." ng-keyup="keyPress($event.keyCode)"/>
                         <span class="input-group-btn">
                             <button class="btn btn-primary btn-sm" id="btn-chat" ng-click="send()">Send</button>
                         </span>

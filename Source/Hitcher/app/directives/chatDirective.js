@@ -53,7 +53,7 @@ app.directive('chatView', function (appConst, authService, chatService) {
                 chatService.send(scope.message, authService.userData.userName || 'аноним', photoPath);
 
                 scope.message = "";
-
+                //$('#message').val('').focus();
                 // TODO implement add message logic...
             };
 
@@ -67,6 +67,9 @@ app.directive('chatView', function (appConst, authService, chatService) {
             };
 
             scope.send = send;
+
+            $("#myDiv").draggable();
+            //$("#myDiv")[0].draggable = true;
         }
     };
 });

@@ -46,7 +46,6 @@
                         </li>
                         <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
                         <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
-                        <li> <a href="#/ngchat">Тестовый чат</a></li>
                         <li> <a href="#" ng-click="chatToggle()">Chat box</a></li>
                     </ul>
                 </div>
@@ -61,12 +60,12 @@
         <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
             <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
             </ui-gmap-markers>
-            <!--<ui-gmap-map-control template="app/views/gmaps/gmaps-left-center-control.html" controller="indexController" position="left-center" index="-1"></ui-gmap-map-control>-->
             <ui-gmap-map-control template="app/views/gmaps/gmaps-top-center-control.html" controller="controlCtrl" position="top-center" index="-1"></ui-gmap-map-control>
             <ui-gmap-map-control template="app/views/modal/custom.map.top-right-control.html" controller="controlCtrl" position="top-right" index="-1"></ui-gmap-map-control>
             <ui-gmap-map-control template="app/views/modal/custom.map.bottom-center-control.html" controller="controlCtrl" position="bottom-center" index="-1"></ui-gmap-map-control>
         </ui-gmap-google-map>
 
+        <!--<div id="myDiv" style="background-color: red; width: 500px; height: 400px; z-index: 9999"></div>-->
         <chat-view options="chatOptions" messages="chatMessages" message="chatMessage"></chat-view>
     </div>
 
@@ -121,6 +120,7 @@
 <!--<script type="text/javascript" src="scripts/loading-bar.min.js"></script>-->
 <!--Development-->
 <script type="text/javascript" src="scripts/jquery.js"></script>
+<script type="text/javascript" src="scripts/jquery-ui.js"></script>
 <script type="text/javascript" src="scripts/jquery.signalR-2.2.0.js"></script>
 <!--<script type="text/javascript" src="scripts/bootstrap.js"></script>-->
 
@@ -198,4 +198,3 @@
 <script type="text/javascript" src="app/controllers/signupController.js"></script>
 <script type="text/javascript" src="app/controllers/accountController.js"></script>
 <script type="text/javascript" src="app/controllers/controlCtrl.js"></script>
-<script type="text/javascript" src="app/controllers/testChatController.js"></script>
