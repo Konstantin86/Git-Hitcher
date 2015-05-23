@@ -1,7 +1,12 @@
-﻿app.factory('chatService', ["$http", "$rootScope", "$location", "Hub", "$interval",
-    function ($http, $rootScope, $location, Hub, $interval) {
+﻿app.factory('chatService', ["$http", "$rootScope", "$location", "Hub", "$interval", "localStorageService",
+    function ($http, $rootScope, $location, Hub, $interval, localStorageService) {
 
-        var clientId = system.guid.newGuid();
+        var clientId = localStorageService.get("clientId");
+
+        if (!clientId) {
+            clientId = system.guid.newGuid();
+            localStorageService.set("clientId", clientId);
+        }
 
         var Chats = this;
 
