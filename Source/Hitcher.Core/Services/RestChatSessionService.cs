@@ -15,9 +15,9 @@ namespace Hitcher.Core.Services
 
     public async Task Save(string guid, string name, string message, string photoPath)
     {
-      var allRoutes = _unitOfWork.RouteRepository.GetAll();
-
-      // TODO...
+      //TODO _unitOfWork.ChatMessageRepository.AddAsync();
+      //await Task.Delay(10000); message appears after 10 seconds
+      //Task.Delay(10000); message appears immidiately
     }
   }
 }

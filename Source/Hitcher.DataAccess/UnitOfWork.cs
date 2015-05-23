@@ -24,7 +24,6 @@ namespace Hitcher.DataAccess
     public UnitOfWork(AppDbContext context)
     {
       DbContext = context;
-
       RouteRepository = new RouteRepository(context);
       RouteRecurrencyRepository = new RouteRecurrencyRepository(context);
 
