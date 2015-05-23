@@ -33,6 +33,7 @@ namespace Hitcher
       var config = new HttpConfiguration();
 
       var diContainer = Bootstrapper.Instance.GetContainer(Assembly.GetExecutingAssembly());
+      var diSignalRContainer = BootstrapperSignalR.Instance.GetContainer(Assembly.GetExecutingAssembly());
 
       ConfigureAuth(app);
 
@@ -56,7 +57,7 @@ namespace Hitcher
         map.UseCors(CorsOptions.AllowAll);
         var hubConfiguration = new HubConfiguration
         {
-          Resolver = new AutofacDependencyResolver(diContainer),
+          Resolver = new AutofacDependencyResolver(diSignalRContainer),
           EnableDetailedErrors = true,
           EnableJSONP = true,
           EnableJavaScriptProxies = true

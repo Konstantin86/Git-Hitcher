@@ -1,7 +1,9 @@
-﻿namespace Hitcher.Core.Services
+﻿using System.Threading.Tasks;
+
+namespace Hitcher.Core.Services
 {
   public interface IChatSessionService
   {
-    void Save(string guid, string name, string message, string photoPath);
+    Task Save(string guid, string name, string message, string photoPath);
   }
 }

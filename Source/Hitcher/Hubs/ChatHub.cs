@@ -21,7 +21,7 @@ namespace Hitcher.Hubs
       // TODO: In chat directive initialization (on page load) asyncronously (via ajax request) take N last messages from session emulator (Redis or sql) which were sent not earlier than N minutes ago (in fact N equal to common session expiration time and recommended to be 20 mins)
 
       //RestChatSessionService _chatSessionService = new RestChatSessionService();
-      _chatSessionService.Save(guid, name, message, photoPath);
+      await _chatSessionService.Save(guid, name, message, photoPath);
 
 
       // TODO: Sort messages by time on the client side, set 'send' property according to guid (client should keep it's client guid in the local browser storage for this for specific time (N mins))

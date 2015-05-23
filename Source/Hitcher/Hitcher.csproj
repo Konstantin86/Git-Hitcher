@@ -339,6 +339,7 @@
     <Compile Include="Blob\IBlobStorageRepository.cs" />
     <Compile Include="Blob\IFlowJsRepo.cs" />
     <Compile Include="CompositionRoot\Bootstrapper.cs" />
+    <Compile Include="CompositionRoot\BootstrapperSignalR.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Base\ControllerBase.cs" />
     <Compile Include="Controllers\BlobController.cs" />
