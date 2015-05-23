@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Reflection;
 using System.Web.Http;
+using Autofac.Integration.SignalR;
+using Autofac.Integration.WebApi;
 using Duke.Owin.VkontakteMiddleware;
 using Hitcher.Auth.Providers;
 using Hitcher.CompositionRoot;
@@ -25,6 +27,7 @@ namespace Hitcher
     public static GoogleOAuth2AuthenticationOptions GoogleAuthOptions { get; private set; }
     public static FacebookAuthenticationOptions FacebookAuthOptions { get; private set; }
 
+    //http://docs.autofac.org/en/latest/integration/signalr.html - SignalR with Autofac integration
     public void Configuration(IAppBuilder app)
     {
       var config = new HttpConfiguration();
@@ -35,12 +38,14 @@ namespace Hitcher
 
       ConfigureWebApi(config);
 
-      app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
+      app.UseCors(CorsOptions.AllowAll);
 
       app.UseAutofacMiddleware(diContainer);
       app.UseAutofacWebApi(config);
 
       app.UseWebApi(config);
+
+      //GlobalHost.DependencyResolver = new AutofacDependencyResolver(diContainer);
 
       app.Map("/signalr", map =>
       {
@@ -51,6 +56,7 @@ namespace Hitcher
         map.UseCors(CorsOptions.AllowAll);
         var hubConfiguration = new HubConfiguration
         {
+          Resolver = new AutofacDependencyResolver(diContainer),
           EnableDetailedErrors = true,
           EnableJSONP = true,
           EnableJavaScriptProxies = true

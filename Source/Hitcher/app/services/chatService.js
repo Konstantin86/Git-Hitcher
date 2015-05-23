@@ -43,7 +43,7 @@
                     $rootScope.$apply();
                 }
             },
-            methods: ['send'],
+            methods: ['send', 'sendAsync'],
             errorHandler: function (error) {
                 console.error(error);
             },
@@ -71,7 +71,8 @@
         };
 
         Chats.send = function (msg, userName, photoPath) {
-            hub.send(clientId, userName, msg, photoPath);
+            //hub.send(clientId, userName, msg, photoPath);
+            hub.sendAsync(clientId, userName, msg, photoPath);
         };
 
         Chats.options = {

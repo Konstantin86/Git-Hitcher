@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
+using Autofac.Integration.SignalR;
 using Autofac.Integration.WebApi;
 using Hitcher.Blob;
 using Hitcher.Core.Services;
@@ -60,6 +61,8 @@ namespace Hitcher.CompositionRoot
       {
         _builder.RegisterApiControllers(webApiAssembly);
       }
+
+      _builder.RegisterHubs(webApiAssembly);
     }
 
     private void RegisterManagers(bool webapi)
@@ -76,6 +79,9 @@ namespace Hitcher.CompositionRoot
     private void RegisterServices(bool webapi)
     {
       RegisterDependency<RouteService, IRouteService>(webapi);
+      //RegisterDependency<RestChatSessionService, IChatSessionService>(webapi);
+
+      RegisterInstancePerLifetimeScopeDependency<RestChatSessionService, IChatSessionService>();
 
       //RegisterDependency<RouteRecurrencyResolver>(webapi);
       RegisterDependency<RouteFactory>(webapi);
@@ -96,6 +102,21 @@ namespace Hitcher.CompositionRoot
       //RegisterDependency<ComputationHelper, IComputationHelper>(webapi);
       //RegisterDependency<DataMapper, IDataMapper>(webapi);
       //RegisterDependency<IssuesProvider, IIssuesProvider>(webapi);
+    }
+
+    private void RegisterInstancePerLifetimeScopeDependency<TClass, TAbstraction>(IDictionary<string, object> parameters = null)
+    {
+      var dependency = _builder.RegisterType<TClass>().As<TAbstraction>();
+
+      if (parameters != null)
+      {
+        foreach (var parameter in parameters)
+        {
+          dependency.WithParameter(parameter.Key, parameter.Value);
+        }
+      }
+
+      dependency.InstancePerLifetimeScope();
     }
 
     private void RegisterDependency<TClass, TAbstraction>(bool webapi, IDictionary<string, object> parameters = null)
