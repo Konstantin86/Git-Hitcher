@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Hitcher.DataAccess.Entities.Base;
 
 namespace Hitcher.DataAccess.Repositories
@@ -41,6 +42,20 @@ namespace Hitcher.DataAccess.Repositories
       if (saveChanges)
       {
         _context.SaveChanges();
+      }
+
+      return entity.Id;
+    }
+
+    public async Task<int> AddAsync(T t, bool saveChanges = true)
+    {
+      OnAdd(t, _context);
+
+      var entity = _context.Set<T>().Add(t);
+
+      if (saveChanges)
+      {
+        await _context.SaveChangesAsync();
       }
 
       return entity.Id;

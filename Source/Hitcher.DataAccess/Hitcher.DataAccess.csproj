@@ -90,6 +90,12 @@
     <Compile Include="Auth\AppUserManager.cs" />
     <Compile Include="Auth\AppRoleManager.cs" />
     <Compile Include="Auth\Services\EmailService.cs" />
+    <Compile Include="Entities\ChatMessage.cs" />
+    <Compile Include="Migrations\201505231801546_ChatMessage_Added.cs" />
+    <Compile Include="Migrations\201505231801546_ChatMessage_Added.Designer.cs">
+      <DependentUpon>201505231801546_ChatMessage_Added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\ChatMessageRepository.cs" />
     <Compile Include="Entities\AppUser.cs" />
     <Compile Include="Entities\Base\EntityBase.cs" />
     <Compile Include="Entities\Coord.cs" />
@@ -204,6 +210,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505151931244_RouteRecurrency_Added_Right.resx">
       <DependentUpon>201505151931244_RouteRecurrency_Added_Right.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505231801546_ChatMessage_Added.resx">
+      <DependentUpon>201505231801546_ChatMessage_Added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

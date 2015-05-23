@@ -11,6 +11,8 @@ namespace Hitcher.DataAccess
 
     public DbSet<RouteRecurrency> RouteRecurrencies { get; set; }
 
+    public DbSet<ChatMessage> ChatMessages { get; set; }
+
     public DbSet<Coord> Coords { get; set; }
 
     public AppDbContext()

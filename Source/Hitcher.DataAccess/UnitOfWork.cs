@@ -9,6 +9,7 @@ namespace Hitcher.DataAccess
   {
     RouteRepository RouteRepository { get; }
     RouteRecurrencyRepository RouteRecurrencyRepository { get; }
+    ChatMessageRepository ChatMessageRepository { get; }
 
     //AppDbContext DbContext { get; }
 
@@ -26,14 +27,17 @@ namespace Hitcher.DataAccess
       DbContext = context;
       RouteRepository = new RouteRepository(context);
       RouteRecurrencyRepository = new RouteRecurrencyRepository(context);
+      ChatMessageRepository = new ChatMessageRepository(context);
 
-      _disposableObjects = new List<IDisposable> { context, RouteRepository, RouteRecurrencyRepository };
+      _disposableObjects = new List<IDisposable> { context, RouteRepository, RouteRecurrencyRepository, ChatMessageRepository };
     }
 
 
     public RouteRepository RouteRepository { get; private set; }
 
     public RouteRecurrencyRepository RouteRecurrencyRepository { get; private set; }
+
+    public ChatMessageRepository ChatMessageRepository { get; private set; }
 
     private AppDbContext DbContext { get; set; }
 
