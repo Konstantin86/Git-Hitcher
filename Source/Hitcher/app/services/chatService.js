@@ -1,5 +1,11 @@
-﻿app.factory('chatService', ["$http", "$rootScope", "$location", "Hub", "$interval", "localStorageService",
-    function ($http, $rootScope, $location, Hub, $interval, localStorageService) {
+﻿app.factory('chatService', ["appConst", "$rootScope", "$location", "$resource", "Hub", "$interval", "localStorageService",
+    function (appConst, $rootScope, $location, $resource, Hub, $interval, localStorageService) {
+
+        var resource = $resource(appConst.serviceBase + "/:action", { action: "api/chat" },
+        {
+            // query is pointing out to the temp public chat history
+            //mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
+        });
 
         var clientId = localStorageService.get("clientId");
 
@@ -22,7 +28,42 @@
             }
         }
 
-        var init = function() {
+        var init = function () {
+
+            // todo get temp chat history:
+            resource.query({}, function(response) {
+                if (response && response.length) {
+
+                    // TODO sort by time:
+                    response.sort(function (a, b) {
+                        var timeDiff = function(time) {
+                            var aTimeSpans = new system.time.timeSpan(new Date(), system.time.convertToUTCDate(new Date(time)));
+                            return aTimeSpans.timeDiff;
+                        }
+
+                        return timeDiff(a.time) <= timeDiff(b.time);
+                    });
+
+                    response.forEach(function(chatMsg) {
+
+                        var mins = parseInt(new system.time.timeSpan(new Date(), system.time.convertToUTCDate(new Date(chatMsg.time))).getMinutes());
+
+                        Chats.all.push({
+                            text: chatMsg.message,
+                            userName: chatMsg.userName,
+                            timeLeft: mins > 0 ? mins + " мин." : "только что",
+                            photo: chatMsg.photoPath,
+                            time: system.time.convertToUTCDate(new Date(chatMsg.time)),
+                            sent: chatMsg.clientId == clientId
+                        });
+
+                    });
+
+                    //var ts = new system.time.timeSpan(new Date(), system.time.convertToUTCDate(new Date(response[0].time)));
+
+                }
+            });
+
             updateTimer = $interval(updateMsgTime, 60 * 1000);
         }
 

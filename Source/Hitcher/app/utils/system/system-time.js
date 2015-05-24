@@ -22,7 +22,24 @@ system.time = (function () {
         return this.timeDiff / (1000 * 60 * 60);
     };
 
+    function convertUtcDateToLocalDate(date) {
+        var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+        var offset = date.getTimezoneOffset() / 60;
+        var hours = date.getHours();
+
+        newDate.setHours(hours - offset);
+
+        return newDate;
+    }
+
+    function convertToUTCDate(date) {
+        return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+    }
+
     return {
-        timeSpan: timeSpan
+        timeSpan: timeSpan,
+        convertUTCDateToLocalDate: convertUtcDateToLocalDate,
+        convertToUTCDate: convertToUTCDate
     };
 }());

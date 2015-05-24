@@ -343,6 +343,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\Base\ControllerBase.cs" />
     <Compile Include="Controllers\BlobController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Models\External\ExternalAccessToken.cs" />
     <Compile Include="Models\External\ExternalLoginData.cs" />
