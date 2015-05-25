@@ -22,7 +22,6 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
     $scope.chatMessage = "";
     $scope.chatMessages = chatService.all;
     $scope.chats = chatService.chats;
-    //$scope.selected = chatService.selected;
 
     var updateMenuCommandsAvailability = function (onMapVisChange) {
         if ($('#menu_go_from').length) {

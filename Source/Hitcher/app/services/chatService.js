@@ -6,6 +6,18 @@
             //mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
         });
 
+        var onMessageAddedHandler = [];
+
+        var onMessageAdded = function (callback) { onMessageAddedHandler.push(callback); };
+
+        var raiseEvent = function (callbacks) {
+            if (callbacks.length) {
+                callbacks.forEach(function (callback) {
+                    if (typeof (callback) == "function") { callback(); }
+                });
+            }
+        };
+
         var clientId = localStorageService.get("clientId");
 
         if (!clientId) {
@@ -13,7 +25,7 @@
             localStorageService.set("clientId", clientId);
         }
 
-        var chat = {};
+        var chat = { events: {} };
 
         chat.chats = [{ id: 0, title: "Public", messages: [] }];
         //chat.selected = 1;
@@ -21,8 +33,8 @@
         var updateTimer;
 
         var updateMsgTime = function () {
-            if (chat.chats[chat.selected].messages && chat.chats[chat.selected].messages.length) {
-                chat.chats[chat.selected].messages.forEach(function (msg) {
+            if (chat.chats[chat.options.selected].messages && chat.chats[chat.options.selected].messages.length) {
+                chat.chats[chat.options.selected].messages.forEach(function (msg) {
                     var ts = new system.time.timeSpan(new Date(), msg.time);
                     var mins = parseInt(ts.getMinutes());
                     msg.timeLeft = mins > 0 ? mins + " мин." : "только что";
@@ -60,6 +72,8 @@
                         });
 
                     });
+
+                    raiseEvent(onMessageAddedHandler);
                 }
             });
 
@@ -72,10 +86,14 @@
                 'addNewMessageToPage': function (guid, userName, msg, photoPath) {
                     addPublicMessage(0, guid, userName, msg, photoPath);
                     $rootScope.$apply();
+
+                    raiseEvent(onMessageAddedHandler);
                 },
                 'sendTest': function (msg) {
                     //Chats.add('', '', msg, '');
                     $rootScope.$apply();
+
+                    raiseEvent(onMessageAddedHandler);
                 }
             },
             methods: ['send', 'sendAsync', 'sendAsyncTest'],
@@ -99,6 +117,8 @@
         });
 
         chat.send = function (msg, userName, photoPath) {
+            // todo send public or private msg based on selected chat id
+
             hub.sendAsync(clientId, userName, msg, photoPath);
             //hub.sendAsyncTest("199fdbe5-81fc-41d9-bb2d-b17ece826147", msg);
             //hub.sendAsyncTest(authService.userData.id, msg);
@@ -107,7 +127,7 @@
         chat.options = {
             visible: true,
             title: 'Общий чат',
-            selected: 1
+            selected: 0
         };
 
         chat.init = init;
@@ -131,6 +151,8 @@
                 $rootScope.$apply();
             }
         };
+
+        chat.events.onMessageAdded = onMessageAdded;
 
         function addPublicMessage(chatIndex, guid, userName, msg, photoPath) {
             chat.chats[chatIndex].messages.push({
