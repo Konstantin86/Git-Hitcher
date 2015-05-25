@@ -1,5 +1,10 @@
 ﻿// JQuery usage is a bad style in angularJs app, but currently due to lack of knowledge in how to apply the same anumations with angular, jquery is temporarily used
 
+// TODO 
+// Use bootstrab tabs control to switch between chats (public or private ones)
+// Perform the following logic on switch
+// - load last messages either for public chart of from selected user id
+// - create additional abstraction in the service that will hold array of chats
 app.directive('chatView', function (appConst, authService, chatService) {
     return {
         restrict: 'E',
