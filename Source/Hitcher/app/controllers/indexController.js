@@ -7,45 +7,11 @@
 "use strict";
 
 app.controller("indexController", function ($scope, $location, $aside, authService, userService, routeService, mapService, statusService, chatService) {
-
-
-
-
-
-        //$(document).on('focus', '.panel-footer input.chat_input', function (e) {
-    //    var $this = $(this);
-    //    if ($('#minim_chat_window').hasClass('panel-collapsed')) {
-    //        $this.parents('.panel').find('.panel-body').slideDown();
-    //        $('#minim_chat_window').removeClass('panel-collapsed');
-    //        $('#minim_chat_window').removeClass('glyphicon-plus').addClass('glyphicon-minus');
-    //    }
-    //});
-    //$(document).on('click', '#new_chat', function (e) {
-    //    var size = $(".chat-window:last-child").css("margin-left");
-    //    size_total = parseInt(size) + 400;
-    //    alert(size_total);
-    //    var clone = $("#chat_window_1").clone().appendTo(".container");
-    //    clone.css("margin-left", size_total);
-    //});
-
-    //$('.msg_container_base').scrollTop($('.msg_container_base')[0].scrollHeight);
-
-
-
-
-
-
-    //$scope.chatOptions = {
-    //    visible: true,
-    //    title: 'test'
-    //};
-
     var chatOptions = chatService.options;
 
     $scope.chatToggle = function () {
         chatOptions.visible = !chatOptions.visible;
     };
-
 
     $scope.searchAside = null;
 

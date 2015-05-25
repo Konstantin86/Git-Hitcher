@@ -3,7 +3,6 @@
 
         var resource = $resource(appConst.serviceBase + "/:action", { action: "api/chat" },
         {
-            // query is pointing out to the temp public chat history
             //mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
         });
 
@@ -14,13 +13,16 @@
             localStorageService.set("clientId", clientId);
         }
 
-        var Chats = this;
+        var chat = {};
+
+        chat.chats = [{ id: 0, title: "Public", messages: [] }];
+        //chat.selected = 1;
 
         var updateTimer;
 
         var updateMsgTime = function () {
-            if (Chats.all && Chats.all.length) {
-                Chats.all.forEach(function (msg) {
+            if (chat.chats[chat.selected].messages && chat.chats[chat.selected].messages.length) {
+                chat.chats[chat.selected].messages.forEach(function (msg) {
                     var ts = new system.time.timeSpan(new Date(), msg.time);
                     var mins = parseInt(ts.getMinutes());
                     msg.timeLeft = mins > 0 ? mins + " мин." : "только что";
@@ -48,7 +50,7 @@
 
                         var mins = parseInt(new system.time.timeSpan(new Date(), new Date(chatMsg.time)).getMinutes());
 
-                        Chats.all.push({
+                        chat.chats[0].messages.push({
                             text: chatMsg.message,
                             userName: chatMsg.userName,
                             timeLeft: mins > 0 ? mins + " мин." : "только что",
@@ -58,38 +60,21 @@
                         });
 
                     });
-
-                    //var ts = new system.time.timeSpan(new Date(), system.time.convertToUTCDate(new Date(response[0].time)));
-
                 }
             });
 
             updateTimer = $interval(updateMsgTime, 60 * 1000);
         }
 
-        init();
-
-        //Chat ViewModel
-        var Chat = function (chat) {
-            if (!chat) chat = {};
-
-            var Chat = {
-                UserName: chat.UserName || 'UserX',
-                ChatMessage: chat.ChatMessage || 'MessageY'
-            }
-
-            return Chat;
-        }
-
         //Hub setup
         var hub = new Hub("chatHub", {
             listeners: {
                 'addNewMessageToPage': function (guid, userName, msg, photoPath) {
-                    Chats.add(guid, userName, msg, photoPath);
+                    addPublicMessage(0, guid, userName, msg, photoPath);
                     $rootScope.$apply();
                 },
                 'sendTest': function (msg) {
-                    Chats.add('', '', msg, '');
+                    //Chats.add('', '', msg, '');
                     $rootScope.$apply();
                 }
             },
@@ -113,11 +98,42 @@
             hub.connect();
         });
 
-        Chats.all = [];
+        chat.send = function (msg, userName, photoPath) {
+            hub.sendAsync(clientId, userName, msg, photoPath);
+            //hub.sendAsyncTest("199fdbe5-81fc-41d9-bb2d-b17ece826147", msg);
+            //hub.sendAsyncTest(authService.userData.id, msg);
+        };
 
-        Chats.add = function (guid, userName, msg, photoPath) {
-            //Chats.all.push(new Chat({ UserName: userName, ChatMessage: chatMessage }));
-            Chats.all.push({
+        chat.options = {
+            visible: true,
+            title: 'Общий чат',
+            selected: 1
+        };
+
+        chat.init = init;
+
+        chat.open = function (id, userName) {
+            chat.options.visible = true;
+
+            var chatWithId = chat.chats.filter(function (c) { return c.id === id; });
+
+            if (chatWithId.length) {
+                var index = chat.chats.getIndexByPropertyValue('id', id);
+                chat.options.selected = index;
+                $rootScope.$apply();
+            } else {
+                chat.chats.push({
+                    id: id,
+                    title: userName, messages: []
+                });
+
+                chat.options.selected = chat.chats.length - 1;
+                $rootScope.$apply();
+            }
+        };
+
+        function addPublicMessage(chatIndex, guid, userName, msg, photoPath) {
+            chat.chats[chatIndex].messages.push({
                 text: msg,
                 userName: userName,
                 timeLeft: 'только что',
@@ -127,27 +143,7 @@
             });
         };
 
-        Chats.send = function (msg, userName, photoPath) {
-            //hub.send(clientId, userName, msg, photoPath);
-            //hub.connection.qs = "myInfo=12345";
-            //hub.connection.qs = { "myInfo": "223" };
-            hub.sendAsync(clientId, userName, msg, photoPath);
-            //hub.sendAsyncTest("199fdbe5-81fc-41d9-bb2d-b17ece826147", msg);
-            //hub.sendAsyncTest(authService.userData.id, msg);
-        };
+        init();
 
-        Chats.options = {
-            visible: true,
-            title: 'Общий чат'
-        };
-
-        Chats.reset = function () {
-            $timeout.cancel(updateTimer);
-            updateTimer = null;
-            //Chats.all = [];
-        }
-
-        Chats.init = init;
-
-        return Chats;
+        return chat;
     }]);

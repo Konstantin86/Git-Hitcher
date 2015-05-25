@@ -12,6 +12,7 @@ hitcher.viewModels = (function () {
         //this.recurrency = route.recurrency;
         this.endName = route.endName;
         this.driver = route.name;
+        this.userId = route.userId;
         this.phone = route.phone;
         this.distance = Math.floor(route.totalDistance / 1000) + " км, " + route.totalDistance % 1000 + " м";
         this.duration = route.totalDuration.toString().toHHMMSS();

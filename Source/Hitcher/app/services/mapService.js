@@ -516,7 +516,7 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
         var contextMenu = new googlemaps.ContextMenu(mapControl, menuOptions);
 
         var handleContextMenyRouteClick = function (coords, markerType, callback) {
-            setMarker(coords.k, coords.B, markerType);
+            setMarker(coords.lat(), coords.lng(), markerType);
 
             geocode({ 'latlng': coords.lat() + ',' + coords.lng(), 'language': 'ru' }, false, true).then(function (result) {
                 if (result.data.results && result.data.results.length && typeof (callback) == "function") {

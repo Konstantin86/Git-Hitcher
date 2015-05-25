@@ -2,11 +2,12 @@
 /// <reference path="~/scripts/angular-resource.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
+/// <reference path="~/app/services/chatService.js"/>
 /// <reference path="~/app/models/routeViewModel.js"/>
 
 "use strict";
 
-app.service("routeService", function ($resource, $q, $modal, appConst) {
+app.service("routeService", function ($resource, $q, $modal, chatService, appConst) {
 
     var resource = $resource(appConst.serviceBase + "/:action", { action: "api/route" },
     {
@@ -19,7 +20,13 @@ app.service("routeService", function ($resource, $q, $modal, appConst) {
         routeViewModel.config = {
             showUserPhoto: showUserPhoto
         };
-        routeViewModel.events = {};
+        routeViewModel.events = {
+            onApply: function () {
+                //alert('You have applied ' + routeViewModel.userId);
+
+                chatService.open(routeViewModel.userId, routeViewModel.driver);
+            }
+        };
         routeViewModel.remove = function () {
             var deferred = $q.defer();
 

@@ -5,13 +5,15 @@
 // Perform the following logic on switch
 // - load last messages either for public chart of from selected user id
 // - create additional abstraction in the service that will hold array of chats
-app.directive('chatView', function (appConst, authService, chatService) {
+app.directive("chatView", function (appConst, authService, chatService) {
     return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-            options: '=',
-            messages: '=',
-            message: '=',
+            options: "=",
+            chats: "=",
+            selected: "=",
+            messages: "=",
+            message: "="
         },
         templateUrl: "/app/directives/chatView.html",
         link: function (scope, elem, attrs, ctrl, ngModel) {
@@ -24,15 +26,12 @@ app.directive('chatView', function (appConst, authService, chatService) {
                 scope.messages = [];
             }
 
-            scope.$watchCollection(
-                    "messages",
-                    function (newValue, oldValue) {
-                        $('.msg_container_base').scrollTop($('.msg_container_base')[0].scrollHeight);
-                    }
-                );
-
-            //scope.$watch('inputValue', function (newValue, oldValue) {
-            //});
+            //scope.$watchCollection(
+            //        "messages",
+            //        function (newValue, oldValue) {
+            //            $('.msg_container_base').scrollTop($('.msg_container_base')[0].scrollHeight);
+            //        }
+            //    );
 
             scope.minimize = function () {
                 var $this = $('.panel-heading span.icon_minim');

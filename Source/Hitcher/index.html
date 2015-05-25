@@ -58,15 +58,13 @@
 
     <div id="map_canvas" ng-controller="homeController" ng-show="mapVisible">
         <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
-            <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'">
-            </ui-gmap-markers>
+            <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'"></ui-gmap-markers>
             <ui-gmap-map-control template="app/views/gmaps/gmaps-top-center-control.html" controller="controlCtrl" position="top-center" index="-1"></ui-gmap-map-control>
             <ui-gmap-map-control template="app/views/modal/custom.map.top-right-control.html" controller="controlCtrl" position="top-right" index="-1"></ui-gmap-map-control>
             <ui-gmap-map-control template="app/views/modal/custom.map.bottom-center-control.html" controller="controlCtrl" position="bottom-center" index="-1"></ui-gmap-map-control>
         </ui-gmap-google-map>
 
-        <!--<div id="myDiv" style="background-color: red; width: 500px; height: 400px; z-index: 9999"></div>-->
-        <chat-view options="chatOptions" messages="chatMessages" message="chatMessage"></chat-view>
+        <chat-view options="chatOptions" messages="chatMessages" chats="chats" message="chatMessage" selected="selected"></chat-view>
     </div>
 
     <div ng-view></div>
@@ -158,6 +156,7 @@
 <script type="text/javascript" src="app/utils/system/system-string.js"></script>
 <script type="text/javascript" src="app/utils/system/system-time.js"></script>
 <script type="text/javascript" src="app/utils/system/system-guid.js"></script>
+<script type="text/javascript" src="app/utils/system/system-array.js"></script>
 
 <!--Namespace-->
 <script type="text/javascript" src="app/models/hitcher-ns.js"></script>

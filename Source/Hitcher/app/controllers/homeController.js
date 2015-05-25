@@ -4,6 +4,7 @@
 /// <reference path="~/app/services/statusService.js"/>
 /// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/routeService.js"/>
+/// <reference path="~/app/services/chatService.js"/>
 
 "use strict";
 
@@ -19,8 +20,9 @@ app.controller("homeController", function ($scope, $route, $alert, $aside, $http
 
     $scope.chatOptions = chatService.options;
     $scope.chatMessage = "";
-    //$scope.chatMessages = [];
     $scope.chatMessages = chatService.all;
+    $scope.chats = chatService.chats;
+    //$scope.selected = chatService.selected;
 
     var updateMenuCommandsAvailability = function (onMapVisChange) {
         if ($('#menu_go_from').length) {
