@@ -345,6 +345,7 @@
     <Compile Include="Controllers\BlobController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
+    <Compile Include="Hubs\UserIdProvider\HitcherUserIdProvider.cs" />
     <Compile Include="Models\External\ExternalAccessToken.cs" />
     <Compile Include="Models\External\ExternalLoginData.cs" />
     <Compile Include="Models\External\ExternalLoginViewModel.cs" />

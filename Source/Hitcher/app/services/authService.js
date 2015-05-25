@@ -20,8 +20,10 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     var externalAuthData = { provider: "", userName: "", email: "", externalAccessToken: "", password: "", confirmPassword: "" };
 
     var onLogoutCallbacks = [];
+    var onGetUserDataCallbacks = [];
 
     var onLogout = function (callback) { onLogoutCallbacks.push(callback); };
+    var onGetUserData = function (callback) { onGetUserDataCallbacks.push(callback); };
 
     var raiseEvent = function (callbacks) {
         if (callbacks.length) {
@@ -50,6 +52,7 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
 
     var getUserData = function () {
         resource.get({}, function (user) {
+            userData.id = user.id;
             userData.firstName = user.firstName;
             userData.lastName = user.lastName;
             userData.sex = user.sex;
@@ -60,6 +63,8 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
             userData.isExternal = user.hasExternalLogins;
             userData.city = user.city;
             userData.photoPath = appConst.cdnMediaBase + user.photoPath + "?width=" + appConst.userPhotoWidth;
+
+            raiseEvent(onGetUserDataCallbacks);
         }, function (response) {
             //userData.isAuth = false;    // Supposely authentication header obtained from browser storage is outdated and we most likely receive an unauthorized error here.
             logout();    // Supposely authentication header obtained from browser storage is outdated and we most likely receive an unauthorized error here.
@@ -122,4 +127,5 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     this.obtainAccessToken = obtainAccessToken;
     this.auth = resource;
     this.onLogout = onLogout;
+    this.onGetUserData = onGetUserData;
 });

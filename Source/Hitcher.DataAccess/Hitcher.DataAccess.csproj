@@ -91,9 +91,9 @@
     <Compile Include="Auth\AppRoleManager.cs" />
     <Compile Include="Auth\Services\EmailService.cs" />
     <Compile Include="Entities\ChatMessage.cs" />
-    <Compile Include="Migrations\201505231801546_ChatMessage_Added.cs" />
-    <Compile Include="Migrations\201505231801546_ChatMessage_Added.Designer.cs">
-      <DependentUpon>201505231801546_ChatMessage_Added.cs</DependentUpon>
+    <Compile Include="Migrations\201505250810331_HitcherInitialCreate.cs" />
+    <Compile Include="Migrations\201505250810331_HitcherInitialCreate.Designer.cs">
+      <DependentUpon>201505250810331_HitcherInitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\ChatMessageRepository.cs" />
     <Compile Include="Entities\AppUser.cs" />
@@ -102,62 +102,6 @@
     <Compile Include="Entities\Route.cs" />
     <Compile Include="Entities\RouteRecurrency.cs" />
     <Compile Include="Extensions\RouteExtensions.cs" />
-    <Compile Include="Migrations\201503222032246_InitialCreate.cs" />
-    <Compile Include="Migrations\201503222032246_InitialCreate.Designer.cs">
-      <DependentUpon>201503222032246_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503301205364_Route_Type_Added.cs" />
-    <Compile Include="Migrations\201503301205364_Route_Type_Added.Designer.cs">
-      <DependentUpon>201503301205364_Route_Type_Added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504012145415_Coord_Added.cs" />
-    <Compile Include="Migrations\201504012145415_Coord_Added.Designer.cs">
-      <DependentUpon>201504012145415_Coord_Added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504012213328_Coord_Added_1.cs" />
-    <Compile Include="Migrations\201504012213328_Coord_Added_1.Designer.cs">
-      <DependentUpon>201504012213328_Coord_Added_1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504110807449_NameAndPhone_Added.cs" />
-    <Compile Include="Migrations\201504110807449_NameAndPhone_Added.Designer.cs">
-      <DependentUpon>201504110807449_NameAndPhone_Added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504162217387_Auth_Added.cs" />
-    <Compile Include="Migrations\201504162217387_Auth_Added.Designer.cs">
-      <DependentUpon>201504162217387_Auth_Added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504281957327_LinkedRoutesToUser.cs" />
-    <Compile Include="Migrations\201504281957327_LinkedRoutesToUser.Designer.cs">
-      <DependentUpon>201504281957327_LinkedRoutesToUser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504290606050_ExtendedRoute.cs" />
-    <Compile Include="Migrations\201504290606050_ExtendedRoute.Designer.cs">
-      <DependentUpon>201504290606050_ExtendedRoute.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504300917583_fixedRoutestoUsersRelations.cs" />
-    <Compile Include="Migrations\201504300917583_fixedRoutestoUsersRelations.Designer.cs">
-      <DependentUpon>201504300917583_fixedRoutestoUsersRelations.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505020736337_removed_strong_route_to_user_relation.cs" />
-    <Compile Include="Migrations\201505020736337_removed_strong_route_to_user_relation.Designer.cs">
-      <DependentUpon>201505020736337_removed_strong_route_to_user_relation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505020801201_removed_redundant_route_fields.cs" />
-    <Compile Include="Migrations\201505020801201_removed_redundant_route_fields.Designer.cs">
-      <DependentUpon>201505020801201_removed_redundant_route_fields.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505122019124_added_route_start_time.cs" />
-    <Compile Include="Migrations\201505122019124_added_route_start_time.Designer.cs">
-      <DependentUpon>201505122019124_added_route_start_time.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505130547291_UpdatedEF.cs" />
-    <Compile Include="Migrations\201505130547291_UpdatedEF.Designer.cs">
-      <DependentUpon>201505130547291_UpdatedEF.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505151931244_RouteRecurrency_Added_Right.cs" />
-    <Compile Include="Migrations\201505151931244_RouteRecurrency_Added_Right.Designer.cs">
-      <DependentUpon>201505151931244_RouteRecurrency_Added_Right.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepositoryBase.cs" />
@@ -169,50 +113,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201503222032246_InitialCreate.resx">
-      <DependentUpon>201503222032246_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503301205364_Route_Type_Added.resx">
-      <DependentUpon>201503301205364_Route_Type_Added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504012145415_Coord_Added.resx">
-      <DependentUpon>201504012145415_Coord_Added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504012213328_Coord_Added_1.resx">
-      <DependentUpon>201504012213328_Coord_Added_1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504110807449_NameAndPhone_Added.resx">
-      <DependentUpon>201504110807449_NameAndPhone_Added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504162217387_Auth_Added.resx">
-      <DependentUpon>201504162217387_Auth_Added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504281957327_LinkedRoutesToUser.resx">
-      <DependentUpon>201504281957327_LinkedRoutesToUser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504290606050_ExtendedRoute.resx">
-      <DependentUpon>201504290606050_ExtendedRoute.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504300917583_fixedRoutestoUsersRelations.resx">
-      <DependentUpon>201504300917583_fixedRoutestoUsersRelations.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505020736337_removed_strong_route_to_user_relation.resx">
-      <DependentUpon>201505020736337_removed_strong_route_to_user_relation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505020801201_removed_redundant_route_fields.resx">
-      <DependentUpon>201505020801201_removed_redundant_route_fields.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505122019124_added_route_start_time.resx">
-      <DependentUpon>201505122019124_added_route_start_time.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505130547291_UpdatedEF.resx">
-      <DependentUpon>201505130547291_UpdatedEF.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505151931244_RouteRecurrency_Added_Right.resx">
-      <DependentUpon>201505151931244_RouteRecurrency_Added_Right.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505231801546_ChatMessage_Added.resx">
-      <DependentUpon>201505231801546_ChatMessage_Added.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201505250810331_HitcherInitialCreate.resx">
+      <DependentUpon>201505250810331_HitcherInitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

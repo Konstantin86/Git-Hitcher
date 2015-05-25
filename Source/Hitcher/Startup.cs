@@ -10,6 +10,8 @@ using Hitcher.Auth.Providers;
 using Hitcher.CompositionRoot;
 using Hitcher.DataAccess;
 using Hitcher.DataAccess.Auth;
+using Hitcher.Hubs.UserIdProvider;
+
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
@@ -67,6 +69,8 @@ namespace Hitcher
         // path.
         map.RunSignalR(hubConfiguration);
       });
+
+      GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => new HitcherUserIdProvider());
     }
 
     private void ConfigureAuth(IAppBuilder app)

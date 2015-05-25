@@ -7,13 +7,13 @@ namespace Hitcher.DataAccess.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class removed_redundant_route_fields : IMigrationMetadata
+    public sealed partial class HitcherInitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(removed_redundant_route_fields));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(HitcherInitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201505020801201_removed_redundant_route_fields"; }
+            get { return "201505250810331_HitcherInitialCreate"; }
         }
         
         string IMigrationMetadata.Source

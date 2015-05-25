@@ -3,10 +3,36 @@ namespace Hitcher.DataAccess.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class HitcherInitialCreate : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.ChatMessages",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        ClientId = c.String(),
+                        UserName = c.String(),
+                        Message = c.String(),
+                        PhotoPath = c.String(),
+                        Time = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Coords",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Lat = c.Single(nullable: false),
+                        Lng = c.Single(nullable: false),
+                        RouteId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Routes", t => t.RouteId, cascadeDelete: true)
+                .Index(t => t.RouteId);
+            
             CreateTable(
                 "dbo.AspNetRoles",
                 c => new
@@ -31,6 +57,19 @@ namespace Hitcher.DataAccess.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
+                "dbo.RouteRecurrencies",
+                c => new
+                    {
+                        RouteId = c.Int(nullable: false),
+                        Mode = c.Int(nullable: false),
+                        Interval = c.Int(nullable: false),
+                        Weekdays = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.RouteId)
+                .ForeignKey("dbo.Routes", t => t.RouteId)
+                .Index(t => t.RouteId);
+            
+            CreateTable(
                 "dbo.Routes",
                 c => new
                     {
@@ -39,6 +78,12 @@ namespace Hitcher.DataAccess.Migrations
                         StartLatLng = c.String(),
                         EndName = c.String(),
                         EndLatLng = c.String(),
+                        TotalDistance = c.Int(nullable: false),
+                        TotalDuration = c.Int(nullable: false),
+                        Type = c.Int(nullable: false),
+                        StartTime = c.DateTime(nullable: false),
+                        DueDate = c.DateTime(nullable: false),
+                        UserId = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -51,7 +96,7 @@ namespace Hitcher.DataAccess.Migrations
                         LastName = c.String(maxLength: 100),
                         JoinDate = c.DateTime(nullable: false),
                         BirthDate = c.DateTime(),
-                        Sex = c.String(),
+                        Gender = c.String(),
                         Country = c.String(),
                         City = c.String(),
                         PhotoPath = c.String(),
@@ -102,19 +147,26 @@ namespace Hitcher.DataAccess.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.RouteRecurrencies", "RouteId", "dbo.Routes");
+            DropForeignKey("dbo.Coords", "RouteId", "dbo.Routes");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.RouteRecurrencies", new[] { "RouteId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.Coords", new[] { "RouteId" });
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.Routes");
+            DropTable("dbo.RouteRecurrencies");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.Coords");
+            DropTable("dbo.ChatMessages");
         }
     }
 }
