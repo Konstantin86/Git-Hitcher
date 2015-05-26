@@ -26,5 +26,15 @@ namespace Hitcher.Controllers
       var messages = _unitOfWork.ChatMessageRepository.GetAll(m => m.Time >= dt).OrderBy(m => m.Time);
       return Ok(messages);
     }
+
+    [Route("privateHistory")]
+    [HttpGet]
+    public async Task<IHttpActionResult> GetPrivateHistory(string fromId, string toId)
+    {
+      var messages = _unitOfWork.PrivateChatMessageRepository.GetAll(
+        m => (m.FromUserId == fromId && m.ToUserId == toId) || (m.FromUserId == toId && m.ToUserId == fromId));
+
+      return Ok(messages);
+    }
   }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Hitcher.Core.Services;
 using Microsoft.AspNet.SignalR;
 
@@ -23,13 +20,14 @@ namespace Hitcher.Hubs
       string fromUserId = Context.Request.QueryString["userId"];
       Clients.Group(toUserId).sendPrivate(toUserId, fromUserId, name, message, photoPath);
       Clients.Caller.sendSelf(toUserId, name, message, photoPath);
+      _chatSessionService.SavePrivate(fromUserId, toUserId, name, message, photoPath);
     }
 
     // signalR doc: http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-server#asyncmethods
     public async Task SendAsync(string clientId, string name, string message, string photoPath)
     {
-      await _chatSessionService.Save(clientId, name, message, photoPath);
       Clients.All.sendPublic(clientId, name, message, photoPath);
+      _chatSessionService.Save(clientId, name, message, photoPath);
     }
 
     // Since websocket doesn't work over HTTP we need to pass userId in querystring instead of bearer token in the http header

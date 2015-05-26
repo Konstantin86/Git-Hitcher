@@ -3,7 +3,7 @@
 
         var resource = $resource(appConst.serviceBase + "/:action", { action: "api/chat" },
         {
-            //mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
+            privateHistory: { method: "GET", isArray: true, params: { action: "api/chat/privateHistory" } }
         });
 
         var onMessageAddedHandler = [];
@@ -152,9 +152,12 @@
 
                 chat.options.selected = chat.chats.length - 1;
                 $rootScope.$apply();
-            }
 
-            // TODO load private chat history from server...
+                // TODO load private chat history from server...
+                resource.privateHistory({ fromId: id, toId: authService.userData.id }, function (response) {
+                    var v = response;
+                });
+            }
         };
 
         chat.events.onMessageAdded = onMessageAdded;

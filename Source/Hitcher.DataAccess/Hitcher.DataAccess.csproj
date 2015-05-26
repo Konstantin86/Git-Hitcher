@@ -96,6 +96,10 @@
     <Compile Include="Migrations\201505250810331_HitcherInitialCreate.Designer.cs">
       <DependentUpon>201505250810331_HitcherInitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505262236533_PrivateChatMessage_Added.cs" />
+    <Compile Include="Migrations\201505262236533_PrivateChatMessage_Added.Designer.cs">
+      <DependentUpon>201505262236533_PrivateChatMessage_Added.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\ChatMessageRepository.cs" />
     <Compile Include="Entities\AppUser.cs" />
     <Compile Include="Entities\Base\EntityBase.cs" />
@@ -117,6 +121,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201505250810331_HitcherInitialCreate.resx">
       <DependentUpon>201505250810331_HitcherInitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505262236533_PrivateChatMessage_Added.resx">
+      <DependentUpon>201505262236533_PrivateChatMessage_Added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
