@@ -83,20 +83,23 @@
         //Hub setup
         var hub = new Hub("chatHub", {
             listeners: {
-                'addNewMessageToPage': function (guid, userName, msg, photoPath) {
+                'sendPublic': function (guid, userName, msg, photoPath) {
                     addPublicMessage(0, guid, userName, msg, photoPath);
                     $rootScope.$apply();
-
                     raiseEvent(onMessageAddedHandler);
                 },
-                'sendTest': function (msg) {
-                    //Chats.add('', '', msg, '');
+                'sendPrivate': function (toUserId, fromUserId, userName, msg, photoPath) {
+                    addPrivateMessage(toUserId, fromUserId, userName, msg, photoPath);
                     $rootScope.$apply();
-
+                    raiseEvent(onMessageAddedHandler);
+                },
+                'sendSelf': function (toUserId, userName, msg, photoPath) {
+                    addSelfMessage(toUserId, userName, msg, photoPath);
+                    $rootScope.$apply();
                     raiseEvent(onMessageAddedHandler);
                 }
             },
-            methods: ['send', 'sendAsync', 'sendAsyncTest'],
+            methods: ['sendAsync', 'sendPrivateAsync'],
             errorHandler: function (error) {
                 console.error(error);
             },
@@ -117,11 +120,11 @@
         });
 
         chat.send = function (msg, userName, photoPath) {
-            // todo send public or private msg based on selected chat id
-
-            hub.sendAsync(clientId, userName, msg, photoPath);
-            //hub.sendAsyncTest("199fdbe5-81fc-41d9-bb2d-b17ece826147", msg);
-            //hub.sendAsyncTest(authService.userData.id, msg);
+            if (chat.chats[chat.options.selected].id === 0) {
+                hub.sendAsync(clientId, userName, msg, photoPath);
+            } else {
+                hub.sendPrivateAsync(chat.chats[chat.options.selected].id, userName, msg, photoPath);
+            }
         };
 
         chat.options = {
@@ -164,6 +167,32 @@
                 sent: guid == clientId
             });
         };
+
+        function addPrivateMessage(toUserId, fromUserId, userName, msg, photoPath) {
+            chat.open(fromUserId, userName);
+
+            chat.chats[chat.options.selected].messages.push({
+                text: msg,
+                userName: chat.chats[chat.options.selected].title,
+                timeLeft: 'только что',
+                photo: photoPath,
+                time: new Date(),
+                sent: false
+            });
+        }
+
+        function addSelfMessage(toUserId, userName, msg, photoPath) {
+            chat.open(toUserId);
+
+            chat.chats[chat.options.selected].messages.push({
+                text: msg,
+                userName: userName,
+                timeLeft: 'только что',
+                photo: photoPath,
+                time: new Date(),
+                sent: true
+            });
+        }
 
         init();
 
