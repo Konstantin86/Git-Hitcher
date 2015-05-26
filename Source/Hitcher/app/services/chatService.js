@@ -153,6 +153,8 @@
                 chat.options.selected = chat.chats.length - 1;
                 $rootScope.$apply();
             }
+
+            // TODO load private chat history from server...
         };
 
         chat.events.onMessageAdded = onMessageAdded;

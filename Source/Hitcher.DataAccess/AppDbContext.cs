@@ -13,6 +13,8 @@ namespace Hitcher.DataAccess
 
     public DbSet<ChatMessage> ChatMessages { get; set; }
 
+    public DbSet<PrivateChatMessage> PrivateChatMessages { get; set; }
+
     public DbSet<Coord> Coords { get; set; }
 
     public AppDbContext()

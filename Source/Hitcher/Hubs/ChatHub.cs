@@ -17,11 +17,12 @@ namespace Hitcher.Hubs
     }
 
     // http://www.asp.net/signalr/overview/guide-to-the-api/mapping-users-to-connections - Mapping signalR users to connections
-    public async Task SendPrivateAsync(string userId, string name, string message, string photoPath)
+    public async Task SendPrivateAsync(string toUserId, string name, string message, string photoPath)
     {
+      // TODO keep private chatting history in db
       string fromUserId = Context.Request.QueryString["userId"];
-      Clients.Group(userId).sendPrivate(userId, fromUserId, name, message, photoPath);
-      Clients.Caller.sendSelf(userId, name, message, photoPath);
+      Clients.Group(toUserId).sendPrivate(toUserId, fromUserId, name, message, photoPath);
+      Clients.Caller.sendSelf(toUserId, name, message, photoPath);
     }
 
     // signalR doc: http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-server#asyncmethods

@@ -10,8 +10,7 @@ namespace Hitcher.DataAccess
     RouteRepository RouteRepository { get; }
     RouteRecurrencyRepository RouteRecurrencyRepository { get; }
     ChatMessageRepository ChatMessageRepository { get; }
-
-    //AppDbContext DbContext { get; }
+    PrivateChatMessageRepository PrivateChatMessageRepository { get; }
 
     void SaveChanges();
   }
@@ -28,8 +27,9 @@ namespace Hitcher.DataAccess
       RouteRepository = new RouteRepository(context);
       RouteRecurrencyRepository = new RouteRecurrencyRepository(context);
       ChatMessageRepository = new ChatMessageRepository(context);
+      PrivateChatMessageRepository = new PrivateChatMessageRepository(context);
 
-      _disposableObjects = new List<IDisposable> { context, RouteRepository, RouteRecurrencyRepository, ChatMessageRepository };
+      _disposableObjects = new List<IDisposable> { context, RouteRepository, RouteRecurrencyRepository, ChatMessageRepository, PrivateChatMessageRepository };
     }
 
 
@@ -38,6 +38,8 @@ namespace Hitcher.DataAccess
     public RouteRecurrencyRepository RouteRecurrencyRepository { get; private set; }
 
     public ChatMessageRepository ChatMessageRepository { get; private set; }
+
+    public PrivateChatMessageRepository PrivateChatMessageRepository { get; private set; }
 
     private AppDbContext DbContext { get; set; }
 
