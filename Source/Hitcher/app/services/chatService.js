@@ -1,5 +1,5 @@
-﻿app.factory('chatService', ["appConst", "$rootScope", "$location", "$resource", "Hub", "$interval", "localStorageService", "authService",
-    function (appConst, $rootScope, $location, $resource, Hub, $interval, localStorageService, authService) {
+﻿app.factory('chatService', ["appConst", "$rootScope", "$q", "$location", "$resource", "Hub", "$interval", "localStorageService", "authService",
+    function (appConst, $rootScope, $q, $location, $resource, Hub, $interval, localStorageService, authService) {
 
         var resource = $resource(appConst.serviceBase + "/:action", { action: "api/chat" },
         {
@@ -136,6 +136,9 @@
         chat.init = init;
 
         chat.open = function (id, userName) {
+
+            var deferred = $q.defer();
+
             chat.options.visible = true;
 
             var chatWithId = chat.chats.filter(function (c) { return c.id === id; });
@@ -144,6 +147,7 @@
                 var index = chat.chats.getIndexByPropertyValue('id', id);
                 chat.options.selected = index;
                 $rootScope.$apply();
+                deferred.resolve();
             } else {
                 chat.chats.push({
                     id: id,
@@ -151,13 +155,44 @@
                 });
 
                 chat.options.selected = chat.chats.length - 1;
-                $rootScope.$apply();
+                //$rootScope.$apply();
 
                 // TODO load private chat history from server...
                 resource.privateHistory({ fromId: id, toId: authService.userData.id }, function (response) {
-                    var v = response;
+                    if (response && response.length) {
+
+                        // TODO sort by time:
+                        response.sort(function (a, b) {
+                            var timeDiff = function (time) {
+                                var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
+                                return aTimeSpans.timeDiff;
+                            }
+
+                            return timeDiff(a.time) <= timeDiff(b.time);
+                        });
+
+                        response.forEach(function (chatMsg) {
+
+                            var mins = parseInt(new system.time.timeSpan(new Date(), new Date(chatMsg.time)).getMinutes());
+
+                            chat.chats[chat.options.selected].messages.push({
+                                text: chatMsg.message,
+                                userName: chatMsg.userName,
+                                timeLeft: mins > 0 ? mins + " мин." : "только что",
+                                photo: chatMsg.photoPath,
+                                time: system.time.convertToUTCDate(new Date(chatMsg.time)),
+                                sent: chatMsg.fromUserId === authService.userData.id
+                            });
+                        });
+
+                        deferred.reject();
+                        raiseEvent(onMessageAddedHandler);
+                    }
+
                 });
             }
+
+            return deferred.promise;
         };
 
         chat.events.onMessageAdded = onMessageAdded;
@@ -174,16 +209,25 @@
         };
 
         function addPrivateMessage(toUserId, fromUserId, userName, msg, photoPath) {
-            chat.open(fromUserId, userName);
-
-            chat.chats[chat.options.selected].messages.push({
-                text: msg,
-                userName: chat.chats[chat.options.selected].title,
-                timeLeft: 'только что',
-                photo: photoPath,
-                time: new Date(),
-                sent: false
+            chat.open(fromUserId, userName).then(function() {
+                chat.chats[chat.options.selected].messages.push({
+                    text: msg,
+                    userName: chat.chats[chat.options.selected].title,
+                    timeLeft: 'только что',
+                    photo: photoPath,
+                    time: new Date(),
+                    sent: false
+                });
             });
+
+            //chat.chats[chat.options.selected].messages.sort(function (a, b) {
+            //    var timeDiff = function (time) {
+            //        var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
+            //        return aTimeSpans.timeDiff;
+            //    }
+
+            //    return timeDiff(a.time) <= timeDiff(b.time);
+            //});
         }
 
         function addSelfMessage(toUserId, userName, msg, photoPath) {
