@@ -3,7 +3,8 @@
 
         var resource = $resource(appConst.serviceBase + "/:action", { action: "api/chat" },
         {
-            privateHistory: { method: "GET", isArray: true, params: { action: "api/chat/privateHistory" } }
+            privateHistory: { method: "GET", isArray: true, params: { action: "api/chat/privateHistory" } },
+            privateChats: { method: "GET", isArray: true, params: { action: "api/chat/privateChats" } }
         });
 
         var onMessageAddedHandler = [];
@@ -68,7 +69,7 @@
                             timeLeft: mins > 0 ? mins + " мин." : "только что",
                             photo: chatMsg.photoPath,
                             time: system.time.convertToUTCDate(new Date(chatMsg.time)),
-                            sent: chatMsg.clientId == clientId
+                            sent: chatMsg.clientId === clientId
                         });
 
                     });
@@ -117,6 +118,71 @@
             hub.disconnect();
             hub.connection.qs = { "userId": authService.userData.id };
             hub.connect();
+
+            if (authService.userData.isAuth) {
+                resource.privateChats({}, function (response) {
+                    if (response && response.length) {
+
+                        response.sort(function (a, b) {
+                            var timeDiff = function (time) {
+                                var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
+                                return aTimeSpans.timeDiff;
+                            }
+
+                            return timeDiff(a.time) <= timeDiff(b.time);
+                        });
+
+                        response.forEach(function (chatMsg) {
+
+                            var contactId = chatMsg.toUserId;
+
+                            if (contactId === authService.userData.id) {
+                                contactId = chatMsg.fromUserId;
+                            }
+
+                            var contactUserName;
+
+                            // Take 1st userName that is not equal to currentUser username from the all messages between users:
+                            var usersMessages = response.filter(function (m) {
+                                return (m.toUserId === authService.userData.id && m.fromUserId === contactId) || (m.fromUserId === authService.userData.id && m.toUserId === contactId);
+                            });
+
+                            usersMessages.forEach(function (um) {
+                                if (um.userName !== authService.userData.userName) {
+                                    contactUserName = um.userName;
+                                }
+                            });
+
+
+                            // Open chat tab between users:
+                            chat.open(contactId, contactUserName);
+
+                            // Add chat message:
+                            chat.chats[chat.options.selected].messages.push({
+                                text: chatMsg.message,
+                                userName: chat.chats[chat.options.selected].title,
+                                timeLeft: mins > 0 ? mins + " мин." : "только что",
+                                photo: chatMsg.photoPath,
+                                time: system.time.convertToUTCDate(new Date(chatMsg.time)),
+                                sent: chatMsg.fromUserId === authService.userData.id
+                            });
+
+                            raiseEvent(onMessageAddedHandler);
+                        });
+
+                        chat.chats.forEach(function(c) {
+                            c.messages.sort(function (a, b) {
+                                var timeDiff = function (time) {
+                                    var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
+                                    return aTimeSpans.timeDiff;
+                                }
+
+                                return timeDiff(a.time) <= timeDiff(b.time);
+                            });
+                        });
+                    }
+                });
+            }
         });
 
         chat.send = function (msg, userName, photoPath) {
