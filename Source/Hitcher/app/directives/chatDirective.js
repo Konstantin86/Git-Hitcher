@@ -27,7 +27,8 @@ app.directive("chatView", function (appConst, authService, chatService) {
             }
 
             var scrollToBottom = function() {
-                $('.msg_container_base')[scope.options.selected].scrollTop = $('.msg_container_base')[scope.options.selected].scrollHeight;
+                var scrollHeight = $('.msg_container_base')[scope.options.selected].scrollHeight;
+                $('.msg_container_base')[scope.options.selected].scrollTop = scrollHeight;
             };
 
             chatService.events.onMessageAdded(scrollToBottom);

@@ -1,5 +1,5 @@
-﻿app.factory('chatService', ["appConst", "$rootScope", "$q", "$location", "$resource", "Hub", "$interval", "localStorageService", "authService",
-    function (appConst, $rootScope, $q, $location, $resource, Hub, $interval, localStorageService, authService) {
+﻿app.factory('chatService', ["appConst", "$rootScope", "$q", "$location", "$resource", "Hub", "$interval", "$timeout", "localStorageService", "authService",
+    function (appConst, $rootScope, $q, $location, $resource, Hub, $interval, $timeout, localStorageService, authService) {
 
         var resource = $resource(appConst.serviceBase + "/:action", { action: "api/chat" },
         {
@@ -122,16 +122,6 @@
             if (authService.userData.isAuth) {
                 resource.privateChats({}, function (response) {
                     if (response && response.length) {
-
-                        response.sort(function (a, b) {
-                            var timeDiff = function (time) {
-                                var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
-                                return aTimeSpans.timeDiff;
-                            }
-
-                            return timeDiff(a.time) <= timeDiff(b.time);
-                        });
-
                         response.forEach(function (chatMsg) {
 
                             var contactId = chatMsg.toUserId;
@@ -153,9 +143,10 @@
                                 }
                             });
 
-
                             // Open chat tab between users:
                             chat.open(contactId, contactUserName);
+
+                            var mins = parseInt(new system.time.timeSpan(new Date(), new Date(chatMsg.time)).getMinutes());
 
                             // Add chat message:
                             chat.chats[chat.options.selected].messages.push({
@@ -167,19 +158,13 @@
                                 sent: chatMsg.fromUserId === authService.userData.id
                             });
 
+                            
+                        });
+
+                        //$rootScope.$apply();
+                        $timeout(function () {
                             raiseEvent(onMessageAddedHandler);
-                        });
-
-                        chat.chats.forEach(function(c) {
-                            c.messages.sort(function (a, b) {
-                                var timeDiff = function (time) {
-                                    var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
-                                    return aTimeSpans.timeDiff;
-                                }
-
-                                return timeDiff(a.time) <= timeDiff(b.time);
-                            });
-                        });
+                        }, 500);
                     }
                 });
             }
@@ -212,7 +197,7 @@
             if (chatWithId.length) {
                 var index = chat.chats.getIndexByPropertyValue('id', id);
                 chat.options.selected = index;
-                $rootScope.$apply();
+                //$rootScope.$apply();
                 deferred.resolve();
             } else {
                 chat.chats.push({
@@ -223,39 +208,39 @@
                 chat.options.selected = chat.chats.length - 1;
                 //$rootScope.$apply();
 
-                // TODO load private chat history from server...
-                resource.privateHistory({ fromId: id, toId: authService.userData.id }, function (response) {
-                    if (response && response.length) {
+                //// TODO load private chat history from server...
+                //resource.privateHistory({ fromId: id, toId: authService.userData.id }, function (response) {
+                //    if (response && response.length) {
 
-                        // TODO sort by time:
-                        response.sort(function (a, b) {
-                            var timeDiff = function (time) {
-                                var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
-                                return aTimeSpans.timeDiff;
-                            }
+                //        // TODO sort by time:
+                //        response.sort(function (a, b) {
+                //            var timeDiff = function (time) {
+                //                var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
+                //                return aTimeSpans.timeDiff;
+                //            }
 
-                            return timeDiff(a.time) <= timeDiff(b.time);
-                        });
+                //            return timeDiff(a.time) <= timeDiff(b.time);
+                //        });
 
-                        response.forEach(function (chatMsg) {
+                //        response.forEach(function (chatMsg) {
 
-                            var mins = parseInt(new system.time.timeSpan(new Date(), new Date(chatMsg.time)).getMinutes());
+                //            var mins = parseInt(new system.time.timeSpan(new Date(), new Date(chatMsg.time)).getMinutes());
 
-                            chat.chats[chat.options.selected].messages.push({
-                                text: chatMsg.message,
-                                userName: chatMsg.userName,
-                                timeLeft: mins > 0 ? mins + " мин." : "только что",
-                                photo: chatMsg.photoPath,
-                                time: system.time.convertToUTCDate(new Date(chatMsg.time)),
-                                sent: chatMsg.fromUserId === authService.userData.id
-                            });
-                        });
+                //            chat.chats[chat.options.selected].messages.push({
+                //                text: chatMsg.message,
+                //                userName: chatMsg.userName,
+                //                timeLeft: mins > 0 ? mins + " мин." : "только что",
+                //                photo: chatMsg.photoPath,
+                //                time: system.time.convertToUTCDate(new Date(chatMsg.time)),
+                //                sent: chatMsg.fromUserId === authService.userData.id
+                //            });
+                //        });
 
-                        deferred.reject();
-                        raiseEvent(onMessageAddedHandler);
-                    }
+                //        deferred.reject();
+                //        raiseEvent(onMessageAddedHandler);
+                //    }
 
-                });
+                //});
             }
 
             return deferred.promise;
