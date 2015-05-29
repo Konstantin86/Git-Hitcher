@@ -22,7 +22,7 @@
         var clientId = localStorageService.get("clientId");
 
         if (!clientId) {
-            clientId = system.guid.newGuid();
+            clientId = "client:" + system.guid.newGuid();
             localStorageService.set("clientId", clientId);
         }
 
@@ -91,8 +91,6 @@
                 },
                 'sendPrivate': function (toUserId, fromUserId, userName, msg, photoPath) {
                     addPrivateMessage(toUserId, fromUserId, userName, msg, photoPath);
-                    $rootScope.$apply();
-                    raiseEvent(onMessageAddedHandler);
                 },
                 'sendSelf': function (toUserId, userName, msg, photoPath) {
                     addSelfMessage(toUserId, userName, msg, photoPath);
@@ -112,12 +110,27 @@
             transport: 'webSockets',
             logging: true
         });
-        hub.connection.qs = { "userId": authService.userData.id };
+        hub.connection.qs = { "userId": authService.userData.isAuth ? authService.userData.id : clientId };
+
+        var removePrivateChats = function () {
+            for (var i = 1; i < chat.chats.length; i++) {
+                chat.chats.splice(i, 1);
+            }
+        };
+
+        authService.onLogout(function () {
+            removePrivateChats();
+            hub.disconnect();
+            hub.connection.qs = { "userId": clientId };
+            hub.connect();
+        });
 
         authService.onGetUserData(function () {
             hub.disconnect();
             hub.connection.qs = { "userId": authService.userData.id };
             hub.connect();
+
+            removePrivateChats();
 
             if (authService.userData.isAuth) {
                 resource.privateChats({}, function (response) {
@@ -158,10 +171,9 @@
                                 sent: chatMsg.fromUserId === authService.userData.id
                             });
 
-                            
+
                         });
 
-                        //$rootScope.$apply();
                         $timeout(function () {
                             raiseEvent(onMessageAddedHandler);
                         }, 500);
@@ -187,9 +199,6 @@
         chat.init = init;
 
         chat.open = function (id, userName) {
-
-            var deferred = $q.defer();
-
             chat.options.visible = true;
 
             var chatWithId = chat.chats.filter(function (c) { return c.id === id; });
@@ -197,8 +206,6 @@
             if (chatWithId.length) {
                 var index = chat.chats.getIndexByPropertyValue('id', id);
                 chat.options.selected = index;
-                //$rootScope.$apply();
-                deferred.resolve();
             } else {
                 chat.chats.push({
                     id: id,
@@ -206,44 +213,7 @@
                 });
 
                 chat.options.selected = chat.chats.length - 1;
-                //$rootScope.$apply();
-
-                //// TODO load private chat history from server...
-                //resource.privateHistory({ fromId: id, toId: authService.userData.id }, function (response) {
-                //    if (response && response.length) {
-
-                //        // TODO sort by time:
-                //        response.sort(function (a, b) {
-                //            var timeDiff = function (time) {
-                //                var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
-                //                return aTimeSpans.timeDiff;
-                //            }
-
-                //            return timeDiff(a.time) <= timeDiff(b.time);
-                //        });
-
-                //        response.forEach(function (chatMsg) {
-
-                //            var mins = parseInt(new system.time.timeSpan(new Date(), new Date(chatMsg.time)).getMinutes());
-
-                //            chat.chats[chat.options.selected].messages.push({
-                //                text: chatMsg.message,
-                //                userName: chatMsg.userName,
-                //                timeLeft: mins > 0 ? mins + " мин." : "только что",
-                //                photo: chatMsg.photoPath,
-                //                time: system.time.convertToUTCDate(new Date(chatMsg.time)),
-                //                sent: chatMsg.fromUserId === authService.userData.id
-                //            });
-                //        });
-
-                //        deferred.reject();
-                //        raiseEvent(onMessageAddedHandler);
-                //    }
-
-                //});
             }
-
-            return deferred.promise;
         };
 
         chat.events.onMessageAdded = onMessageAdded;
@@ -255,30 +225,27 @@
                 timeLeft: 'только что',
                 photo: photoPath,
                 time: new Date(),
-                sent: guid == clientId
+                sent: guid === clientId
             });
         };
 
         function addPrivateMessage(toUserId, fromUserId, userName, msg, photoPath) {
-            chat.open(fromUserId, userName).then(function() {
-                chat.chats[chat.options.selected].messages.push({
-                    text: msg,
-                    userName: chat.chats[chat.options.selected].title,
-                    timeLeft: 'только что',
-                    photo: photoPath,
-                    time: new Date(),
-                    sent: false
-                });
+            chat.open(fromUserId, userName);
+
+            chat.chats[chat.options.selected].messages.push({
+                text: msg,
+                userName: chat.chats[chat.options.selected].title,
+                timeLeft: 'только что',
+                photo: photoPath,
+                time: new Date(),
+                sent: false
             });
 
-            //chat.chats[chat.options.selected].messages.sort(function (a, b) {
-            //    var timeDiff = function (time) {
-            //        var aTimeSpans = new system.time.timeSpan(new Date(), new Date(time));
-            //        return aTimeSpans.timeDiff;
-            //    }
+            $rootScope.$apply();
 
-            //    return timeDiff(a.time) <= timeDiff(b.time);
-            //});
+            $timeout(function () {
+                raiseEvent(onMessageAddedHandler);
+            }, 200);
         }
 
         function addSelfMessage(toUserId, userName, msg, photoPath) {

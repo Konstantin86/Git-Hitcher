@@ -178,10 +178,12 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                 for (var i = 0; i < result.length; i++) {
                     var routeViewModel = routeService.getRouteViewModel(result[i]);
                     routeViewModel.canDelete = false;
+                    routeViewModel.canChat = false;
 
                     routeViewModel.events.mouseenter = function (routeViewModel) {
                         return function () {
                             routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute;
+                            routeViewModel.canChat = !routeViewModel.model.isCurrentUserRoute;
                             mapService.setRoute(routeViewModel.model, true, true);
                         }
                     }(routeViewModel);
@@ -189,6 +191,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                     routeViewModel.events.mouseout = function (routeViewModel) {
                         return function () {
                             routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute && routeViewModel.isActive;
+                            routeViewModel.canChat = !routeViewModel.model.isCurrentUserRoute && routeViewModel.isActive;
                             mapService.clearTemp();
                         }
                     }(routeViewModel);
@@ -198,12 +201,14 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                             if (lastSelected) {
                                 lastSelected.isActive = false;
                                 lastSelected.canDelete = false;
+                                lastSelected.canChat = false;
                             }
 
                             mapService.clearAll();
 
                             routeViewModel.isActive = true;
                             routeViewModel.canDelete = routeViewModel.model.isCurrentUserRoute;
+                            routeViewModel.canChat = !routeViewModel.model.isCurrentUserRoute;
                             mapService.setRoute(routeViewModel.model, false, true);
                             lastSelected = routeViewModel;
                         }
@@ -226,6 +231,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
                 resultRoutes[0].isActive = true;
                 resultRoutes[0].canDelete = resultRoutes[0].model.isCurrentUserRoute;
+                resultRoutes[0].canChat = !resultRoutes[0].model.isCurrentUserRoute;
                 mapService.setRoute(resultRoutes[0].model, false, true);
                 lastSelected = resultRoutes[0];
             } else {

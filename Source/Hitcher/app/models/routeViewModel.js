@@ -5,6 +5,7 @@ hitcher.viewModels = (function () {
     var viewModel = function (route) {
         this.model = route;
         this.canDelete = route.isCurrentUserRoute;
+        this.canChat = !route.isCurrentUserRoute;
         this.startName = route.startName;
         this.startTime = new Date(Date.parse(route.startTime)).toLocaleString();
         this.dueDate = new Date(Date.parse(route.dueDate)).toLocaleString();

@@ -20,7 +20,11 @@ namespace Hitcher.Hubs
       string fromUserId = Context.Request.QueryString["userId"];
       Clients.Group(toUserId).sendPrivate(toUserId, fromUserId, name, message, photoPath);
       Clients.Caller.sendSelf(toUserId, name, message, photoPath);
-      _chatSessionService.SavePrivate(fromUserId, toUserId, name, message, photoPath);
+
+      if (!fromUserId.StartsWith("client") && !toUserId.StartsWith("client"))   // Don't save private messages from anonimous user
+      {
+        _chatSessionService.SavePrivate(fromUserId, toUserId, name, message, photoPath);
+      }
     }
 
     // signalR doc: http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-server#asyncmethods

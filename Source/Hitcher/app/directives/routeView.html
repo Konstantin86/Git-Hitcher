@@ -49,7 +49,7 @@
                 <td class="route-item-label" ng-show="routeInfo.canDelete">
                     <a href="#" style="text-decoration: none; color: lightcoral" ng-click="routeInfo.events.onRemove()"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>  Удалить</a>
                 </td>
-                <td class="route-item-label">
+                <td class="route-item-label" ng-show="routeInfo.canChat">
                     <a href="#" style="text-decoration: none; color: lightcoral" ng-click="routeInfo.events.onApply()"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>  Оставить заявку</a>
                 </td>
             </tr>
