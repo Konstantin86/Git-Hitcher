@@ -33,11 +33,12 @@
                         <span class="glyphicon glyphicon-chevron-down"></span>
                     </button>
                     <span class="glyphicon glyphicon glyphicon-plane" aria-hidden="true" style="font-size: 20pt; margin-top: 17px; color: white"></span>
-                    <a class="navbar-brand" href="#/home">Попутчик</a>
+                    <a class="navbar-brand" href="#/home">SmartGo</a>
                 </div>
                 <div class="collapse navbar-collapse" data-collapse="!navbarExpanded">
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Button to trigger a default dropdown from an array ($scope.dropdown) [{text:'foo', href:'', click:''}, ...] -->
+                        <li> <a href="#/map">Карта</a></li>
                         <li ng-hide="!mapVisible" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
                         <li ng-hide="!authData.isAuth" ng-cloak>
                             <a style="cursor: context-menu" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
@@ -46,7 +47,7 @@
                         </li>
                         <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
                         <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
-                        <li> <a href="#" ng-click="chatToggle()">Chat box</a></li>
+                        <li> <a href="#" ng-click="chatToggle()">Chat</a></li>
                     </ul>
                 </div>
             </div>
@@ -56,7 +57,7 @@
         <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
     </div>
 
-    <div id="map_canvas" ng-controller="homeController" ng-show="mapVisible">
+    <div id="map_canvas" ng-controller="mapController" ng-show="mapVisible">
         <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
             <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'"></ui-gmap-markers>
             <ui-gmap-map-control template="app/views/gmaps/gmaps-top-center-control.html" controller="controlCtrl" position="top-center" index="-1"></ui-gmap-map-control>
@@ -191,8 +192,9 @@
 <script type="text/javascript" src="app/directives/formatPhone.js"></script>
 <script type="text/javascript" src="app/directives/chatDirective.js"></script>
 <!--Controllers-->
-<script type="text/javascript" src="app/controllers/indexController.js"></script>
 <script type="text/javascript" src="app/controllers/homeController.js"></script>
+<script type="text/javascript" src="app/controllers/indexController.js"></script>
+<script type="text/javascript" src="app/controllers/mapController.js"></script>
 <script type="text/javascript" src="app/controllers/loginController.js"></script>
 <script type="text/javascript" src="app/controllers/signupController.js"></script>
 <script type="text/javascript" src="app/controllers/accountController.js"></script>

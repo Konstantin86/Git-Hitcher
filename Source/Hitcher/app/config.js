@@ -5,9 +5,14 @@
 "use strict";
 
 app.config(function ($routeProvider) {
+    $routeProvider.when("/map", {
+        controller: "mapController"
+        //templateUrl: "app/views/map.html"
+    });
+
     $routeProvider.when("/home", {
-        controller: "homeController"
-        //templateUrl: "app/views/home.html"
+        controller: "homeController",
+        templateUrl: "app/views/home.html"
     });
 
     $routeProvider.when("/login", {

@@ -16,7 +16,7 @@ app.controller("loginController", function ($scope, $location, authService, erro
 
     $scope.login = function () {
         authService.login($scope.formData).then(function () {
-            $location.path("/home");
+            $location.path("/map");
         }, function (response) {
             $scope.formData = { userName: "", password: "" };
             statusService.error(errorService.parseAuthResponse(response));
@@ -51,7 +51,7 @@ app.controller("loginController", function ($scope, $location, authService, erro
     $scope.authCompletedCB = function (fragment) {
         $scope.$apply(function () {
             authService.obtainAccessToken({ provider: fragment.provider, externalAccessToken: fragment.external_access_token, userId: fragment.user_id }).then(function () {
-                $location.path("/home");
+                $location.path("/map");
             }, function (response) {
                 statusService.error(errorService.parseDataResponse(response));
             });

@@ -179,6 +179,7 @@
     <Content Include="app\const\msgConst.js" />
     <Content Include="app\controllers\accountController.js" />
     <Content Include="app\controllers\controlCtrl.js" />
+    <Content Include="app\controllers\homeController.js" />
     <Content Include="app\controllers\indexController.js" />
     <Content Include="app\controllers\loginController.js" />
     <Content Include="app\controllers\signupController.js" />
@@ -210,6 +211,7 @@
     <Content Include="app\views\account.html" />
     <Content Include="app\views\gmaps\gmaps-left-center-control.html" />
     <Content Include="app\views\gmaps\gmaps-top-center-control.html" />
+    <Content Include="app\views\home.html" />
     <Content Include="app\views\login.html" />
     <Content Include="app\views\modal\aside.html" />
     <Content Include="app\views\modal\recover-pwd-dialog.html" />
@@ -265,7 +267,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\config.js" />
-    <Content Include="app\controllers\homeController.js" />
+    <Content Include="app\controllers\mapController.js" />
     <Content Include="content\css\angular-motion.css" />
     <Content Include="content\css\angular-motion.min.css" />
     <Content Include="content\css\animations.css" />

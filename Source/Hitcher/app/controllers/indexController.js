@@ -38,7 +38,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
     authService.onLogout(hideSearch);
 
     $scope.$on('$routeChangeSuccess', function () {
-        $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/home";
+        $scope.mapVisible = !arguments[1].loadedTemplateUrl || arguments[1].redirectTo === "/map";
 
         if (!$scope.mapVisible) {
             hideSearch();
@@ -46,7 +46,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
     });
 
     var showMyRoutes = function () {
-        $location.path("/home");
+        $location.path("/map");
         initAside();
         $scope.searchModel.hideFilter = true;
         $scope.searchModel.currentUserOnly = true;
