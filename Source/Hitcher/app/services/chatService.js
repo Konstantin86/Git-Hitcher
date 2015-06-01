@@ -29,14 +29,13 @@
         var chat = { events: {} };
 
         chat.chats = [{ id: 0, title: "Public", messages: [] }];
-        //chat.selected = 1;
 
         var updateTimer;
 
         var updateMsgTime = function () {
             if (chat.chats[chat.options.selected].messages && chat.chats[chat.options.selected].messages.length) {
                 chat.chats[chat.options.selected].messages.forEach(function (msg) {
-                    var ts = new system.time.timeSpan(new Date(), msg.time);
+                    var ts = new system.time.timeSpan(new Date(), new Date(msg.time));
                     var mins = parseInt(ts.getMinutes());
                     msg.timeLeft = mins > 0 ? mins + " мин." : "только что";
                 });
@@ -167,7 +166,7 @@
                                 userName: chat.chats[chat.options.selected].title,
                                 timeLeft: mins > 0 ? mins + " мин." : "только что",
                                 photo: chatMsg.photoPath,
-                                time: system.time.convertToUTCDate(new Date(chatMsg.time)),
+                                time: new Date(chatMsg.time),
                                 sent: chatMsg.fromUserId === authService.userData.id
                             });
 

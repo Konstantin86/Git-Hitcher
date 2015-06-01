@@ -108,12 +108,12 @@ namespace Hitcher
 
       // Dev:
       #if DEBUG
-      FacebookAuthOptions = new FacebookAuthenticationOptions
-      {
-        AppId = "1564102313872108",
-        AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
-        Provider = new FacebookAuthProvider()
-      };
+      //FacebookAuthOptions = new FacebookAuthenticationOptions
+      //{
+      //  AppId = "1564102313872108",
+      //  AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
+      //  Provider = new FacebookAuthProvider()
+      //};
       #endif
       
       app.UseFacebookAuthentication(FacebookAuthOptions);
@@ -128,12 +128,12 @@ namespace Hitcher
 
       // Dev:
       #if DEBUG
-      vkAuthenticationOptions = new VkAuthenticationOptions
-      {
-        AppId = "4886156",
-        AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
-        Provider = new CustomVkAuthenticationProvider()
-      };
+      //vkAuthenticationOptions = new VkAuthenticationOptions
+      //{
+      //  AppId = "4886156",
+      //  AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
+      //  Provider = new CustomVkAuthenticationProvider()
+      //};
       #endif
 
       app.UseVkontakteAuthentication(vkAuthenticationOptions);
