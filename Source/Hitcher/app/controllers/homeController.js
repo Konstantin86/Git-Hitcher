@@ -17,13 +17,38 @@ app.controller("homeController", function ($scope, $location, $aside, appConst, 
     var slides = $scope.slides = [];
 
     slides.push({
-        image: hostUri + "content/images/lp_2.jpg",
-        text: "Путешевствуй вместе с нами..."
+        image: hostUri + "content/images/lp_1.jpg",
+        text: "Альтернатива такси есть..."
     });
 
     slides.push({
-        image: hostUri + "content/images/lp_1.jpg",
-        text: "Альтернатива такси есть..."
+        image: hostUri + "content/images/lp_2.jpg",
+        text: "Путешевствуйте вместе..."
+    });
+
+    slides.push({
+        image: hostUri + "content/images/lp_3.jpg",
+        text: "Надоело ездить на шестерке?"
+    });
+
+    slides.push({
+        image: hostUri + "content/images/lp_4.jpg",
+        text: "Путешевствуйте между городами и даже странами"
+    });
+
+    slides.push({
+        image: hostUri + "content/images/lp_7.jpg",
+        text: "Найдите попутчика внутри города"
+    });
+
+    slides.push({
+        image: hostUri + "content/images/lp_5.jpg",
+        text: "Надоело ездить на ланосе?"
+    });
+
+    slides.push({
+        image: hostUri + "content/images/lp_6.jpg",
+        text: "Надоело ездить на Тойоте?"
     });
 
     //slides.push({

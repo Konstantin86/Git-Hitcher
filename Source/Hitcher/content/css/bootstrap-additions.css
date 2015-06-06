@@ -137,7 +137,7 @@
  * Aside element
  */
 .aside {
-  position: fixed;
+    position: fixed;
   top: 0;
   bottom: 0;
   z-index: 1049;
@@ -151,6 +151,12 @@
 @media (max-width: 991px) {
   .aside {
     min-width: 240px;
+  }
+}
+/*To take whole width on mobile devices*/
+@media (max-width: 768px) {
+  .aside {
+    width: 100%;
   }
 }
 .aside.left {

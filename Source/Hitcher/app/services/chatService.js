@@ -191,7 +191,7 @@
 
         chat.options = {
             visible: true,
-            title: 'Общий чат',
+            title: 'Чат',
             selected: 0
         };
 
