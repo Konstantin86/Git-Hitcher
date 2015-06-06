@@ -117,16 +117,13 @@ body {
   }
 }*/
 
-@media (min-width: 1600px) {
-    .container-wide {
-        width: 1600px;
-        height: 716px;
-    }
-}
 
 @media (min-width: 1600px) {
     .container-wide {
         width: 1600px;
+    }
+
+    .container-carousel-hd {
         height: 716px;
     }
 
