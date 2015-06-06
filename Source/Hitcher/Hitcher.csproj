@@ -185,6 +185,7 @@
     <Content Include="app\controllers\signupController.js" />
     <Content Include="app\directives\chatDirective.js" />
     <Content Include="app\directives\chatView.html" />
+    <Content Include="app\directives\disableAnimation.js" />
     <Content Include="app\directives\formatPhone.js" />
     <Content Include="app\directives\numberOnlyInputDirective.js" />
     <Content Include="app\directives\routeDirective.js" />
@@ -232,6 +233,15 @@
     <Content Include="content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="content\images\1-set-your-goals.jpg" />
+    <Content Include="content\images\2-create-workout-plan.jpg" />
+    <Content Include="content\images\3-work-hard.jpg" />
+    <Content Include="content\images\4-take-suggestions-from-community.jpg" />
+    <Content Include="content\images\5-do-something-every-day.jpg" />
+    <Content Include="content\images\6-achieve-your-goals.jpg" />
+    <Content Include="content\images\7-share-your-success.jpg" />
+    <Content Include="content\images\8-observe-places.jpg" />
+    <Content Include="content\images\default_avatar.png" />
     <Content Include="content\images\glyphicons-203-shopping-cart.png" />
     <Content Include="content\images\glyphicons-209-cart-out.png" />
     <Content Include="content\images\glyphicons-210-cart-in.png" />
@@ -246,6 +256,10 @@
     <Content Include="content\images\glyphicons-6-car.png" />
     <Content Include="content\images\glyphicons-60-cargo.png" />
     <Content Include="content\images\glyphicons-600-car-wheel.png" />
+    <Content Include="content\images\baner_1.jpg" />
+    <Content Include="content\images\lp_1.jpg" />
+    <Content Include="content\images\lp_2.jpg" />
+    <Content Include="content\images\test\baner_20.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="scripts\angular-google-maps.js" />
     <Content Include="scripts\angular-google-maps.min.js" />

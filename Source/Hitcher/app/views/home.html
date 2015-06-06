@@ -1,16 +1,55 @@
-﻿Hello world!
+﻿<div class="container container-wide">
+    <carousel interval="myInterval" disable-animation="true">
+        <slide ng-repeat="slide in slides" active="slide.active">
+            <img ng-src="{{slide.image}}" style="margin:auto;">
+            <div class="carousel-caption">
+                <h1>{{slide.text}}</h1>
+            </div>
+        </slide>
+    </carousel>
+</div>
 
-<hr />
-<footer class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <p>Project Idea: Vladyslav Tretyakov.</p>
-            <p>Developed by: Konstantin Lazurenko. VK: <a target="_blank" href="http://vk.com/justkostyan">justkostyan</a></p>
-            <p>Mail: <a target="_blank" href="mailto:kos_sml@mail.ru">kos_sml@mail.ru</a></p>
-            <p>Skype: just_kostyan, vlad-usa</p>
+<div class="container">
+    <div style="background-color: lightgrey; padding: 5px;">
+        <h3 align="center">Сервис умных перемещений...</h3>
+    </div>
+
+    <div class="row" style="background-color: whitesmoke; margin: 0px 0px 10px 0px">
+        <div class="col-md-4">
+            <h2>Explore...</h2>
+            <p>
+                Have a look at the most popular sport exercises and techniques. Learn how to reach goals in your physical and sport life.
+            </p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
         </div>
-        <div class="col-md-6">
-            <h5 style="float: right">2015 KL</h5>
+        <div class="col-md-4">
+            <h2>Follow up...</h2>
+            <p>Track your sport life with us. Compose a sport program for your individual goals and follow them.</p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <h2>Stay in touch!</h2>
+            <p>Stay motivated with us! Share your achievements with us. Ask for help or get help from others. Take comprehensive control on your progress.</p>
+            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
         </div>
     </div>
-</footer>
+
+    <hr />
+    <footer class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p>Project Idea: Vladyslav Tretyakov.</p>
+                <p>
+                    Developed by: Konstantin Lazurenko. VK: <a target="_blank" href="http://vk.com/justkostyan">justkostyan</a>
+                </p>
+                <p>
+                    Mail: <a target="_blank" href="mailto:kos_sml@mail.ru">kos_sml@mail.ru</a>
+                </p>
+                <p>Skype: just_kostyan, vlad-usa</p>
+            </div>
+            <div class="col-md-6">
+                <h5 style="float: right">2015 KL</h5>
+            </div>
+        </div>
+    </footer>
+</div>
