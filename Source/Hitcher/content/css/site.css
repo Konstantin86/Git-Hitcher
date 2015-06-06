@@ -129,6 +129,10 @@ body {
         width: 1600px;
         height: 716px;
     }
+
+    .navbar-left-shift {
+        margin-left: 16px;
+    }
 }
 
 @media (min-width: 1200px) {

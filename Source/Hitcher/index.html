@@ -25,74 +25,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 </head>
 <body>
-    <div ng-controller="indexController">
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button class="navbar-toggle" data-toggle="collapse" data-target="#navigationbar">
-                        <span class="glyphicon glyphicon-chevron-down"></span>
-                    </button>
-                    <span class="glyphicon glyphicon glyphicon-plane" aria-hidden="true" style="font-size: 20pt; margin-top: 17px; color: white"></span>
-                    <a class="navbar-brand" href="#/home">SmartGo</a>
-                </div>
-                <div class="collapse navbar-collapse" id="navigationbar">
-                    <ul class="nav navbar-nav navbar-right">
-
-                        <li> <a href="#/map">Карта</a></li>
-                        <li ng-hide="!mapVisible" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
-                        <li ng-hide="!authData.isAuth" ng-cloak>
-                            <a style="cursor: context-menu" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
-                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;{{authData.userName && authData.firstName}}
-                            </a>
-                        </li>
-                        <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
-                        <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
-                        <li> <a href="#" ng-click="chatToggle()">Chat</a></li>
-                    </ul>
-                </div>
+    <nav class="navbar navbar-default navbar-fixed-top" ng-controller="indexController">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="glyphicon glyphicon glyphicon-plane" aria-hidden="true" style="font-size: 20pt; margin-top: 17px; color: white"></span>
+                <a class="navbar-brand" href="#/home">SmartGo</a>
             </div>
-        </nav>
-        <!--<nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Project name</a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-header">Nav header</li>
-                                <li><a href="#">Separated link</a></li>
-                                <li><a href="#">One more separated link</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="../navbar/">Default</a></li>
-                        <li><a href="../navbar-static-top/">Static top</a></li>
-                        <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
-                    </ul>
-                </div>
+            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+                <ul class="nav navbar-nav navbar-left-shift">
+                    <li><a href="#/map">Карта</a></li>
+                    <li ng-hide="!mapVisible" ng-cloak><button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button></li>
+                    <!--<li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li ng-hide="!authData.isAuth" ng-cloak>
+                        <a style="cursor: context-menu" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;{{authData.userName && authData.firstName}}
+                        </a>
+                    </li>
+                    <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
+                    <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
+                    <li> <a href="#" ng-click="chatToggle()">Chat</a></li>
+                </ul>
             </div>
-        </nav>-->
+        </div>
+    </nav>
 
-        <!--Look to the http://angular-ui.github.io/bootstrap/ example in order to implement array of alerts-->
-        <alert class="oaerror {{state.status}}" ng-hide="state.message === ''" type="{{state.status}}" ng-cloak close="closeAlert()">{{state.message}}</alert>
-    </div>
 
     <div id="map_canvas" ng-controller="mapController" ng-show="mapVisible">
         <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
@@ -108,26 +85,6 @@
     <div>
         <div ng-view class="at-view-fade-in"></div>
     </div>
-
-    <!--<div class="container" ng-controller="searchController" ng-show="config.visible" ng-cloak style="margin: 20px auto">
-        <div class="jumbotron">
-            Search results will be displayed here...
-        </div>
-    </div>-->
-    <!--<hr />
-    <footer class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <p>Project Idea: Vladyslav Tretyakov.</p>
-                <p>Developed by: Konstantin Lazurenko. VK: <a target="_blank" href="http://vk.com/justkostyan">justkostyan</a></p>
-                <p>Mail: <a target="_blank" href="mailto:kos_sml@mail.ru">kos_sml@mail.ru</a></p>
-                <p>Skype: just_kostyan, vlad-usa</p>
-            </div>
-            <div class="col-md-6">
-                <h5 style="float: right">2015 KL</h5>
-            </div>
-        </div>
-    </footer>-->
 
 </body>
 </html>
@@ -160,7 +117,7 @@
 <script type="text/javascript" src="scripts/jquery.js"></script>
 <script type="text/javascript" src="scripts/jquery-ui.js"></script>
 <script type="text/javascript" src="scripts/jquery.signalR-2.2.0.js"></script>
-<!--<script type="text/javascript" src="scripts/bootstrap.js"></script>-->
+<script type="text/javascript" src="scripts/bootstrap.js"></script>
 
 <script type="text/javascript" src="scripts/angular.js"></script>
 <script type="text/javascript" src="scripts/angular-route.js"></script>
