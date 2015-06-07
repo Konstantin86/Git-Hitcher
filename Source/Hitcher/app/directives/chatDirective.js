@@ -33,13 +33,6 @@ app.directive("chatView", function (appConst, authService, chatService) {
 
             chatService.events.onMessageAdded(scrollToBottom);
 
-            //scope.$watchCollection(
-            //        "messages",
-            //        function (newValue, oldValue) {
-            //            $('.msg_container_base').scrollTop($('.msg_container_base')[0].scrollHeight);
-            //        }
-            //    );
-
             scope.minimize = function () {
                 var $this = $('.panel-heading span.icon_minim');
                 if (!$this.hasClass('panel-collapsed')) {
@@ -58,6 +51,10 @@ app.directive("chatView", function (appConst, authService, chatService) {
             };
 
             var send = function () {
+
+                if (!scope.message) {
+                    return;
+                }
 
                 var photoPath = authService.userData.photoPath || appConst.cdnMediaBase + "default_avatar.png";
                 photoPath = photoPath.split("?width")[0] + "?width=" + appConst.chatPhotoWidth;
