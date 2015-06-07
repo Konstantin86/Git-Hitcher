@@ -24,7 +24,7 @@ app.controller("accountController", function ($scope, $location, authService, er
 
     $scope.onFilesAdded = function () {
         if ((arguments[0][0].file.type.indexOf("image") === -1) || arguments[0][0].size > 20000000) {
-            statusService.warning("You are allowed to upload only image files up to 20 Mb size");
+            statusService.info("You are allowed to upload only image files up to 20 Mb size");
             return false;
         } else {
             this.$flow.defaults.headers.Authorization = authService.getAuthHeader();

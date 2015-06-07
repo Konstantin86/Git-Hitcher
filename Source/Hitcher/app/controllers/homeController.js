@@ -6,8 +6,7 @@
 
 "use strict";
 
-app.controller("homeController", function ($scope, $location, $aside, appConst, authService, userService, routeService, mapService, statusService, chatService) {
-    statusService.clear();
+app.controller("homeController", function ($scope, $location, $aside, appConst, authService, userService, routeService, mapService, statusService) {
 
     //$scope.welcomeText = msgConst.HOME_WELCOME;
     //$scope.welcomeHeader = msgConst.HOME_WELCOME_HEADER;

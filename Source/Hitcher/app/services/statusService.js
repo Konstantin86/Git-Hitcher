@@ -16,7 +16,7 @@ app.service("statusService", function ($alert, cfpLoadingBar) {
     };
 
     var success = function (msg) {
-        set(msg, "success");
+        $alert({ content: msg, placement: 'top-right', type: 'success', duration: 3, show: true });
     };
 
     var warning = function (msg) {
@@ -24,7 +24,7 @@ app.service("statusService", function ($alert, cfpLoadingBar) {
     };
 
     var error = function (msg) {
-        set(msg || "Unable to connect to service", "danger");
+        $alert({ content: msg || "Unable to connect to service", placement: 'top-right', type: 'danger', duration: 3, show: true });
     };
 
     var loading = function (msg) {
@@ -39,6 +39,11 @@ app.service("statusService", function ($alert, cfpLoadingBar) {
         state.message = "";
     };
 
+    var info = function(msg) {
+        $alert({ content: msg, placement: 'top-right', type: 'info', duration: 3, show: true });
+    }
+
+    this.info = info;
     this.set = set;
     this.state = state;
     this.success = success;

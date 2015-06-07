@@ -15,6 +15,12 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     $scope.searchAside = null;
 
+    $scope.alert = {
+        "title": "Holy guacamole!",
+        "content": "Best check yo self, you're not looking too good.",
+        "type": "info"
+    };
+
     var showAside = function () {
         if (!$scope.searchAside) {
             $scope.searchAside = $aside({ scope: $scope, backdrop: false, dismissable: false, placement: 'right', template: 'app/views/modal/search.html' });
@@ -56,7 +62,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     $scope.userMenu = [{ "text": "Профайл", "href": "#/account", "target": "_self" }, { "text": "Мои маршруты", click: showMyRoutes }, { "divider": true }, { "text": "Выйти", "click": "logout()" }];
 
-    $scope.state = statusService.state;
     $scope.markerEvents = mapService.markerEvents;
 
     mapService.onMarkerDrag(function (marker, eventName, args) {
@@ -79,8 +84,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             }
         });
     });
-
-    $scope.closeAlert = function () { statusService.clear(); };
 
     $scope.authData = authService.userData;
 
@@ -235,7 +238,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                 mapService.setRoute(resultRoutes[0].model, false, true);
                 lastSelected = resultRoutes[0];
             } else {
-                statusService.warning("Подходящих результатов не найдено");
+                statusService.info("Подходящих результатов не найдено");
             }
 
             $scope.searchModel.disableFilter = true;

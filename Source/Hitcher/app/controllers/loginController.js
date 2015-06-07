@@ -8,9 +8,7 @@
 /// <reference path="~/app/utils/system/system-string.js" />
 "use strict";
 
-app.controller("loginController", function ($scope, $location, authService, errorService, statusService, appConst, msgConst) {
-
-    statusService.clear();
+app.controller("loginController", function ($scope, $location, $alert, statusService, authService, errorService, appConst, msgConst) {
 
     $scope.formData = { userName: "", password: "" };
 

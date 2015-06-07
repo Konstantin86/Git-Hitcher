@@ -143,8 +143,7 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
 
         routeService.resource.save($scope.route, function (result) {
             if (result) {
-                $alert({ content: 'Route is successfully created.', placement: 'top-right', type: 'success', duration: 3, show: true });
-                //statusService.success("Route is successfully created.");
+                statusService.success("Route is successfully created.");
             }
 
             initAside();
@@ -197,7 +196,7 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
 
             if (!routeData) {
                 initAside();
-                statusService.warning("Невозможно проложить маршрут.");
+                statusService.info("Невозможно проложить маршрут.");
                 return;
             };
 

@@ -20,62 +20,45 @@
     <link href="content/css/social-buttons-animated.css" rel="stylesheet" />
     <link href="content/css/font-awesome.min.css" rel="stylesheet" />
     <link href="content/css/animations.css" rel="stylesheet" />
-    <link href="content/css/bootstrap-custom-alerts.css" rel="stylesheet" />
     <link href="content/css/hitcher.css" rel="stylesheet" />
     <link href="content/css/site.css" rel="stylesheet"/>
-    <!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">-->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top" ng-controller="indexController">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="glyphicon glyphicon glyphicon-plane" aria-hidden="true" style="font-size: 20pt; margin-top: 17px; color: white"></span>
-                <a class="navbar-brand" href="#/home">SmartGo</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-                <ul class="nav navbar-nav navbar-left-shift">
-                    <li><a href="#/map">Карта</a></li>
-                    <li ng-hide="!mapVisible" ng-cloak>
-                        <button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button>
-                    </li>
-                    <!--<li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>-->
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li ng-hide="!authData.isAuth" ng-cloak>
-                        <a style="cursor: context-menu" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;{{authData.userName && authData.firstName}}
-                        </a>
-                    </li>
-                    <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
-                    <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
-                    <li> <a href="#" ng-click="chatToggle()">Chat</a></li>
-                </ul>
-            </div>
+<nav class="navbar navbar-default navbar-fixed-top" ng-controller="indexController">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="glyphicon glyphicon glyphicon-plane" aria-hidden="true" style="font-size: 20pt; margin-top: 17px; color: white"></span>
+            <a class="navbar-brand" href="#/home">SmartGo</a>
         </div>
-    </nav>
+        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+            <ul class="nav navbar-nav navbar-left-shift">
+                <li><a href="#/map">Карта</a></li>
+                <li ng-hide="!mapVisible" ng-cloak>
+                    <button type="button" class="btn btn-default" style="margin: 9px" ng-click="onSearchClick()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск...</button>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li ng-hide="!authData.isAuth" ng-cloak>
+                    <a style="cursor: context-menu" data-animation="am-flip-x-linear" bs-dropdown="userMenu" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;&nbsp;{{authData.userName && authData.firstName}}
+                    </a>
+                </li>
+                <li ng-hide="authData.isAuth"> <a href="#/login">Войти</a></li>
+                <li ng-hide="authData.isAuth"> <a href="#/signup">Регистрация</a></li>
+                <li> <a href="#" ng-click="chatToggle()">Chat</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-
-    <div id="map_canvas" ng-controller="mapController" ng-show="mapVisible">
+<div id="map_canvas" ng-controller="mapController" ng-show="mapVisible">
         <ui-gmap-google-map center="map.center" zoom="map.zoom" draggable="true" options="options" bounds="map.bounds" control="map.control">
             <ui-gmap-markers models="markers" options="'options'" events="markerEvents" coords="'self'" icon="'icon'"></ui-gmap-markers>
             <ui-gmap-map-control template="app/views/gmaps/gmaps-top-center-control.html" controller="controlCtrl" position="top-center" index="-1"></ui-gmap-map-control>
