@@ -69,7 +69,7 @@ app.directive("chatView", function (appConst, authService, chatService) {
             //var timeDiff = new system.time.timeSpan()
 
             scope.keyPress = function (code) {
-                if (code == 13) {
+                if (code === 13) {
                     send();
                 }
             };
