@@ -29,7 +29,7 @@ app.controller("loginController", function ($scope, $location, $alert, statusSer
         content: msgConst.LOGIN_PWD_RECOVERY_INSTRUCTIONS,
         yes: function () {
             var modal = this;
-            authService.auth.resetPassword({ email: modal.input, callbackLink: appConst.serviceBase + "#/login" }, function () {
+            authService.auth.resetPassword({ email: modal.input, callbackLink: location.protocol + "//" + location.host + "/#/login" }, function () {
                 modal.$hide();
                 statusService.success(system.string.format(msgConst.LOGIN_PWD_RECOVERY_LINK_SENT_FORMAT, modal.input));
             }, function (response) {
@@ -41,7 +41,7 @@ app.controller("loginController", function ($scope, $location, $alert, statusSer
 
     $scope.externalLogin = function (provider) {
         var redirectUri = location.protocol + "//" + location.host + "/authcomplete.html";
-        var externalProviderUrl = appConst.serviceBase + "api/auth/externalLogin?provider=" + provider + "&response_type=token&client_id=" + "Hitcher" + "&redirect_uri=" + redirectUri;
+        var externalProviderUrl = "/api/auth/externalLogin?provider=" + provider + "&response_type=token&client_id=" + "Hitcher" + "&redirect_uri=" + redirectUri;
         window.$windowScope = $scope;
         window.open(externalProviderUrl, "Authenticate Account", "location=0,status=0,width=600,height=750");
     };

@@ -39,7 +39,7 @@ app.config(function ($httpProvider) {
 
 app.config(["flowFactoryProvider", "appConst", function (flowFactoryProvider, appConst) {
     flowFactoryProvider.defaults = {
-        target: appConst.serviceBase + "api/blob/upload",
+        target: "/api/blob/upload",
         testChunks: false,
         permanentErrors: [404, 500, 501],
         maxChunkRetries: 1,

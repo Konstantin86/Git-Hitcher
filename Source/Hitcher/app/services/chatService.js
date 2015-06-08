@@ -1,7 +1,7 @@
 ﻿app.factory('chatService', ["appConst", "$rootScope", "$q", "$location", "$resource", "Hub", "$interval", "$timeout", "localStorageService", "authService",
     function (appConst, $rootScope, $q, $location, $resource, Hub, $interval, $timeout, localStorageService, authService) {
 
-        var resource = $resource(appConst.serviceBase + "/:action", { action: "api/chat" },
+        var resource = $resource("/:action", { action: "api/chat" },
         {
             privateHistory: { method: "GET", isArray: true, params: { action: "api/chat/privateHistory" } },
             privateChats: { method: "GET", isArray: true, params: { action: "api/chat/privateChats" } }

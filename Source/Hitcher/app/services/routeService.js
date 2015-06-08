@@ -9,7 +9,7 @@
 
 app.service("routeService", function ($resource, $q, $modal, chatService, appConst) {
 
-    var resource = $resource(appConst.serviceBase + "/:action", { action: "api/route" },
+    var resource = $resource("/:action", { action: "api/route" },
     {
         mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
     });

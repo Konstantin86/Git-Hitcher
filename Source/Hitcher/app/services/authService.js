@@ -6,7 +6,7 @@
 "use strict";
 
 app.service("authService", function ($resource, $q, localStorageService, appConst) {
-    var resource = $resource(appConst.serviceBase + "/:action", { action: "api/auth" },
+    var resource = $resource("/:action", { action: "api/auth" },
     {
         getLocalAccessToken: { method: "GET", params: { action: "api/auth/localaccesstoken" } },
         registerExternal: { method: "POST", params: { action: "api/auth/registerexternal" } },

@@ -11,7 +11,6 @@ using Hitcher.DataAccess;
 using Hitcher.DataAccess.Entities;
 using Hitcher.Models.External;
 using Hitcher.Models.Request;
-using Hitcher.Models.Response;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
@@ -125,7 +124,6 @@ namespace Hitcher.Controllers
 
       return result.Succeeded
         ? Redirect(callbackLink)
-        //? Redirect(new Uri(ConfigurationManager.AppSettings["webClientHostBaseUri"] + @"#/login"))
         : GetErrorResult(result);
     }
 

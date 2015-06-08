@@ -14,12 +14,12 @@ app.service("authInterceptorService", ["$q", "$location", "localStorageService",
             config.headers["Content-Type"] = "multipart/form-data";
         }
 
-        if (config.url.indexOf(appConst.serviceBase) !== -1) {
+        //if (config.url.indexOf(appConst.serviceBase) !== -1) {
             var authData = localStorageService.get("authorizationData");
             if (authData) {
                 config.headers.Authorization = "Bearer " + authData.token;
             }
-        }
+        //}
 
         return config;
     }
