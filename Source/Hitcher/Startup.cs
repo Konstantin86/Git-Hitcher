@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Reflection;
@@ -98,43 +99,21 @@ namespace Hitcher
       };
       app.UseGoogleAuthentication(GoogleAuthOptions);
 
-      // Prod:
       FacebookAuthOptions = new FacebookAuthenticationOptions
       {
-        AppId = "1564101533872186",
-        AppSecret = "82828e2f0763e9e561c25d14fbf24c34",
+        AppId = ConfigurationManager.AppSettings["authFbAppId"],
+        AppSecret = ConfigurationManager.AppSettings["authFbAppSecret"],
         Provider = new FacebookAuthProvider()
       };
-
-      // Dev:
-      #if DEBUG
-      FacebookAuthOptions = new FacebookAuthenticationOptions
-      {
-        AppId = "1564102313872108",
-        AppSecret = "ff54b5171b3b0e6ff4e0a5c9229437bc",
-        Provider = new FacebookAuthProvider()
-      };
-      #endif
       
       app.UseFacebookAuthentication(FacebookAuthOptions);
 
-      // Prod:
       var vkAuthenticationOptions = new VkAuthenticationOptions
       {
-        AppId = "4887889",
-        AppSecret = "JgT4ZDrcxZvQYLa5o0zI",
+        AppId = ConfigurationManager.AppSettings["authVkAppId"],
+        AppSecret = ConfigurationManager.AppSettings["authVkAppSecret"],
         Provider = new CustomVkAuthenticationProvider()
       };
-
-      // Dev:
-      #if DEBUG
-      vkAuthenticationOptions = new VkAuthenticationOptions
-      {
-        AppId = "4886156",
-        AppSecret = "eTlQrHXr6Kjk8BRZXwFi",
-        Provider = new CustomVkAuthenticationProvider()
-      };
-      #endif
 
       app.UseVkontakteAuthentication(vkAuthenticationOptions);
 
