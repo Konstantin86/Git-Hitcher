@@ -61,13 +61,3 @@ Set-AzureWebsite $WebSiteName -WebSocketsEnabled $true;
 #Set correct sql edition (standard)
 #Add current machine ip to firewall (optional)
 
-
-
-#cdn:
-#??? Investigate if its possible to add cdn via cmdlets
-
-
-
-#New-AzureStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountNameTest -Type Standard_GRS -Location $ResourceGroupLocation
-#Set-AzureStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName -Type Standard_GRS
-#https://msdn.microsoft.com/en-us/library/azure/dn495306.aspx - set azure storage account geo replication
