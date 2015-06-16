@@ -35,15 +35,23 @@ New-AzureResourceGroup -Name $ResourceGroupName `
                        -webSiteLocation $ResourceGroupLocation `
                        -webSiteHostingPlanName "SharedPlan" `
                        -webSiteHostingPlanSKU "Shared" `
-					             -storageAccountNameFromTemplate $StorageAccountName `
+                       -sqlDbEdition "Standard" `
+					   -storageAccountNameFromTemplate $StorageAccountName `
                        -Force `
-					             -Verbose;
+					   -Verbose;
+#Azure service object id - performance levels (https://msdn.microsoft.com/en-US/library/azure/dn505701)
 
-#Switch-AzureMode -Name AzureServiceManagement
+
+#Configure storage:
+#Add container for storing app-specific blobs
+Set-AzureSubscription -CurrentStorageAccountName $StorageAccountName -SubscriptionName (Get-AzureSubscription -current).SubscriptionName;
+New-AzureStorageContainer -Name ($WebSiteName.ToLowerInvariant() + "media");
+
+Switch-AzureMode -Name AzureServiceManagement
 
 #Configure web app:
 #Enable web-sockets
-#Set-AzureWebsite "SmartGo" -WebSocketsEnabled $true
+Set-AzureWebsite $WebSiteName -WebSocketsEnabled $true
 #http://blogs.msdn.com/b/cdndevs/archive/2015/04/23/azure-powershell-azure-websites-for-the-command-line-junkies-part-1.aspx
 #configure custom domains
 #Set-AzureWebsite -Name "ramisample" -HostNames @('www.abc.com', 'abc.com')
@@ -53,12 +61,7 @@ New-AzureResourceGroup -Name $ResourceGroupName `
 #Set correct sql edition (standard)
 #Add current machine ip to firewall (optional)
 
-#Configure storage:
-#Add container for storing app-specific blobs
-#Set-AzureSubscription -CurrentStorageAccountName "smartgostorage" -SubscriptionName (Get-AzureSubscription -current).SubscriptionName
-#New-AzureStorageContainer -Name "testcont"
 
-#Switch-AzureMode -Name AzureServiceManagement
 
 #cdn:
 #??? Investigate if its possible to add cdn via cmdlets

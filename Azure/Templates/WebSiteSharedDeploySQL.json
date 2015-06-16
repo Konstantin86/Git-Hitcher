@@ -59,7 +59,7 @@
         },
         "sqlDbServiceObjectiveId": {
             "type": "string",
-            "defaultValue": "910b4fcb-8a29-4c3e-958f-f7ba794388b2"
+            "defaultValue": "f1173c43-91bd-4aaa-973c-54e79e15235b"
         },
 		"storageAccountName": {
 			"type": "string"
