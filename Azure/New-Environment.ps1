@@ -47,11 +47,11 @@ New-AzureResourceGroup -Name $ResourceGroupName `
 Set-AzureSubscription -CurrentStorageAccountName $StorageAccountName -SubscriptionName (Get-AzureSubscription -current).SubscriptionName;
 New-AzureStorageContainer -Name ($WebSiteName.ToLowerInvariant() + "media");
 
-Switch-AzureMode -Name AzureServiceManagement
+Switch-AzureMode -Name AzureServiceManagement;
 
 #Configure web app:
 #Enable web-sockets
-Set-AzureWebsite $WebSiteName -WebSocketsEnabled $true
+Set-AzureWebsite $WebSiteName -WebSocketsEnabled $true;
 #http://blogs.msdn.com/b/cdndevs/archive/2015/04/23/azure-powershell-azure-websites-for-the-command-line-junkies-part-1.aspx
 #configure custom domains
 #Set-AzureWebsite -Name "ramisample" -HostNames @('www.abc.com', 'abc.com')
