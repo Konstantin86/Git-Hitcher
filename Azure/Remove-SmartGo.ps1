@@ -1,0 +1,1 @@
+﻿Remove-AzureResourceGroup -Name "smartgo" -Force
