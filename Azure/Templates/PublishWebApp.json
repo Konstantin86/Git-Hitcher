@@ -1,0 +1,42 @@
+﻿{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "dropLocation": {
+            "type": "string",
+            "metadata": {
+                "visualStudio.deployment": { "parameterUsedAs": { "value": "dropLocation" } }
+            }
+        },
+        "dropLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "visualStudio.deployment": { "parameterUsedAs": { "value": "sasToken", "refersTo": "dropLocation" } }
+            }
+        },
+        "webSitePackage": {
+            "type": "string",
+            "metadata": {
+                "visualStudio.deployment": { "parameterUsedAs": { "value": "projectOutput" } }
+            }
+        },
+        "webSiteName": {
+            "type": "string"
+        }
+    },
+    "resources": [
+		{
+			"apiVersion": "2014-04-01-preview",
+			"name": "[concat(parameters('webSiteName'), '/', 'MSDeploy')]",
+			"type": "Microsoft.Web/sites/extensions",
+			"properties": {
+				"packageUri": "[concat(parameters('dropLocation'), '/', parameters('webSitePackage'), parameters('dropLocationSasToken'))]",
+				"dbType": "None",
+				"connectionString": "",
+				"setParameters": {
+					"IIS Web Application Name": "[parameters('webSiteName')]"
+				}
+			}
+		}
+    ]
+}
