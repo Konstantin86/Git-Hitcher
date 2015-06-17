@@ -16,7 +16,7 @@ namespace Hitcher.Blob
     {
       _storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
       _blobClient = _storageAccount.CreateCloudBlobClient();
-      _container = _blobClient.GetContainerReference("media");
+      _container = _blobClient.GetContainerReference(CloudConfigurationManager.GetSetting("StorageContainerName"));
     }
 
     public void UploadImageFromStream(Stream stream, string fileName)

@@ -6,7 +6,7 @@ Param(
     [string] $StorageContainerName = ("{0}-{1}" -f $WebSiteName.ToLowerInvariant(), (Get-Date -format "hh-mm-ss-dd-mm-yyyy")),
     [string] $LocalStorageDropPath = 'StorageDrop',
     [string] $AzCopyPath = '.\Tools\AzCopy.exe',
-    [string] $webSitePackage = "CustomerManager.zip",
+    [string] $webSitePackage = "hitcher.zip",
     [string] $TemplateFile = '.\Templates\PublishWebApp.json'
 )
 
@@ -28,10 +28,11 @@ $publishXmlFile = ".\WebDeployPackage.pubxml";
     /p:VisualStudioVersion=12.0 `
     /p:DeployOnBuild=true `
     /p:DesktopBuildPackageLocation=$LocalStorageDropPath `
-    /p:PublishProfile=WebDeployPackage.pubxml;
+    /p:PublishProfile=WebDeployPackage.pubxml `
+    /p:Configuration=WebDeployPackage;
 
     #Apparently, for the transform to be executed, you have to specify a build configuration using:
-    #/p:Configuration=hitcher
+    #/p:Configuration=WebDeployPackage
 
 	
 Switch-AzureMode -Name AzureServiceManagement;
