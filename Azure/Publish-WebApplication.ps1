@@ -30,6 +30,9 @@ $publishXmlFile = ".\WebDeployPackage.pubxml";
     /p:DesktopBuildPackageLocation=$LocalStorageDropPath `
     /p:PublishProfile=WebDeployPackage.pubxml;
 
+    #Apparently, for the transform to be executed, you have to specify a build configuration using:
+    #/p:Configuration=hitcher
+
 	
 Switch-AzureMode -Name AzureServiceManagement;
 #Copy application package to the storage
