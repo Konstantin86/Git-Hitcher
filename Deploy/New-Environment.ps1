@@ -45,7 +45,7 @@ New-AzureResourceGroup -Name $ResourceGroupName `
 #Configure storage:
 #Add container for storing app-specific blobs
 Set-AzureSubscription -CurrentStorageAccountName $StorageAccountName -SubscriptionName (Get-AzureSubscription -current).SubscriptionName;
-New-AzureStorageContainer -Name ($WebSiteName.ToLowerInvariant() + "media");
+New-AzureStorageContainer -Name ($WebSiteName.ToLowerInvariant() + "media") -Permission Container;
 
 Switch-AzureMode -Name AzureServiceManagement;
 

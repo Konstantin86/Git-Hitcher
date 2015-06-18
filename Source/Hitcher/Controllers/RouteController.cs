@@ -128,7 +128,7 @@ namespace Hitcher.Controllers
         {
           route.Phone = routeUser.PhoneNumber;
           route.Name = routeUser.UserName;
-          route.PhotoPath = ConfigurationManager.AppSettings["cdnMediaBase"] + routeUser.PhotoPath;
+          route.PhotoPath = routeUser.PhotoPath;
           route.IsCurrentUserRoute = user != null && user.Id == route.UserId;
         }
       }

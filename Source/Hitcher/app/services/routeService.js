@@ -9,51 +9,52 @@
 
 app.service("routeService", function ($resource, $q, $modal, chatService, appConst) {
 
-    var resource = $resource("/:action", { action: "api/route" },
-    {
-        mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
-    });
+  var resource = $resource("/:action", { action: "api/route" },
+  {
+    mostRecent: { method: "GET", params: { action: "api/route/mostRecent" } }
+  });
 
-    var getRouteViewModel = function (route, showUserPhoto) {
+  var getRouteViewModel = function (route, showUserPhoto) {
 
-        var routeViewModel = new hitcher.viewModels.routeViewModel(route);
-        routeViewModel.config = {
-            showUserPhoto: showUserPhoto
-        };
-        routeViewModel.events = {
-            onApply: function () {
-                //alert('You have applied ' + routeViewModel.userId);
+    var routeViewModel = new hitcher.viewModels.routeViewModel(route);
+    routeViewModel.config = {
+      showUserPhoto: showUserPhoto
+    };
+    routeViewModel.photoPath = appConst.cdnMediaBase + routeViewModel.photoPath;
+    routeViewModel.events = {
+      onApply: function () {
+        //alert('You have applied ' + routeViewModel.userId);
 
-                chatService.open(routeViewModel.userId, routeViewModel.driver);
-            }
-        };
-        routeViewModel.remove = function () {
-            var deferred = $q.defer();
+        chatService.open(routeViewModel.userId, routeViewModel.driver);
+      }
+    };
+    routeViewModel.remove = function () {
+      var deferred = $q.defer();
 
-            var viewModel = this;
+      var viewModel = this;
 
-            var modal = $modal({ template: 'app/views/modal/yes-no-dialog.html', show: false });
-            modal.$scope.title = 'Удаление маршрута';
-            modal.$scope.content = 'Вы в своём уме?';
-            modal.$scope.yes = function () {
-                var modal = this;
-                resource.delete({ id: viewModel.model.id }, function (response) {
-                    modal.$hide();
-                    deferred.resolve(viewModel.model.id);
-                }, function (response) {
-                    this.$hide();
-                    deferred.reject();
-                    //statusService.error(errorService.parseDataError(response));
-                });
-            }
-            modal.$promise.then(modal.show);
-            return deferred.promise;
-        };
-
-
-        return routeViewModel;
+      var modal = $modal({ template: 'app/views/modal/yes-no-dialog.html', show: false });
+      modal.$scope.title = 'Удаление маршрута';
+      modal.$scope.content = 'Вы в своём уме?';
+      modal.$scope.yes = function () {
+        var modal = this;
+        resource.delete({ id: viewModel.model.id }, function (response) {
+          modal.$hide();
+          deferred.resolve(viewModel.model.id);
+        }, function (response) {
+          this.$hide();
+          deferred.reject();
+          //statusService.error(errorService.parseDataError(response));
+        });
+      }
+      modal.$promise.then(modal.show);
+      return deferred.promise;
     };
 
-    this.getRouteViewModel = getRouteViewModel;
-    this.resource = resource;
+
+    return routeViewModel;
+  };
+
+  this.getRouteViewModel = getRouteViewModel;
+  this.resource = resource;
 });
