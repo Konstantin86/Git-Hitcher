@@ -42,6 +42,9 @@ $storageAccountContext = New-AzureStorageContext $StorageAccountName $storageAcc
 $dropLocation = $storageAccountContext.BlobEndPoint + $StorageContainerName;
 & $AzCopyPath $LocalStorageDropPath $dropLocation /DestKey:$storageAccountKey /S /Y;
 
+#Upload media app blobs to azure (default avatar and icons):
+#http://irisclasson.com/2014/05/07/creating-and-uploading-to-azure-blob-storage-with-azure-powershell/
+
 #Set drop location for msdeploy
 $dropLocationSasToken = New-AzureStorageContainerSASToken -Container $StorageContainerName -Context $storageAccountContext -Permission r;
 $dropLocationSasToken = ConvertTo-SecureString $dropLocationSasToken -AsPlainText -Force;
