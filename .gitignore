@@ -68,3 +68,7 @@ Thumbs.db
 bin/
 obj/
 *sln.ide/
+
+
+# Except:
+!nuget.exe
