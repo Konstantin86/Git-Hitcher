@@ -4,7 +4,9 @@ Param(
     [string] $ResourceGroupName = $WebSiteName,
     [string] $StorageAccountName = $ResourceGroupName.ToLowerInvariant() + "storage",
     [string] $StorageContainerName = ("{0}-{1}" -f $WebSiteName.ToLowerInvariant(), (Get-Date -format "hh-mm-ss-dd-mm-yyyy")),
+    [string] $StorageContainerMediaName = "smartgomedia",
     [string] $LocalStorageDropPath = 'StorageDrop',
+    [string] $LocalStorageMediaDropPath = 'StorageMediaDrop',
     [string] $AzCopyPath = '.\Tools\AzCopy.exe',
     [string] $webSitePackage = "hitcher.zip",
     [string] $TemplateFile = '.\Templates\PublishWebApp.json'
@@ -16,6 +18,7 @@ $wasServiceManagementMode = Get-Module -Name Azure -ListAvailable;
 $AzCopyPath = [System.IO.Path]::Combine($PSScriptRoot, $AzCopyPath);
 $TemplateFile = [System.IO.Path]::Combine($PSScriptRoot, $TemplateFile);
 $LocalStorageDropPath = [System.IO.Path]::Combine($PSScriptRoot, $LocalStorageDropPath);
+$LocalStorageMediaDropPath = [System.IO.Path]::Combine($PSScriptRoot, $LocalStorageMediaDropPath);
 
 if(!(Test-Path -PathType Container $LocalStorageDropPath)) { mkdir $LocalStorageDropPath; }
 
@@ -40,7 +43,9 @@ Switch-AzureMode -Name AzureServiceManagement;
 $storageAccountKey = (Get-AzureStorageKey -StorageAccountName $StorageAccountName).Primary;
 $storageAccountContext = New-AzureStorageContext $StorageAccountName $storageAccountKey;
 $dropLocation = $storageAccountContext.BlobEndPoint + $StorageContainerName;
+$dropMediaLocation = $storageAccountContext.BlobEndPoint + $StorageContainerMediaName;
 & $AzCopyPath $LocalStorageDropPath $dropLocation /DestKey:$storageAccountKey /S /Y;
+& $AzCopyPath $LocalStorageMediaDropPath $dropMediaLocation /DestKey:$storageAccountKey /S /Y;
 
 #Upload media app blobs to azure (default avatar and icons):
 #http://irisclasson.com/2014/05/07/creating-and-uploading-to-azure-blob-storage-with-azure-powershell/
