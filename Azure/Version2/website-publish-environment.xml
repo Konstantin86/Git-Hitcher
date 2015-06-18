@@ -1,1 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?> <resourceGroup name="CustomerManager" location="West Europe" >     <storage accountName="customermanagerstorage" />     <sqlAzure databaseServerName="customermanagerserver" databaseName="dmres1" userName="userDB" password="Qwerty11"  /> </resourceGroup>

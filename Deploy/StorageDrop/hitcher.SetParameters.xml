@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <setParameter name="IIS Web Application Name" value="SmartGo" />
+  <setParameter name="DefaultConnection-Web.config Connection String" value="Data Source=tcp:smartgoserver.database.windows.net,1433;Initial Catalog=smartgodb;User ID=smartgoDbAdmin@smartgoserver;Password=1208Skpi5" />
+  <setParameter name="DefaultConnection_DatabasePublish-Web.config Connection String" value="Data Source=tcp:smartgoserver.database.windows.net,1433;Initial Catalog=smartgodb;User ID=smartgoDbAdmin@smartgoserver;Password=1208Skpi5" />
+</parameters>
