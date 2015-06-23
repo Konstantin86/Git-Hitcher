@@ -1,0 +1,29 @@
+{
+  "name": "hitcher",
+  "version": "1.0.0",
+  "description": "smartgo source project",
+  "main": "app\\app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Konstantin86/Git-Hitcher.git"
+  },
+  "keywords": [
+    "smartgo",
+    "hitcher"
+  ],
+  "author": "Konstantin Lazurenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Konstantin86/Git-Hitcher/issues"
+  },
+  "homepage": "https://github.com/Konstantin86/Git-Hitcher#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-uglify": "^1.2.0"
+  }
+}
