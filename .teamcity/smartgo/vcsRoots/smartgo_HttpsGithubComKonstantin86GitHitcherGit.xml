@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vcs-root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="41e3d9db-63cd-4a94-9553-c81e1aa6e675" type="jetbrains.git" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>https://github.com/Konstantin86/Git-Hitcher.git</name>
+  <param name="agentCleanFilesPolicy" value="ALL_UNTRACKED" />
+  <param name="agentCleanPolicy" value="ON_BRANCH_CHANGE" />
+  <param name="authMethod" value="PASSWORD" />
+  <param name="branch" value="prod" />
+  <param name="ignoreKnownHosts" value="true" />
+  <param name="secure:password" value="zxx57d5ca63deec682d3ddd275eb821c7a9" />
+  <param name="submoduleCheckout" value="CHECKOUT" />
+  <param name="url" value="https://github.com/Konstantin86/Git-Hitcher.git" />
+  <param name="useAlternates" value="true" />
+  <param name="username" value="Konstantin86" />
+  <param name="usernameStyle" value="USERID" />
+</vcs-root>
+
