@@ -331,6 +331,7 @@
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
     <Content Include="scripts\data-parser.js" />
+    <Content Include="scripts\dist\scripts.min.js" />
     <Content Include="scripts\gMapsContextMenu.js" />
     <None Include="scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="scripts\jquery-1.6.4.js" />
