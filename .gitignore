@@ -68,6 +68,7 @@ Thumbs.db
 bin/
 obj/
 *sln.ide/
+node_modules
 
 
 # Except:
