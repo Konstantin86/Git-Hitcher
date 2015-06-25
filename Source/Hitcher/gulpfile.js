@@ -3,6 +3,9 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     plumber = require('gulp-plumber'),
 
+//https://www.npmjs.com/package/gulp-processhtml/
+//https://github.com/lazd/gulp-replace
+
     dist = 'scripts/dist';
 
 gulp.task('compressScripts', function () {
