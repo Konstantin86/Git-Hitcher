@@ -68,6 +68,7 @@ Thumbs.db
 bin/
 obj/
 node_modules
+packages
 *sln.ide/
 
 
