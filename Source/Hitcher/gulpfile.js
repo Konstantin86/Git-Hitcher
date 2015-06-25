@@ -2,6 +2,8 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     plumber = require('gulp-plumber'),
+    processhtml = require('gulp-processhtml')
+    opts = { /* plugin options */ };
 
 //https://www.npmjs.com/package/gulp-processhtml/
 //https://github.com/lazd/gulp-replace
@@ -85,6 +87,12 @@ gulp.task('compressScripts', function () {
 gulp.task('watch', function () {
   gulp.watch(['app/**/*.js'],
       ['compressScripts']);
+});
+
+gulp.task('processProd', function () {
+  gulp.src('./index.html')
+               .pipe(processhtml(opts))
+               .pipe(gulp.dest(''));
 });
 
 gulp.task('default', ['compressScripts', 'watch']);
