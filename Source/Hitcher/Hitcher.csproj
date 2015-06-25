@@ -194,8 +194,8 @@
     <Content Include="app\directives\routeListDirective.js" />
     <Content Include="app\directives\routeListView.html" />
     <Content Include="app\directives\routeView.html" />
-    <Content Include="app\models\hitcher-ns.js" />
     <Content Include="app\models\routeViewModel.js" />
+    <Content Include="app\namespaces.js" />
     <Content Include="app\services\authService.js" />
     <Content Include="app\services\chatService.js" />
     <Content Include="app\services\errorService.js" />
@@ -208,7 +208,6 @@
     <Content Include="app\utils\system\system-format.js" />
     <Content Include="app\utils\system\system-guid.js" />
     <Content Include="app\utils\system\system-json.js" />
-    <Content Include="app\utils\system\system-ns.js" />
     <Content Include="app\utils\system\system-string.js" />
     <Content Include="app\utils\system\system-time.js" />
     <Content Include="app\views\account.html" />
@@ -331,7 +330,15 @@
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
     <Content Include="scripts\data-parser.js" />
-    <Content Include="scripts\dist\scripts.min.js" />
+    <Content Include="scripts\dist\appscripts.app.min.js" />
+    <Content Include="scripts\dist\appscripts.config.min.js" />
+    <Content Include="scripts\dist\appscripts.const.min.js" />
+    <Content Include="scripts\dist\appscripts.controllers.min.js" />
+    <Content Include="scripts\dist\appscripts.directives.min.js" />
+    <Content Include="scripts\dist\appscripts.models.min.js" />
+    <Content Include="scripts\dist\appscripts.namespaces.min.js" />
+    <Content Include="scripts\dist\appscripts.services.min.js" />
+    <Content Include="scripts\dist\appscripts.utils.min.js" />
     <Content Include="scripts\gMapsContextMenu.js" />
     <None Include="scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="scripts\jquery-1.6.4.js" />

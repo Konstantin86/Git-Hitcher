@@ -2,8 +2,6 @@
 
 /// <reference path="~/app/app.js"/>
 
-"use strict";
-
 app.constant("msgConst", {
     "HOME_WELCOME": "Yet another fitness results tracker...",
     "HOME_WELCOME_HEADER": "KeepFit",

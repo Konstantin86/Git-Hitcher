@@ -1,6 +1,4 @@
-﻿/// <reference path="~/app/utils/system/system-ns.js"/>
-
-"use strict";
+﻿/// <reference path="~/app/namespaces.js"/>
 
 system.string = (function () {
     var titleCaseRgx = /([a-z])([A-Z])/g;
@@ -9,7 +7,6 @@ system.string = (function () {
     var slice = Array.prototype.slice;
 
     function indexOf(source, pattern, caseSensitive) {
-        // check for null/undefined but allow 0
         if (source == null || source === "" || pattern == null || pattern === "") {
             return -1;
         }

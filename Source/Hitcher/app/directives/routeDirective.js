@@ -1,4 +1,8 @@
-﻿app.directive('routeView', function () {
+﻿/// <reference path="~/scripts/angular.min.js"/>
+
+/// <reference path="~/app/app.js"/>
+
+app.directive('routeView', function () {
     return {
         restrict: 'E',
         scope: {

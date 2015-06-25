@@ -3,12 +3,12 @@
 /// <reference path="~/app/services/mapService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
 /// <reference path="~/app/services/authService.js"/>
+/// <reference path="~/app/services/userService.js"/>
 /// <reference path="~/app/services/routeService.js"/>
 /// <reference path="~/app/services/chatService.js"/>
 
-"use strict";
-
-app.controller("mapController", function ($scope, $route, $alert, $aside, $http, $modal, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService, chatService) {
+app.controller("mapController", ["$scope", "$route", "$alert", "$aside", "$http", "$modal", "$q", "$timeout", "$interval", "userService", "authService", "mapService", "statusService", "routeService", "chatService",
+  function ($scope, $route, $alert, $aside, $http, $modal, $q, $timeout, $interval, userService, authService, mapService, statusService, routeService, chatService) {
     var driveAside;
     var routeCreating = false;
 
@@ -55,7 +55,7 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
 
     $scope.user = userService.user;
 
-    mapService.onMarkerDrag(function (marker, eventName, args) {
+    mapService.onMarkerDrag(function (marker) {
         var coords = marker.position;
         var markerKey = marker.key;
 
@@ -128,7 +128,6 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
 
             var maxPoints = Math.floor(km * granularity);
             var step = Math.floor($scope.route.path.length / maxPoints);
-            //alert($scope.route.path.length + ' - ' + maxPoints + ' - every ' + step + ' gran ' + granularity);
 
             var pountsToSave = [];
 
@@ -221,8 +220,6 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
                 mapService.centerMap(location.lat(), location.lng(), 12);
 
                 if (routeCreating) {
-                    //routeCreating = false;
-                    // TODO redraw route
                     mapService.clearTempDirection();
                     createRoute();
                 }
@@ -235,8 +232,6 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
                 mapService.centerMap(location.lat(), location.lng(), 12);
 
                 if (routeCreating) {
-                    //routeCreating = false;
-                    // TODO redraw route
                     mapService.clearTempDirection();
                     createRoute();
                 }
@@ -252,7 +247,7 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
         });
     });
 
-    mapService.contextMenuReady.then(function (gmaps) {
+    mapService.contextMenuReady.then(function () {
         $scope.$watch('route.startLatLng', function (value) {
             if ($('#menu_go_from').length) $('#menu_go_from')[0].style.display = value ? 'none' : 'block';
             if ($('#menu_go_to').length) $('#menu_go_to')[0].style.display = value ? 'block' : 'none';
@@ -265,20 +260,20 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
             updateMenuCommandsAvailability();
         });
 
-        $scope.$watch('route.endLatLng', function (value) {
+        $scope.$watch('route.endLatLng', function () {
             if ($('#menu_go_to').length) $('#menu_go_to')[0].style.display = ($scope.route.startLatLng && $scope.route.endLatLng) || (!$scope.route.startLatLng) ? 'none' : 'block';
 
             updateMenuCommandsAvailability();
         });
     });
 
-    $scope.$watch('route.startLatLng', function (value) {
+    $scope.$watch('route.startLatLng', function () {
         if ($scope.route.endLatLng && $scope.route.startLatLng && !routeCreating) {
             createRoute();
         }
     });
 
-    $scope.$watch('route.endLatLng', function (value) {
+    $scope.$watch('route.endLatLng', function () {
         if ($scope.route.endLatLng && $scope.route.startLatLng && !routeCreating) {
             createRoute();
         }
@@ -304,8 +299,8 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
         }
 
         $scope.route.path = path;
-        $scope.route.startLatLng = directions.mc.origin;
-        $scope.route.endLatLng = directions.mc.destination;
+        $scope.route.startLatLng = directions.nc.origin;
+        $scope.route.endLatLng = directions.nc.destination;
         var distance = directions.routes[0].legs[0].distance.value;
         $scope.route.totalDistanceToSave = distance;
         $scope.route.totalDistance = Math.floor(distance / 1000) + ' км, ' + distance % 1000 + ' м';
@@ -352,4 +347,4 @@ app.controller("mapController", function ($scope, $route, $alert, $aside, $http,
             recurrencyModes: [{ value: 0, label: "Каждый день" }, { value: 1, label: "Каждую неделю" }, { value: 2, label: "Каждый месяц" }]
         };
     };
-});
+}]);

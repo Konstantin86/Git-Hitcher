@@ -3,8 +3,6 @@
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
 
-"use strict";
-
 app.factory('chatService', ["appConst", "$rootScope", "$q", "$location", "$resource", "Hub", "$interval", "$timeout", "localStorageService", "authService",
     function (appConst, $rootScope, $q, $location, $resource, Hub, $interval, $timeout, localStorageService, authService) {
 

@@ -1,12 +1,7 @@
 ﻿/// <reference path="~/scripts/angular.min.js"/>
 /// <reference path="~/app/app.js"/>
 
-"use strict";
-
-app.service("statusService", function ($alert, cfpLoadingBar) {
-
-    var alert;
-    // statuses valid values: success, warning, danger, info
+app.service("statusService", ["$alert", "cfpLoadingBar", function ($alert, cfpLoadingBar) {
     var state = { message: "", status: "success" };
 
     var set = function (msg, stat) {
@@ -51,4 +46,4 @@ app.service("statusService", function ($alert, cfpLoadingBar) {
     this.warning = warning;
     this.error = error;
     this.clear = clear;
-});
+}]);

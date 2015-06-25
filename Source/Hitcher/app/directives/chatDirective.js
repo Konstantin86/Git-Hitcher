@@ -1,11 +1,17 @@
-﻿// JQuery usage is a bad style in angularJs app, but currently due to lack of knowledge in how to apply the same anumations with angular, jquery is temporarily used
+﻿/// <reference path="~/scripts/angular.min.js"/>
+/// <reference path="~/app/app.js"/>
+/// <reference path="~/app/const/appConst.js"/>
+/// <reference path="~/app/services/authService.js"/>
+/// <reference path="~/app/services/chatService.js"/>
+
+// JQuery usage is a bad style in angularJs app, but currently due to lack of knowledge in how to apply the same anumations with angular, jquery is temporarily used
 
 // TODO 
 // Use bootstrab tabs control to switch between chats (public or private ones)
 // Perform the following logic on switch
 // - load last messages either for public chart of from selected user id
 // - create additional abstraction in the service that will hold array of chats
-app.directive("chatView", function (appConst, authService, chatService) {
+app.directive("chatView", ["appConst", "authService", "chatService", function (appConst, authService, chatService) {
     return {
         restrict: "E",
         scope: {
@@ -80,4 +86,4 @@ app.directive("chatView", function (appConst, authService, chatService) {
             //$("#myDiv")[0].draggable = true;
         }
     };
-});
+}]);
