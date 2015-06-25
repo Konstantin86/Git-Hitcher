@@ -1,4 +1,8 @@
-﻿app.directive('numberOnlyInput', function () {
+﻿/// <reference path="~/scripts/angular.min.js"/>
+
+/// <reference path="~/app/app.js"/>
+
+app.directive('numberOnlyInput', function () {
     return {
         restrict: 'EA',
         template: '<input name="{{inputName}}" ng-model="inputValue" ng-disabled="ngDisabled" min="1" max="10" type="number" class="form-control input-sm" />',

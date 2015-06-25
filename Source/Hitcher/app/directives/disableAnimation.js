@@ -2,9 +2,7 @@
 
 /// <reference path="~/app/app.js"/>
 
-"use strict";
-
-app.directive("disableAnimation", function ($animate) {
+app.directive("disableAnimation", ["$animate", function ($animate) {
     return {
         restrict: "A",
         link: function ($scope, $element, $attrs) {
@@ -13,4 +11,4 @@ app.directive("disableAnimation", function ($animate) {
             });
         }
     }
-});
+}]);

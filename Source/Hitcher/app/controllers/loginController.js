@@ -4,11 +4,11 @@
 /// <reference path="~/app/const/msgConst.js"/>
 /// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
+/// <reference path="~/app/services/errorService.js"/>
 /// <reference path="~/app/utils/system/system-ns.js" />
 /// <reference path="~/app/utils/system/system-string.js" />
-"use strict";
 
-app.controller("loginController", function ($scope, $location, $alert, statusService, authService, errorService, appConst, msgConst) {
+app.controller("loginController", ["$scope", "$location", "$alert", "statusService", "authService", "errorService", "appConst", "msgConst", function ($scope, $location, $alert, statusService, authService, errorService, appConst, msgConst) {
 
     $scope.formData = { userName: "", password: "" };
 
@@ -55,4 +55,4 @@ app.controller("loginController", function ($scope, $location, $alert, statusSer
             });
         });
     }
-});
+}]);

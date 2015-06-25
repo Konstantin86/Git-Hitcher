@@ -5,9 +5,8 @@
 /// <reference path="~/app/services/chatService.js"/>
 /// <reference path="~/app/models/routeViewModel.js"/>
 
-"use strict";
-
-app.service("routeService", function ($resource, $q, $modal, chatService, appConst) {
+app.service("routeService", ["$resource", "$q", "$modal", "chatService", "appConst",
+  function ($resource, $q, $modal, chatService, appConst) {
 
   var resource = $resource("/:action", { action: "api/route" },
   {
@@ -23,8 +22,6 @@ app.service("routeService", function ($resource, $q, $modal, chatService, appCon
     routeViewModel.photoPath = appConst.cdnMediaBase + routeViewModel.photoPath;
     routeViewModel.events = {
       onApply: function () {
-        //alert('You have applied ' + routeViewModel.userId);
-
         chatService.open(routeViewModel.userId, routeViewModel.driver);
       }
     };
@@ -38,13 +35,12 @@ app.service("routeService", function ($resource, $q, $modal, chatService, appCon
       modal.$scope.content = 'Вы в своём уме?';
       modal.$scope.yes = function () {
         var modal = this;
-        resource.delete({ id: viewModel.model.id }, function (response) {
+        resource.delete({ id: viewModel.model.id }, function () {
           modal.$hide();
           deferred.resolve(viewModel.model.id);
-        }, function (response) {
+        }, function () {
           this.$hide();
           deferred.reject();
-          //statusService.error(errorService.parseDataError(response));
         });
       }
       modal.$promise.then(modal.show);
@@ -57,4 +53,4 @@ app.service("routeService", function ($resource, $q, $modal, chatService, appCon
 
   this.getRouteViewModel = getRouteViewModel;
   this.resource = resource;
-});
+}]);

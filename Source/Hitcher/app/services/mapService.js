@@ -7,9 +7,8 @@
 /// <reference path="~/app/services/statusService.js"/>
 /// <reference path="~/app/services/routeService.js"/>
 
-"use strict";
-
-app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, appConst, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
+app.service("mapService", ["$rootScope", "$q", "$http", "$timeout", "$compile", "appConst", "routeService", "statusService", "uiGmapGoogleMapApi", "uiGmapIsReady",
+  function ($rootScope, $q, $http, $timeout, $compile, appConst, routeService, statusService, uiGmapGoogleMapApi, uiGmapIsReady) {
     var gmaps, geocoder, mapControl;                                                            // google maps api objects
     var selectedRouteOptions, tempDirection, tempSearchDirection, highlightRoutePolyline;       // temp route objects
     var infoWindow, infoWindowCreating, infoWindowDelayTimer, underMouseLatLng;                 // infoWindow objects
@@ -629,4 +628,4 @@ app.service("mapService", function ($rootScope, $q, $http, $timeout, $compile, a
     this.displayOptions = displayOptions;
     this.updateHighlight = updateHighlight;
     this.removeRoute = removeRoute;
-});
+}]);

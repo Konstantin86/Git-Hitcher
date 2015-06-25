@@ -3,9 +3,7 @@
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/appConst.js"/>
 
-"use strict";
-
-app.service("authInterceptorService", ["$q", "$location", "localStorageService", "appConst", function ($q, $location, localStorageService, appConst) {
+app.service("authInterceptorService", ["$q", "$location", "localStorageService", function ($q, $location, localStorageService) {
 
     var request = function (config) {
         config.headers = config.headers || {};

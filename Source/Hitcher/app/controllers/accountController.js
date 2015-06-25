@@ -5,72 +5,73 @@
 /// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
 
-"use strict";
+app.controller("accountController", ["$scope", "$location", "authService", "errorService", "appConst", "msgConst", "statusService", function ($scope, $location, authService, errorService, appConst, msgConst, statusService) {
 
-app.controller("accountController", function ($scope, $location, authService, errorService, appConst, msgConst, statusService) {
-    statusService.clear();
+  function resetSecurityFormData() { $scope.securityFormData = { oldPassword: "", password: "", confirmPassword: "" }; };
 
-    if (!authService.userData.isAuth) {
-        $location.path("/login");
+  statusService.clear();
+
+  if (!authService.userData.isAuth) {
+    $location.path("/login");
+  }
+
+  var maxdate = new Date();
+  maxdate.setDate(maxdate.getDate() - 12 * 365);
+  $scope.maxDate = maxdate;
+
+  $scope.formData = authService.userData;
+  resetSecurityFormData();
+  $scope.photoWidth = appConst.userPhotoWidth;
+
+  $scope.onFilesAdded = function () {
+    if ((arguments[0][0].file.type.indexOf("image") === -1) || arguments[0][0].size > 20000000) {
+      statusService.info("You are allowed to upload only image files up to 20 Mb size");
+      return false;
+    } else {
+      this.$flow.defaults.headers.Authorization = authService.getAuthHeader();
+      return true;
     }
+  };
 
-    var maxdate = new Date();
-    maxdate.setDate(maxdate.getDate() - 12 * 365);
-    $scope.maxDate = maxdate;
+  $scope.onUploadProgress = function () { statusService.loading("Uploading photo..."); };
 
-    $scope.formData = authService.userData;
-    resetSecurityFormData();
-    $scope.photoWidth = appConst.userPhotoWidth;
+  $scope.onUploadSuccess = function (file, message) {
+    statusService.success("User photo is updated successfully");
+    authService.setPhoto(message.split('"').join(''));
+  };
 
-    $scope.onFilesAdded = function () {
-        if ((arguments[0][0].file.type.indexOf("image") === -1) || arguments[0][0].size > 20000000) {
-            statusService.info("You are allowed to upload only image files up to 20 Mb size");
-            return false;
-        } else {
-            this.$flow.defaults.headers.Authorization = authService.getAuthHeader();
-        }
-    };
-    $scope.onUploadProgress = function () { statusService.loading("Uploading photo..."); };
+  $scope.deleteUserModal =
+  {
+    title: "Delete Confirmation",
+    content: msgConst.ACCOUNT_DELETE,
+    yes: function () {
+      var modal = this;
+      authService.auth.delete({}, function () {
+        modal.$hide();
+        $location.path("/home");
+        authService.logout();
+      }, function (response) {
+        this.$hide();
+        statusService.error(errorService.parseDataError(response));
+      });
+    }
+  };
 
-    $scope.onUploadSuccess = function (file, message) {
-        statusService.success("User photo is updated successfully");
-        authService.setPhoto(message.split('"').join(''));
-    };
+  $scope.update = function () {
+    authService.auth.update($scope.formData, function () {
+      statusService.success(msgConst.ACCOUNT_UPDATE_SUCCESS);
+    }, function (response) {
+      statusService.error(errorService.parseFormResponse(response));
+    });
+  };
 
-    $scope.deleteUserModal =
-    {
-        title: "Delete Confirmation",
-        content: msgConst.ACCOUNT_DELETE,
-        yes: function () {
-            var modal = this;
-            authService.auth.delete({}, function () {
-                modal.$hide();
-                $location.path("/home");
-                authService.logout();
-            }, function (response) {
-                this.$hide();
-                statusService.error(errorService.parseDataError(response));
-            });
-        }
-    };
-
-    $scope.update = function () {
-        authService.auth.update($scope.formData, function () {
-            statusService.success(msgConst.ACCOUNT_UPDATE_SUCCESS);
-        }, function (response) {
-            statusService.error(errorService.parseFormResponse(response));
-        });
-    };
-
-    $scope.changePassword = function () {
-        authService.auth.updatePassword($scope.securityFormData, function () {
-            resetSecurityFormData();
-            statusService.success(msgConst.ACCOUNT_PWD_CHANGE_SUCCESS);
-        }, function (response) {
-            resetSecurityFormData();
-            statusService.error(errorService.parseFormResponse(response));
-        });
-    };
-
-    function resetSecurityFormData() { $scope.securityFormData = { oldPassword: "", password: "", confirmPassword: "" }; };
-});
+  $scope.changePassword = function () {
+    authService.auth.updatePassword($scope.securityFormData, function () {
+      resetSecurityFormData();
+      statusService.success(msgConst.ACCOUNT_PWD_CHANGE_SUCCESS);
+    }, function (response) {
+      resetSecurityFormData();
+      statusService.error(errorService.parseFormResponse(response));
+    });
+  };
+}]);

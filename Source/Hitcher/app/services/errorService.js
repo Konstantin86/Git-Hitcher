@@ -2,9 +2,7 @@
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/const/msgConst.js"/>
 
-"use strict";
-
-app.service("errorService", function (msgConst) {
+app.service("errorService", ["msgConst", function (msgConst) {
     var parseAuthResponse = function (response, defaultErrorMessage) {
         return response && response.data && response.data.error_description ? response.data.error_description : response.statusText || defaultErrorMessage || msgConst.LOGIN_UNRECOGNIZED_ERROR;
     };
@@ -33,4 +31,4 @@ app.service("errorService", function (msgConst) {
     this.parseAuthResponse = parseAuthResponse;
     this.parseDataResponse = parseDataResponse;
     this.parseFormResponse = parseFormResponse;
-});
+}]);

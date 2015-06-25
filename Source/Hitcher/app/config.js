@@ -4,10 +4,9 @@
 
 "use strict";
 
-app.config(function ($routeProvider) {
+app.config(["$routeProvider", function ($routeProvider) {
     $routeProvider.when("/map", {
         controller: "mapController"
-        //templateUrl: "app/views/map.html"
     });
 
     $routeProvider.when("/home", {
@@ -31,11 +30,11 @@ app.config(function ($routeProvider) {
     });
 
     $routeProvider.otherwise({ redirectTo: "/home" });
-});
+}]);
 
-app.config(function ($httpProvider) {
+app.config(["$httpProvider", function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptorService');
-});
+}]);
 
 app.config(["flowFactoryProvider", "appConst", function (flowFactoryProvider, appConst) {
     flowFactoryProvider.defaults = {
@@ -53,10 +52,9 @@ app.config(["flowFactoryProvider", "appConst", function (flowFactoryProvider, ap
     });
 }]);
 
-app.config(function($asideProvider) {
+app.config(["$asideProvider", function($asideProvider) {
     angular.extend($asideProvider.defaults, {
         container: "body",
         html: true
     });
-});
-
+}]);

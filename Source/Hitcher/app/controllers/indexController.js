@@ -1,12 +1,15 @@
-﻿/// <reference path="~/scripts/angular.min.js"/>
+﻿/// <reference path="~/scripts/angular-strap.js"/>
+/// <reference path="~/scripts/angular.min.js"/>
 /// <reference path="~/app/app.js"/>
 /// <reference path="~/app/services/authService.js"/>
 /// <reference path="~/app/services/mapService.js"/>
 /// <reference path="~/app/services/statusService.js"/>
+/// <reference path="~/app/services/routeService.js"/>
+/// <reference path="~/app/services/chatService.js"/>
+/// <reference path="~/app/services/userService.js"/>
+/// <reference path="~/app/services/authService.js"/>
 
-"use strict";
-
-app.controller("indexController", function ($scope, $location, $aside, authService, userService, routeService, mapService, statusService, chatService) {
+app.controller("indexController", ["$scope", "$location", "$aside", "authService", "userService", "routeService", "mapService", "statusService", "chatService", function ($scope, $location, $aside, authService, userService, routeService, mapService, statusService, chatService) {
     var chatOptions = chatService.options;
 
     $scope.chatToggle = function () {
@@ -64,7 +67,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
 
     $scope.markerEvents = mapService.markerEvents;
 
-    mapService.onMarkerDrag(function (marker, eventName, args) {
+    mapService.onMarkerDrag(function (marker) {
         var coords = marker.position;
         var markerKey = marker.key; 
 
@@ -92,7 +95,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         $location.path("/home");
     }
 
-    mapService.ready.then(function (gmaps) {
+    mapService.ready.then(function () {
         $scope.$watch('user.type', function (value) {
             if ($scope.searchAside) {
                 $scope.hideSearch();
@@ -106,10 +109,10 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
         onRouteRemove(id);
     });
 
-    mapService.contextMenuReady.then(function (gmaps) {
+    mapService.contextMenuReady.then(function () {
         $scope.$watch('searchModel.startLat', function (value) {
-            if ($('#menu_search_from').length) $('#menu_search_from')[0].style.display = value ? 'none' : 'block';
-            if ($('#menu_search_to').length) $('#menu_search_to')[0].style.display = value ? 'block' : 'none';
+            if ($('#menu_search_from').length) $("#menu_search_from")[0].style.display = value ? 'none' : 'block';
+            if ($('#menu_search_to').length) $("#menu_search_to")[0].style.display = value ? 'block' : 'none';
 
             var resetDisplay = ((($('#menu_go_from').length && $('#menu_go_from')[0].style.display === 'none') && $scope.authData.isAuth) || ($('#menu_search_from').length && $('#menu_search_from')[0].style.display === 'none')) ? 'block' : 'none';
 
@@ -117,7 +120,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             if ($('.context_menu_separator').length) $('.context_menu_separator')[0].style.display = resetDisplay;
         });
 
-        $scope.$watch('searchModel.endLat', function (value) {
+        $scope.$watch('searchModel.endLat', function () {
             if ($('#menu_search_to').length) $('#menu_search_to')[0].style.display = ($scope.searchModel.startLat && $scope.searchModel.endLat) || (!$scope.searchModel.startLat) ? 'none' : 'block';
         });
 
@@ -152,9 +155,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             disableFilter: false,
             hideFilter: false,
             currentUserOnly: false
-            //routes: [
-            //    { name: 'test1', description: 'descr1' }
-            //],
         };
     };
 
@@ -220,10 +220,7 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
                     routeViewModel.events.onRemove = function (routeViewModel) {
                         return function () {
                             routeViewModel.remove().then(function (id) {
-
                                 onRouteRemove(id);
-                                //$scope.searchModel.routes = $scope.searchModel.routes.filter(function (item) { return item.model.id !== id; });
-
                                 mapService.removeRoute(id);
                             });
                         }
@@ -245,7 +242,6 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             $scope.searchModel.routes = resultRoutes;
         });
 
-        //mapService.removeSearchMarkers();
         if ($scope.searchModel && $scope.searchModel.startLatLng && $scope.searchModel.endLatLng) {
             mapService.declareRoute($scope.searchModel, true);
         }
@@ -293,4 +289,4 @@ app.controller("indexController", function ($scope, $location, $aside, authServi
             }
         }
     };
-});
+}]);
