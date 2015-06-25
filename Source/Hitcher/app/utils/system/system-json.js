@@ -1,5 +1,7 @@
 ﻿/// <reference path="~/app/utils/system/system-ns.js"/>
 
+"use strict";
+
 system.json = (function () {
     var getKeys = function (obj) {
         var keys = [];

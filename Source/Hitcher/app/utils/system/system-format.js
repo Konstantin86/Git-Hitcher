@@ -1,5 +1,7 @@
 ﻿/// <reference path="~/app/utils/system/system-ns.js"/>
 
+"use strict";
+
 system.format = (function () {
     var setPrecision = function (obj, precisionValue) {
 

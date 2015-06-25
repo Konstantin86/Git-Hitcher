@@ -1,5 +1,7 @@
 ﻿/// <reference path="~/app/utils/system/system-ns.js"/>
 
+"use strict";
+
 system.string = (function () {
     var titleCaseRgx = /([a-z])([A-Z])/g;
     var separatorRgx = /([_ ]+)([a-z])/gi;

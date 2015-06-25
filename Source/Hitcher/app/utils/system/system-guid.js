@@ -1,5 +1,7 @@
 ﻿/// <reference path="~/app/utils/system/system-ns.js"/>
 
+"use strict";
+
 system.guid = (function () {
     var newGuid = function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

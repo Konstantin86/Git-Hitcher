@@ -5,7 +5,7 @@
 
 "use strict";
 
-app.service("authService", function ($resource, $q, localStorageService, appConst) {
+app.service("authService", ["$resource", "$q", "localStorageService", "appConst", function ($resource, $q, localStorageService, appConst) {
     var resource = $resource("/:action", { action: "api/auth" },
     {
         getLocalAccessToken: { method: "GET", params: { action: "api/auth/localaccesstoken" } },
@@ -128,4 +128,4 @@ app.service("authService", function ($resource, $q, localStorageService, appCons
     this.auth = resource;
     this.onLogout = onLogout;
     this.onGetUserData = onGetUserData;
-});
+}]);

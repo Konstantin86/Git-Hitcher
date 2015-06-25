@@ -1,5 +1,7 @@
 ﻿/// <reference path="~/app/utils/system/system-ns.js"/>
 
+"use strict";
+
 system.time = (function () {
 
     var timeSpan = function (startDate, endDate) {
