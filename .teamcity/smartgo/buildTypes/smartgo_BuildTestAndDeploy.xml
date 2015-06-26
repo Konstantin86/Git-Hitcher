@@ -15,7 +15,7 @@
       <runner id="RUNNER_6" name="" type="jonnyzzz.gulp">
         <parameters>
           <param name="jonnyzzz.gulp.file" value="Source/Hitcher" />
-          <param name="jonnyzzz.gulp.mode" value="npm" />
+          <param name="jonnyzzz.gulp.mode" value="global" />
           <param name="jonnyzzz.gulp.tasks"><![CDATA[compressScripts
 processProd]]></param>
           <param name="teamcity.build.workingDir" value="Source/Hitcher" />
