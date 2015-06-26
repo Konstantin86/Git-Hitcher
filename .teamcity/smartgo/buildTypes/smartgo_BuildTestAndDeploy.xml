@@ -14,6 +14,7 @@
       </runner>
       <runner id="RUNNER_6" name="" type="jonnyzzz.gulp">
         <parameters>
+          <param name="jonnyzzz.gulp.file" value="Source\Hitcher" />
           <param name="jonnyzzz.gulp.mode" value="global" />
           <param name="jonnyzzz.gulp.tasks"><![CDATA[compressScripts
 processProd]]></param>
