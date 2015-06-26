@@ -8,6 +8,7 @@
       <runner id="RUNNER_5" name="" type="jonnyzzz.npm">
         <parameters>
           <param name="npm_commands" value="install" />
+          <param name="teamcity.build.workingDir" value="Source/Hitcher" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
