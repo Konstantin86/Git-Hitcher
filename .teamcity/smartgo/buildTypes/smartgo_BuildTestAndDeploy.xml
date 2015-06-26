@@ -62,6 +62,12 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
+      <runner id="RUNNER_5" name="" type="jonnyzzz.npm">
+        <parameters>
+          <param name="npm_commands" value="install" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
     </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="smartgo_HttpsGithubComKonstantin86GitHitcherGit" />
