@@ -68,6 +68,14 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
+      <runner id="RUNNER_6" name="" type="jonnyzzz.gulp">
+        <parameters>
+          <param name="jonnyzzz.gulp.mode" value="global" />
+          <param name="jonnyzzz.gulp.tasks"><![CDATA[compressScripts
+processProd]]></param>
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
     </build-runners>
     <vcs-settings>
       <vcs-entry-ref root-id="smartgo_HttpsGithubComKonstantin86GitHitcherGit" />
