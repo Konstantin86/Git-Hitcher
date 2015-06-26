@@ -18,6 +18,7 @@
           <param name="jonnyzzz.gulp.mode" value="global" />
           <param name="jonnyzzz.gulp.tasks"><![CDATA[compressScripts
 processProd]]></param>
+          <param name="teamcity.build.workingDir" value="Source/Hitcher/node_modules/.bin" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
