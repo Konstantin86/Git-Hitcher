@@ -5,6 +5,20 @@
   <settings>
     <parameters />
     <build-runners>
+      <runner id="RUNNER_5" name="" type="jonnyzzz.npm">
+        <parameters>
+          <param name="npm_commands" value="install" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_6" name="" type="jonnyzzz.gulp">
+        <parameters>
+          <param name="jonnyzzz.gulp.mode" value="global" />
+          <param name="jonnyzzz.gulp.tasks"><![CDATA[compressScripts
+processProd]]></param>
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
       <runner id="RUNNER_1" name="" type="jb.nuget.installer">
         <parameters>
           <param name="nuget.path" value="Source/.nuget/nuget.exe" />
@@ -59,20 +73,6 @@
           <param name="jetbrains_powershell_execution" value="PS1" />
           <param name="jetbrains_powershell_script_file" value="Deploy\Publish-SmartGo.ps1" />
           <param name="jetbrains_powershell_script_mode" value="FILE" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_5" name="" type="jonnyzzz.npm">
-        <parameters>
-          <param name="npm_commands" value="install" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_6" name="" type="jonnyzzz.gulp">
-        <parameters>
-          <param name="jonnyzzz.gulp.mode" value="global" />
-          <param name="jonnyzzz.gulp.tasks"><![CDATA[compressScripts
-processProd]]></param>
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
